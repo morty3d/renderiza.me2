@@ -1,0 +1,204 @@
+/* =====================================================
+   VISOR DE SUBIDA
+===================================================== */
+
+.upload-viewer {
+
+    padding-bottom:
+        95px;
+
+}
+
+
+/* =====================================================
+   CTA
+===================================================== */
+
+.publish-button {
+
+    position:
+        absolute;
+
+    z-index:
+        18;
+
+    left:
+        50%;
+
+    bottom:
+        24px;
+
+    transform:
+        translateX(-50%);
+
+    width:
+        min(
+            420px,
+            calc(100% - 32px)
+        );
+
+    min-height:
+        58px;
+
+    padding:
+        0 28px;
+
+    border:
+        1px solid #100F0F;
+
+    border-radius:
+        6px;
+
+    background:
+        #100F0F;
+
+    color:
+        #FFFFFF;
+
+    cursor:
+        pointer;
+
+    font-family:
+        "Instrument Sans",
+        sans-serif;
+
+    font-size:
+        16px;
+
+    font-weight:
+        600;
+
+    letter-spacing:
+        -.02em;
+
+    transition:
+        transform .2s ease,
+        background .2s ease;
+
+}
+
+
+.publish-button:hover {
+
+    transform:
+        translateX(-50%)
+        translateY(-2px);
+
+}
+
+
+/* =====================================================
+   SUBIMOS LOS CONTROLES
+===================================================== */
+
+.upload-controls {
+
+    bottom:
+        100px;
+
+}
+
+
+.upload-viewer
+.tool-panel {
+
+    bottom:
+        160px;
+
+}
+
+
+.upload-viewer
+.interaction-help {
+
+    bottom:
+        175px;
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media
+(max-width: 900px) {
+
+    .upload-controls {
+
+        bottom:
+            90px;
+
+    }
+
+
+    .upload-viewer
+    .tool-panel {
+
+        bottom:
+            195px;
+
+    }
+
+
+    .publish-button {
+
+        bottom:
+            14px;
+
+        min-height:
+            58px;
+
+    }
+
+}
+
+
+@media
+(max-width: 650px) {
+
+    .upload-controls {
+
+        bottom:
+            86px;
+
+    }
+
+
+    .upload-viewer
+    .tool-panel {
+
+        bottom:
+            192px;
+
+    }
+
+
+    .publish-button {
+
+        left:
+            10px;
+
+        right:
+            10px;
+
+        bottom:
+            10px;
+
+        width:
+            auto;
+
+        transform:
+            none;
+
+    }
+
+
+    .publish-button:hover {
+
+        transform:
+            none;
+
+    }
+
+}

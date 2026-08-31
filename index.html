@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Subí tu modelo 3D y compartilo mediante QR o link para que cualquiera pueda explorarlo desde cualquier dispositivo.">
+    <title>renderiza.me</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="website-content">
+
+    <header class="navbar" id="top">
+        <a href="#inicio" class="brand" aria-label="renderiza.me - Inicio">
+            <span class="brand-mark" aria-hidden="true">R</span>
+            <span class="brand-name">renderiza<span>.me</span></span>
+        </a>
+
+        <nav class="nav-links" aria-label="Navegación principal">
+            <a href="#como-funciona">Cómo funciona</a>
+            <a href="#usos">Usos</a>
+            <a href="#precios">Precios</a>
+            <a href="#empresas">Empresas</a>
+            <a href="#faq">FAQ</a>
+        </nav>
+
+        <div class="nav-actions">
+            <a href="#" class="button button-black nav-login">Ingresar</a>
+            <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <nav class="mobile-menu" id="mobile-menu" aria-label="Navegación móvil">
+            <a href="#como-funciona">Cómo funciona</a>
+            <a href="#usos">Usos</a>
+            <a href="#precios">Precios</a>
+            <a href="#empresas">Empresas</a>
+            <a href="#faq">FAQ</a>
+            <a href="#" class="button button-black">Ingresar</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="hero" id="inicio">
+            <div class="hero-brand">renderiza.me</div>
+
+            <h1 class="hero-title">
+                Lo tenés en 3D.
+                <span>Mostralo en 3D.</span>
+            </h1>
+
+            <p class="hero-description">
+                Subí tu modelo y generá un QR o link para que cualquiera pueda verlo, girarlo y entenderlo mejor desde cualquier dispositivo.
+            </p>
+
+            <div class="hero-actions">
+                <a
+    href="#"
+    class="button button-black button-large upload-trigger"
+>
+    Subir mi 3D
+</a>
+                <a
+    href="./demo.html"
+    class="button button-outline button-large"
+>
+    Ver demo
+</a>
+
+            
+        </section>
+
+        <section class="section steps-section" id="como-funciona">
+            <div class="section-kicker">CÓMO FUNCIONA</div>
+            <h2 class="section-big-title">Tu modelado 3D<br>en cualquier pantalla</h2>
+
+            <div class="steps">
+                <article class="step-card step-neutral">
+                    <div class="step-top">01</div>
+                    <div class="step-icon upload-icon" aria-hidden="true">↑</div>
+                    <h3>Subilo</h3>
+                    <p>Cargá tu modelo 3D en formato GLB, desde tu celular o computadora.</p>
+                </article>
+
+                <article class="step-card step-blue">
+                    <div class="step-top">02</div>
+                    <div class="step-icon orbit-icon" aria-hidden="true">
+                        <span></span>
+                    </div>
+                    <h3>Exploralo</h3>
+                    <p>Revisalo, modificado, cambiá las texturas y hacé todos los ajustes que necesites.</p>
+                </article>
+
+                <article class="step-card step-lilac">
+                    <div class="step-top">03</div>
+                    <div class="step-icon publish-icon" aria-hidden="true">✓</div>
+                    <h3>Publicalo</h3>
+                    <p>Cuando esté listo, elegis cuánto tiempo querés mantenerlo activo.</p>
+                </article>
+
+                <article class="step-card step-pale">
+                    <div class="step-top">04</div>
+                    <div class="step-icon share-icon" aria-hidden="true">↗</div>
+                    <h3>Compartilo</h3>
+                    <p>Descargá tu QR o copiá el link y usalo donde quieras.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="preview-section" id="antes-de-publicar">
+            <div class="preview-inner">
+                <div class="preview-heading">
+                    <div class="section-kicker">ANTES DE PUBLICAR</div>
+                    <h2>Primero probalo.<br><br><span>Después publicalo.</span></h2>
+                </div>
+
+                <div class="preview-copy">
+                    <p>Subí tu modelo, cambiá las texturas y ajustalo todas las veces que quieras sin costo.</p>
+                    <p>Podés verlo exactamente como lo va a ver quien escanee el QR.</p>
+                    <h3>Lo que ves es lo que van a ver.</h3>
+                    <p>Cuando estas conforme, recién ahí elegís cuánto tiempo publicarlo y pagás.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section use-section" id="usos">
+            <div class="section-kicker">USALO DONDE QUIERAS</div>
+            <h2 class="section-big-title use-title">Tu modelado 3D complementa la presentación.</h2>
+
+            <div class="use-grid">
+                <article class="use-card use-card-one use-card-large">
+                    <span class="use-label">FACULTAD</span>
+                    <div class="use-card-copy">
+                        <h3>Sumalo a tu lámina de entrega.</h3>
+                        <p>Dejá que docentes y compañeros puedan explorar tu proyecto desde su celular.</p>
+                    </div>
+                    <div class="fake-qr" aria-hidden="true">
+                        <div class="qr-corner q1"></div>
+                        <div class="qr-corner q2"></div>
+                        <div class="qr-corner q3"></div>
+                        <div class="qr-center"></div>
+                    </div>
+                </article>
+
+                <article class="use-card use-card-two">
+                    <span class="use-label">PORTFOLIO</span>
+                    <div class="use-card-copy">
+                        <h3>No muestres solo imágenes.</h3>
+                        <p>Compartí el modelo completo junto a tus renders y presentaciones.</p>
+                    </div>
+                    <div class="use-line" aria-hidden="true"></div>
+                </article>
+
+                <article class="use-card use-card-three">
+                    <span class="use-label">PRESENTACIONES</span>
+                    <div class="use-card-copy">
+                        <h3>Dejá que lo vean por sí mismos.</h3>
+                        <p>Un QR alcanza para abrir tu proyecto desde cualquier dispositivo.</p>
+                    </div>
+                    <div class="mini-device" aria-hidden="true"><span></span></div>
+                </article>
+
+                <article class="use-card use-card-four">
+                    <span class="use-label">FERIAS · STANDS</span>
+                    <div class="use-card-copy">
+                        <h3>Mostrá más de lo que llevaste.</h3>
+                        <p>Compartí productos, variantes o detalles que no están físicamente en el stand.</p>
+                    </div>
+                    <div class="stand-shape" aria-hidden="true"></div>
+                </article>
+
+                <article class="use-card use-card-five">
+                    <span class="use-label">EMPRENDEDORES</span>
+                    <div class="use-card-copy">
+                        <h3>Mostrá una idea antes de fabricarla.</h3>
+                        <p>Ideal para muebles, productos, piezas, arquitectura y desarrollos a medida.</p>
+                    </div>
+                    <div class="client-shape" aria-hidden="true"><span></span></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section pricing-section" id="precios">
+            <div class="pricing-text">
+                <div class="section-kicker">PRECIO SIMPLE</div>
+                <h2>Sin suscripciones, <span>pagás cuando está listo.</span></h2>
+                <p>Subir, probar y ajustar tu modelo no tiene costo.</p>
+                <p>Cuando estés conforme, elegís cuánto tiempo querés mantenerlo publicado y pagás una sola vez.</p>
+                <p>Ideal para una entrega, presentación, muestra o evento.</p>
+            </div>
+
+            <div class="pricing-visual" aria-hidden="true">
+                <div class="pricing-ring ring-one"></div>
+                <div class="pricing-ring ring-two"></div>
+                <div class="pricing-ring ring-three"></div>
+                <div class="pricing-dot"></div>
+            </div>
+        </section>
+
+        <section class="company-section" id="empresas">
+            <div class="company-heading">
+                <div class="section-kicker section-kicker-light">RENDERIZA.ME PARA EMPRESAS</div>
+                <h2>Un QR también puede mostrar <span>todo tu producto.</span></h2>
+            </div>
+
+            <div class="company-copy">
+                <p>Mostrá productos, piezas y prototipos en 3D desde un stand, local, catálogo, packaging o presentación.</p>
+                <p>Tus clientes pueden escanear el código y explorar el producto directamente desde su celular.</p>
+                <p>Personalizá la experiencia con tu logo, colores, información del producto y entorno visual.</p>
+                <p>Ideal para productos grandes, variantes, prototipos o desarrollos que todavía no fueron fabricados.</p>
+                <a href="#" class="button button-white button-large">Contactanos →</a>
+            </div>
+        </section>
+
+        <section class="section faq-section" id="faq">
+            <div class="section-kicker">PREGUNTAS FRECUENTES</div>
+            <h2>Lo importante,<br><span>sin vueltas.</span></h2>
+
+            <div class="faq">
+                <details>
+                    <summary>¿Necesito instalar una aplicación?</summary>
+                    <p>No. El modelo se abre directamente desde el navegador del celular, tablet o computadora.</p>
+                </details>
+
+                <details>
+                    <summary>¿Qué archivo tengo que subir?</summary>
+                    <p>Podés subir tu modelo en formato GLB.<p> 
+                        Rhinoceros, Fusion, Blender,SketchUp, 3Dmax, Cinema 4d, todos exportan directo en .GLB </p>
+                </details>
+
+                <details>
+                    <summary>¿Tengo que pagar para probar mi modelo?</summary>
+                    <p>No. Podés subirlo, revisarlo, cambiar las texturas, reemplazar el archvio y hacer ajustes todas las veces que quieras sin pagar.</p>
+                </details>
+
+                <details>
+                    <summary>¿Puedo ver cómo va a quedar antes de publicarlo?</summary>
+                    <p>Sí. Antes de pagar podés explorar el modelo tal como lo verá cualquier persona que acceda mediante el QR o link.</p>
+                </details>
+
+                <details>
+                    <summary>¿Cuándo tengo que pagar?</summary>
+                    <p>Recién cuando tu modelo está listo y decidís generar el link o QR. <p>El costo se calcula segun el tiempo que neceistas vigente el acceso.</p>
+                </details>
+
+                <details>
+                    <summary>¿Cómo comparto mi modelo?</summary>
+                    <p>renderiza.me genera un link y un código QR para cada objeto publicado.<p> El QR lo podes pegar en tu lamina de entrega, stand o simplemente compartir el link con otra persona.</p>
+                </details>
+
+                <details>
+                    <summary>¿Dónde puedo usar el QR?</summary>
+                    <p>Donde quieras: láminas, portfolios, presentaciones, stands, catálogos, packaging, carteles o redes.</p>
+                </details>
+
+                <details>
+                    <summary>¿La persona que escanea el QR tiene que registrarse?</summary>
+                    <p>No. Escanea el código y accede directamente al modelo.</p>
+                </details>
+
+                <details>
+                    <summary>¿Se puede girar y acercar el modelo?</summary>
+                    <p>Sí. El modelo es interactivo: se puede rotar, acercar, explorar desde distintos ángulos y hacer cortes en los ejes X,Y y Z.</p>
+                </details>
+
+                <details>
+                    <summary>¿Tengo que pagar una suscripción?</summary>
+                    <p>No. Pagás únicamente por cada modelado y por el tiempo que quieras mantenerlo publicado.</p>
+                </details>
+
+                <details>
+                    <summary>¿Puedo contratar solamente 24 horas?</summary>
+                    <p>Sí. Podés publicarlo desde 24 horas, ideal para una entrega o presentación puntual.</p>
+                </details>
+
+                <details>
+                    <summary>¿Qué pasa cuando termina el período?</summary>
+                    <p>El acceso deja de estar disponible hasta que decidas volver a activarlo.</p>
+                </details>
+
+                <details>
+                    <summary>¿Funciona desde un celular?</summary>
+                    <p>Sí. renderiza.me está pensado para que el modelo pueda abrirse y explorarse fácilmente desde celulares, tablets y computadoras.</p>
+                </details>
+            </div>
+        </section>
+
+        <section class="final-cta">
+            <div class="final-title">
+                <span>Ya hiciste el 3D.</span>
+                <span class="final-blue">Ahora mostralo.</span>
+            </div>
+            <p>Subilo, preparalo y compartilo cuando esté listo.</p>
+            <a
+    href="#"
+    class="button button-black button-large upload-trigger"
+>
+    Subir mi 3D
+</a>
+        </section>
+
+    </main>
+
+    <footer>
+        <a class="footer-logo" href="#inicio">renderiza<span>.me</span></a>
+
+        <div class="footer-links">
+            <a href="#">Instagram</a>
+            <a href="#">Contacto</a>
+            <a href="#">Términos</a>
+            <a href="#">Privacidad</a>
+        </div>
+
+        <div class="footer-copy">© 2026 renderiza.me</div>
+    </footer>
+
+</div>
+
+<script src="script.js"></script>
+<input
+    id="modelFileInput"
+    type="file"
+    accept=".glb,model/gltf-binary"
+    hidden
+>
+
+<script src="./upload-flow.js"></script>
+</body>
+</html>

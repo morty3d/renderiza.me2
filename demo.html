@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Demo | renderiza.me</title>
+
+
+    <!-- FUENTES -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- CSS -->
+
+    <link
+        rel="stylesheet"
+        href="./demo.css"
+    >
+
+
+    <!-- BABYLON -->
+
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="demo-header">
+
+
+        <a
+            href="./index.html"
+            class="demo-brand"
+        >
+            renderiza<span>.me</span>
+        </a>
+
+
+        <div class="demo-header-center">
+            DEMO 3D
+        </div>
+
+
+        <a
+            href="./index.html"
+            class="back-button"
+        >
+            ← Volver
+        </a>
+
+
+    </header>
+
+
+
+    <!-- =====================================================
+         VISOR
+    ====================================================== -->
+
+    <main class="viewer">
+
+
+        <canvas
+            id="renderCanvas"
+            aria-label="Visor interactivo 3D"
+        ></canvas>
+
+
+
+        <!-- =================================================
+             CARGA
+        ================================================== -->
+
+        <div
+            class="loading-screen"
+            id="loadingScreen"
+        >
+
+            <div class="loading-content">
+
+
+                <div class="loading-label">
+                    CARGANDO MODELO
+                </div>
+
+
+                <div class="loading-title">
+                    renderiza<span>.me</span>
+                </div>
+
+
+                <div class="loading-bar">
+
+                    <div
+                        class="loading-progress"
+                        id="loadingProgress"
+                    ></div>
+
+                </div>
+
+
+                <div
+                    class="loading-percent"
+                    id="loadingPercent"
+                >
+                    0%
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             ERROR
+        ================================================== -->
+
+        <div
+            class="error-message"
+            id="errorMessage"
+        >
+            No pudimos cargar el modelo 3D.
+        </div>
+
+
+
+        <!-- =================================================
+             INFORMACIÓN MODELO
+        ================================================== -->
+
+        <div class="model-info">
+
+            <span>
+                MODELO
+            </span>
+
+            <strong>
+                Demo renderiza.me
+            </strong>
+
+        </div>
+
+
+
+        <!-- =================================================
+             AYUDA
+        ================================================== -->
+
+        <div
+            class="interaction-help"
+            id="interactionHelp"
+        >
+
+            <span class="desktop-help">
+                Arrastrá para girar · Scroll para acercar
+            </span>
+
+            <span class="mobile-help">
+                Deslizá para girar · Pellizcá para acercar
+            </span>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PANEL DE CORTES
+        ================================================== -->
+
+        <div
+            class="tool-panel"
+            id="cutPanel"
+        >
+
+
+            <div class="tool-panel-title">
+                CORTE
+            </div>
+
+
+            <div class="axis-buttons">
+
+
+                <button
+                    class="axis-button active"
+                    data-axis="x"
+                    type="button"
+                >
+                    X
+                </button>
+
+
+                <button
+                    class="axis-button"
+                    data-axis="y"
+                    type="button"
+                >
+                    Y
+                </button>
+
+
+                <button
+                    class="axis-button"
+                    data-axis="z"
+                    type="button"
+                >
+                    Z
+                </button>
+
+
+            </div>
+
+
+            <div class="slider-wrapper">
+
+                <input
+                    id="cutSlider"
+                    class="tool-slider"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="50"
+                    step="1"
+                    aria-label="Posición del corte"
+                >
+
+            </div>
+
+
+            <div
+                class="slider-value"
+                id="cutValue"
+            >
+                50%
+            </div>
+
+
+            <button
+                class="panel-reset"
+                id="cutReset"
+                type="button"
+            >
+                Quitar corte
+            </button>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             PANEL DE LUZ
+        ================================================== -->
+
+        <div
+            class="tool-panel"
+            id="lightPanel"
+        >
+
+
+            <div class="tool-panel-title">
+                LUZ
+            </div>
+
+
+            <div class="light-icon">
+                ☀
+            </div>
+
+
+            <div class="slider-wrapper">
+
+                <input
+                    id="lightSlider"
+                    class="tool-slider"
+                    type="range"
+                    min="0"
+                    max="200"
+                    value="100"
+                    step="1"
+                    aria-label="Intensidad de luz"
+                >
+
+            </div>
+
+
+            <div
+                class="slider-value"
+                id="lightValue"
+            >
+                100%
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             CONTROLES PRINCIPALES
+        ================================================== -->
+
+        <div class="viewer-controls">
+
+
+            <!-- ROTACIÓN -->
+
+            <button
+                class="viewer-button active"
+                id="rotateButton"
+                type="button"
+                title="Rotación automática"
+            >
+
+                <svg viewBox="0 0 24 24">
+
+                    <path
+                        d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5"
+                    ></path>
+
+                    <path
+                        d="M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5"
+                    ></path>
+
+                </svg>
+
+                <span>
+                    Rotación
+                </span>
+
+            </button>
+
+
+
+            <div class="controls-separator"></div>
+
+
+
+            <!-- FRONTAL -->
+
+            <button
+                class="viewer-button view-button"
+                id="frontButton"
+                type="button"
+            >
+                <span>Frontal</span>
+            </button>
+
+
+
+            <!-- LATERAL -->
+
+            <button
+                class="viewer-button view-button"
+                id="sideButton"
+                type="button"
+            >
+                <span>Lateral</span>
+            </button>
+
+
+
+            <!-- SUPERIOR -->
+
+            <button
+                class="viewer-button view-button"
+                id="topButton"
+                type="button"
+            >
+                <span>Superior</span>
+            </button>
+
+
+
+            <div class="controls-separator"></div>
+
+
+
+            <!-- CORTES -->
+
+            <button
+    class="viewer-button"
+    id="cutButton"
+    type="button"
+    title="Cortes"
+>
+
+    <svg viewBox="0 0 24 24">
+
+        <!-- circunferencia -->
+        <circle cx="12" cy="12" r="7.5"></circle>
+
+        <!-- centro -->
+        <circle cx="12" cy="12" r="2.2"></circle>
+
+        <!-- líneas guía -->
+        <path d="M12 2v4"></path>
+        <path d="M12 18v4"></path>
+        <path d="M2 12h4"></path>
+        <path d="M18 12h4"></path>
+
+    </svg>
+
+    <span>
+        Cortes
+    </span>
+
+</button>
+
+
+
+            <!-- LUZ -->
+
+            <button
+                class="viewer-button"
+                id="lightButton"
+                type="button"
+                title="Luz"
+            >
+
+                <svg viewBox="0 0 24 24">
+
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="4"
+                    ></circle>
+
+                    <path d="M12 2v2"></path>
+                    <path d="M12 20v2"></path>
+                    <path d="M4.93 4.93l1.41 1.41"></path>
+                    <path d="M17.66 17.66l1.41 1.41"></path>
+                    <path d="M2 12h2"></path>
+                    <path d="M20 12h2"></path>
+                    <path d="M4.93 19.07l1.41-1.41"></path>
+                    <path d="M17.66 6.34l1.41-1.41"></path>
+
+                </svg>
+
+                <span>
+                    Luz
+                </span>
+
+            </button>
+
+
+
+            <div class="controls-separator"></div>
+
+
+
+            <!-- CENTRAR -->
+
+            <button
+                class="viewer-button"
+                id="resetButton"
+                type="button"
+                title="Centrar"
+            >
+
+                <svg viewBox="0 0 24 24">
+
+                    <path
+                        d="M3 12a9 9 0 1 0 3-6.7"
+                    ></path>
+
+                    <path
+                        d="M3 4v6h6"
+                    ></path>
+
+                </svg>
+
+                <span>
+                    Centrar
+                </span>
+
+            </button>
+
+
+
+            <!-- FULLSCREEN -->
+
+            <button
+                class="viewer-button"
+                id="fullscreenButton"
+                type="button"
+                title="Pantalla completa"
+            >
+
+                <svg viewBox="0 0 24 24">
+
+                    <path d="M8 3H3v5"></path>
+                    <path d="M16 3h5v5"></path>
+                    <path d="M8 21H3v-5"></path>
+                    <path d="M16 21h5v-5"></path>
+
+                </svg>
+
+                <span>
+                    Pantalla completa
+                </span>
+
+            </button>
+
+
+        </div>
+
+
+    </main>
+
+
+
+    <script src="./demo.js"></script>
+
+
+</body>
+
+</html>

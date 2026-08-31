@@ -1,0 +1,1364 @@
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+:root {
+
+    --background: #E8E9E5;
+
+    --black: #100F0F;
+
+    --white: #FFFFFF;
+
+    --gray: #74736F;
+
+    --blue: #2664EB;
+
+    --border:
+        rgba(16, 15, 15, .20);
+
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+
+    box-sizing: border-box;
+
+}
+
+
+html,
+body {
+
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+
+    overflow: hidden;
+
+}
+
+
+body {
+
+    background: var(--background);
+
+    color: var(--black);
+
+    font-family:
+        "Instrument Sans",
+        Arial,
+        sans-serif;
+
+    -webkit-font-smoothing:
+        antialiased;
+
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.demo-header {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    z-index: 30;
+
+    width: 100%;
+    height: 78px;
+
+    padding: 0 32px;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr auto 1fr;
+
+    align-items: center;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    background:
+        rgba(232, 233, 229, .86);
+
+    backdrop-filter:
+        blur(14px);
+
+    -webkit-backdrop-filter:
+        blur(14px);
+
+}
+
+
+.demo-brand {
+
+    justify-self: start;
+
+    color: var(--black);
+
+    font-size: 21px;
+
+    font-weight: 600;
+
+    letter-spacing: -.04em;
+
+    text-decoration: none;
+
+}
+
+
+.demo-brand span {
+
+    color: var(--blue);
+
+}
+
+
+.demo-header-center {
+
+    font-family:
+        "Roboto Mono",
+        monospace;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    letter-spacing: .14em;
+
+}
+
+
+.back-button {
+
+    justify-self: end;
+
+    min-height: 42px;
+
+    padding: 0 18px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border:
+        1px solid
+        var(--black);
+
+    border-radius: 5px;
+
+    color: var(--black);
+
+    background: transparent;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+
+}
+
+
+.back-button:hover {
+
+    background: var(--black);
+
+    color: white;
+
+}
+
+
+/* =====================================================
+   VIEWER
+===================================================== */
+
+.viewer {
+
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    background: var(--background);
+
+}
+
+
+#renderCanvas {
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    outline: none;
+
+    touch-action: none;
+
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.loading-screen {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 20;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: var(--background);
+
+    transition:
+        opacity .5s ease,
+        visibility .5s ease;
+
+}
+
+
+.loading-screen.hidden {
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+}
+
+
+.loading-content {
+
+    width:
+        min(
+            380px,
+            calc(100% - 50px)
+        );
+
+    text-align: center;
+
+}
+
+
+.loading-label {
+
+    margin-bottom: 20px;
+
+    font-family:
+        "Roboto Mono",
+        monospace;
+
+    font-size: 10px;
+
+    letter-spacing: .14em;
+
+}
+
+
+.loading-title {
+
+    margin-bottom: 35px;
+
+    font-size:
+        clamp(
+            34px,
+            5vw,
+            52px
+        );
+
+    font-weight: 600;
+
+    letter-spacing: -.055em;
+
+}
+
+
+.loading-title span {
+
+    color: var(--blue);
+
+}
+
+
+.loading-bar {
+
+    width: 100%;
+    height: 2px;
+
+    overflow: hidden;
+
+    background:
+        rgba(16, 15, 15, .14);
+
+}
+
+
+.loading-progress {
+
+    width: 0%;
+    height: 100%;
+
+    background: var(--blue);
+
+    transition:
+        width .15s linear;
+
+}
+
+
+.loading-percent {
+
+    margin-top: 12px;
+
+    color: var(--gray);
+
+    font-family:
+        "Roboto Mono",
+        monospace;
+
+    font-size: 10px;
+
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.error-message {
+
+    position: absolute;
+
+    z-index: 40;
+
+    top: 50%;
+    left: 50%;
+
+    display: none;
+
+    padding: 18px 22px;
+
+    transform:
+        translate(-50%, -50%);
+
+    border:
+        1px solid
+        var(--black);
+
+    background:
+        var(--background);
+
+    font-size: 14px;
+
+}
+
+
+.error-message.visible {
+
+    display: block;
+
+}
+
+
+/* =====================================================
+   INFO MODELO
+===================================================== */
+
+.model-info {
+
+    position: absolute;
+
+    z-index: 10;
+
+    left: 32px;
+
+    bottom: 31px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+}
+
+
+.model-info span {
+
+    color: var(--gray);
+
+    font-family:
+        "Roboto Mono",
+        monospace;
+
+    font-size: 9px;
+
+    letter-spacing: .1em;
+
+}
+
+
+.model-info strong {
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+}
+
+
+/* =====================================================
+   AYUDA
+===================================================== */
+
+.interaction-help {
+
+    position: absolute;
+
+    z-index: 10;
+
+    left: 50%;
+
+    bottom: 98px;
+
+    transform:
+        translateX(-50%);
+
+    padding: 9px 13px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 5px;
+
+    background:
+        rgba(232, 233, 229, .78);
+
+    backdrop-filter:
+        blur(8px);
+
+    color: var(--gray);
+
+    font-family:
+        "Roboto Mono",
+        monospace;
+
+    font-size: 9px;
+
+    white-space: nowrap;
+
+    transition:
+        opacity .4s ease;
+
+}
+
+
+.interaction-help.hidden {
+
+    opacity: 0;
+
+    pointer-events: none;
+
+}
+
+
+.mobile-help {
+
+    display: none;
+
+}
+
+
+/* =====================================================
+   CONTROLES DESKTOP
+===================================================== */
+
+.viewer-controls {
+
+    position: absolute;
+
+    z-index: 12;
+
+    left: 50%;
+
+    bottom: 25px;
+
+    transform:
+        translateX(-50%);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 6px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 7px;
+
+    background:
+        rgba(232, 233, 229, .90);
+
+    backdrop-filter:
+        blur(14px);
+
+    -webkit-backdrop-filter:
+        blur(14px);
+
+}
+
+
+.viewer-button {
+
+    height: 44px;
+
+    min-width: 0;
+
+    padding: 0 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    flex: 0 0 auto;
+
+    border: 0;
+
+    border-radius: 4px;
+
+    background: transparent;
+
+    color: var(--black);
+
+    cursor: pointer;
+
+    font-family:
+        "Instrument Sans",
+        sans-serif;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+
+}
+
+
+.viewer-button svg {
+
+    width: 17px;
+    height: 17px;
+
+    flex: 0 0 auto;
+
+    fill: none;
+
+    stroke: currentColor;
+
+    stroke-width: 1.6;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+
+}
+
+
+.viewer-button:hover {
+
+    background:
+        rgba(16, 15, 15, .08);
+
+}
+
+
+.viewer-button.active {
+
+    background: var(--blue);
+
+    color: white;
+
+}
+
+
+.controls-separator {
+
+    width: 1px;
+    height: 24px;
+
+    flex: 0 0 1px;
+
+    margin: 0 3px;
+
+    background: var(--border);
+
+}
+
+
+/* =====================================================
+   PANELES CORTES / LUZ
+===================================================== */
+
+.tool-panel {
+
+    position: absolute;
+
+    z-index: 14;
+
+    left: 50%;
+
+    bottom: 86px;
+
+    transform:
+        translateX(-50%)
+        translateY(8px);
+
+    width:
+        min(
+            650px,
+            calc(100% - 32px)
+        );
+
+    min-height: 58px;
+
+    padding: 8px 10px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 7px;
+
+    background:
+        rgba(232, 233, 229, .95);
+
+    backdrop-filter:
+        blur(16px);
+
+    -webkit-backdrop-filter:
+        blur(16px);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+        opacity .18s ease,
+        transform .18s ease,
+        visibility .18s ease;
+
+}
+
+
+.tool-panel.visible {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+
+}
+
+
+.tool-panel-title {
+
+    min-width: 48px;
+
+    font-family:
+        "Roboto Mono",
+        monospace;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    letter-spacing: .10em;
+
+}
+
+
+/* =====================================================
+   EJES
+===================================================== */
+
+.axis-buttons {
+
+    display: flex;
+
+    gap: 3px;
+
+    flex: 0 0 auto;
+
+}
+
+
+.axis-button {
+
+    width: 36px;
+    height: 36px;
+
+    padding: 0;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 4px;
+
+    background: transparent;
+
+    color: var(--black);
+
+    cursor: pointer;
+
+    font-family:
+        "Roboto Mono",
+        monospace;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+}
+
+
+.axis-button.active {
+
+    border-color: var(--blue);
+
+    background: var(--blue);
+
+    color: white;
+
+}
+
+
+/* =====================================================
+   SLIDERS
+===================================================== */
+
+.slider-wrapper {
+
+    flex: 1 1 auto;
+
+    min-width: 80px;
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+.tool-slider {
+
+    width: 100%;
+    height: 3px;
+
+    margin: 0;
+
+    appearance: none;
+
+    -webkit-appearance: none;
+
+    background:
+        rgba(16, 15, 15, .18);
+
+    border-radius: 999px;
+
+    outline: none;
+
+    cursor: pointer;
+
+}
+
+
+.tool-slider::-webkit-slider-thumb {
+
+    appearance: none;
+
+    -webkit-appearance: none;
+
+    width: 18px;
+    height: 18px;
+
+    border: 2px solid
+        var(--blue);
+
+    border-radius: 50%;
+
+    background:
+        var(--background);
+
+    cursor: pointer;
+
+}
+
+
+.tool-slider::-moz-range-thumb {
+
+    width: 16px;
+    height: 16px;
+
+    border: 2px solid
+        var(--blue);
+
+    border-radius: 50%;
+
+    background:
+        var(--background);
+
+    cursor: pointer;
+
+}
+
+
+.slider-value {
+
+    width: 42px;
+
+    flex: 0 0 42px;
+
+    color: var(--gray);
+
+    font-family:
+        "Roboto Mono",
+        monospace;
+
+    font-size: 10px;
+
+    text-align: right;
+
+}
+
+
+.panel-reset {
+
+    min-height: 36px;
+
+    flex: 0 0 auto;
+
+    padding: 0 11px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 4px;
+
+    background: transparent;
+
+    color: var(--black);
+
+    cursor: pointer;
+
+    font-family:
+        "Instrument Sans",
+        sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+}
+
+
+.panel-reset:hover {
+
+    background:
+        rgba(16, 15, 15, .06);
+
+}
+
+
+.light-icon {
+
+    width: 30px;
+
+    flex: 0 0 30px;
+
+    text-align: center;
+
+    font-size: 18px;
+
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .viewer-controls {
+
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+
+        transform: none;
+
+        width: auto;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+        gap: 4px;
+
+        padding: 6px;
+
+    }
+
+
+    .viewer-button {
+
+        width: 100%;
+        min-width: 0;
+
+        padding: 0 7px;
+
+        flex: initial;
+
+        font-size: 11px;
+
+    }
+
+
+    .controls-separator {
+
+        display: none;
+
+    }
+
+
+    /*
+    Los 8 botones quedan:
+    
+    fila 1:
+    Rotación / Frontal / Lateral / Superior
+
+    fila 2:
+    Cortes / Luz / Centrar / Fullscreen
+    */
+
+
+    .tool-panel {
+
+        bottom: 124px;
+
+    }
+
+
+    .interaction-help {
+
+        bottom: 190px;
+
+    }
+
+
+    .model-info {
+
+        top: 94px;
+        left: 20px;
+
+        bottom: auto;
+
+    }
+
+}
+
+
+/* =====================================================
+   CELULAR
+===================================================== */
+
+@media (max-width: 650px) {
+
+    /* HEADER */
+
+    .demo-header {
+
+        height: 67px;
+
+        padding: 0 16px;
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .demo-header-center {
+
+        display: none;
+
+    }
+
+
+    .demo-brand {
+
+        font-size: 19px;
+
+    }
+
+
+    .back-button {
+
+        min-height: 38px;
+
+        padding: 0 13px;
+
+        font-size: 12px;
+
+    }
+
+
+    /* CONTROLES */
+
+    .viewer-controls {
+
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+
+        width: auto;
+
+        padding: 5px;
+
+        gap: 4px;
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+        overflow: visible;
+
+    }
+
+
+    .viewer-button {
+
+        width: 100%;
+        min-width: 0;
+
+        height: 42px;
+
+        padding: 0 4px;
+
+        gap: 3px;
+
+        overflow: hidden;
+
+        font-size: 10px;
+
+        text-overflow: clip;
+
+    }
+
+
+    .viewer-button svg {
+
+        width: 18px;
+        height: 18px;
+
+    }
+
+
+    /*
+       En mobile dejamos SOLO ICONO
+       en las herramientas.
+
+       Frontal / lateral / superior
+       siguen escritas.
+    */
+
+    #rotateButton span,
+    #cutButton span,
+    #lightButton span,
+    #resetButton span,
+    #fullscreenButton span {
+
+        display: none;
+
+    }
+
+
+    #frontButton span,
+    #sideButton span,
+    #topButton span {
+
+        display: inline;
+
+    }
+
+
+    /* PANELES */
+
+    .tool-panel {
+
+        left: 10px;
+        right: 10px;
+
+        bottom: 122px;
+
+        width: auto;
+
+        min-height: 55px;
+
+        padding: 7px;
+
+        gap: 6px;
+
+        transform:
+            translateY(8px);
+
+    }
+
+
+    .tool-panel.visible {
+
+        transform:
+            translateY(0);
+
+    }
+
+
+    .tool-panel-title {
+
+        display: none;
+
+    }
+
+
+    /* EJES */
+
+    .axis-buttons {
+
+        gap: 2px;
+
+    }
+
+
+    .axis-button {
+
+        width: 31px;
+        height: 34px;
+
+        font-size: 10px;
+
+    }
+
+
+    /* SLIDER */
+
+    .slider-wrapper {
+
+        min-width: 55px;
+
+    }
+
+
+    .slider-value {
+
+        width: 32px;
+
+        flex-basis: 32px;
+
+        font-size: 9px;
+
+    }
+
+
+    /* QUITAR CORTE */
+
+    .panel-reset {
+
+        width: 34px;
+        min-width: 34px;
+
+        padding: 0;
+
+        font-size: 0;
+
+    }
+
+
+    .panel-reset::after {
+
+        content: "×";
+
+        font-size: 20px;
+
+        line-height: 1;
+
+    }
+
+
+    .light-icon {
+
+        width: 25px;
+
+        flex-basis: 25px;
+
+        font-size: 17px;
+
+    }
+
+
+    /* AYUDA */
+
+    .desktop-help {
+
+        display: none;
+
+    }
+
+
+    .mobile-help {
+
+        display: inline;
+
+    }
+
+
+    .interaction-help {
+
+        bottom: 190px;
+
+        max-width:
+            calc(100% - 30px);
+
+        overflow: hidden;
+
+        font-size: 8px;
+
+        text-overflow: ellipsis;
+
+    }
+
+
+    /* INFO */
+
+    .model-info {
+
+        top: 84px;
+        left: 16px;
+
+        bottom: auto;
+
+    }
+
+}
+
+
+/* =====================================================
+   CELULARES MUY ANGOSTOS
+===================================================== */
+
+@media (max-width: 380px) {
+
+    .viewer-controls {
+
+        left: 6px;
+        right: 6px;
+
+        gap: 2px;
+
+        padding: 4px;
+
+    }
+
+
+    .viewer-button {
+
+        padding: 0 2px;
+
+        font-size: 9px;
+
+    }
+
+
+    .tool-panel {
+
+        left: 6px;
+        right: 6px;
+
+        gap: 4px;
+
+        padding: 6px;
+
+    }
+
+
+    .axis-button {
+
+        width: 29px;
+
+    }
+
+
+    .slider-value {
+
+        width: 29px;
+
+        flex-basis: 29px;
+
+    }
+
+}
