@@ -2,97 +2,98 @@
    DOM
 ===================================================== */
 
-const canvas =
-    document.getElementById("renderCanvas");
+const canvas = document.getElementById("renderCanvas");
 
-const loadingScreen =
-    document.getElementById("loadingScreen");
+const loadingScreen = document.getElementById("loadingScreen");
+const loadingProgress = document.getElementById("loadingProgress");
+const loadingPercent = document.getElementById("loadingPercent");
+const errorMessage = document.getElementById("errorMessage");
+const modelName = document.getElementById("modelName");
 
-const loadingProgress =
-    document.getElementById("loadingProgress");
+const rotateButton = document.getElementById("rotateButton");
+const resetButton = document.getElementById("resetButton");
+const fullscreenButton = document.getElementById("fullscreenButton");
 
-const loadingPercent =
-    document.getElementById("loadingPercent");
+const frontButton = document.getElementById("frontButton");
+const sideButton = document.getElementById("sideButton");
+const topButton = document.getElementById("topButton");
 
-const errorMessage =
-    document.getElementById("errorMessage");
+const cutButton = document.getElementById("cutButton");
+const cutPanel = document.getElementById("cutPanel");
+const cutSlider = document.getElementById("cutSlider");
+const cutValue = document.getElementById("cutValue");
+const cutReset = document.getElementById("cutReset");
 
-const modelName =
-    document.getElementById("modelName");
+const lightButton = document.getElementById("lightButton");
+const lightPanel = document.getElementById("lightPanel");
+const lightSlider = document.getElementById("lightSlider");
+const lightValue = document.getElementById("lightValue");
 
+const publishButton = document.getElementById("publishButton");
 
-const rotateButton =
-    document.getElementById("rotateButton");
+const axisButtons = document.querySelectorAll(".axis-button");
+const viewButtons = document.querySelectorAll(".view-button");
 
-const resetButton =
-    document.getElementById("resetButton");
+const interactionHelp = document.getElementById("interactionHelp");
 
-const fullscreenButton =
-    document.getElementById("fullscreenButton");
-
-
-const frontButton =
-    document.getElementById("frontButton");
-
-const sideButton =
-    document.getElementById("sideButton");
-
-const topButton =
-    document.getElementById("topButton");
-
-
-const cutButton =
-    document.getElementById("cutButton");
-
-const cutPanel =
-    document.getElementById("cutPanel");
-
-const cutSlider =
-    document.getElementById("cutSlider");
-
-const cutValue =
-    document.getElementById("cutValue");
-
-const cutReset =
-    document.getElementById("cutReset");
+const replaceFileButton = document.getElementById("replaceFileButton");
+const replaceFileInput = document.getElementById("replaceFileInput");
 
 
-const lightButton =
-    document.getElementById("lightButton");
+/* =====================================================
+   CONFIGURACIÓN VISUAL
+===================================================== */
 
-const lightPanel =
-    document.getElementById("lightPanel");
+/*
+Plano Blueprint
+*/
 
-const lightSlider =
-    document.getElementById("lightSlider");
+const CUT_PLANE_COLOR_HEX = "#1e78b3";
 
-const lightValue =
-    document.getElementById("lightValue");
-
-
-const publishButton =
-    document.getElementById("publishButton");
+const CUT_PLANE_OPACITY = 1;
 
 
-const axisButtons =
-    document.querySelectorAll(".axis-button");
+/*
+El plano es SIEMPRE cuadrado.
 
-const viewButtons =
-    document.querySelectorAll(".view-button");
+Su lado se calcula tomando la dimensión
+más grande del bounding box + 15%.
+*/
 
-const interactionHelp =
-    document.getElementById(
-        "interactionHelp"
-    );
-const replaceFileButton =
-    document.getElementById(
-        "replaceFileButton"
-    );
+const CUT_PLANE_SIZE_FACTOR = 1.15;
 
-const replaceFileInput =
-    document.getElementById(
-        "replaceFileInput"
-    );
+
+/*
+Modelo durante el corte.
+*/
+
+const CUT_MODEL_OPACITY = 0.20;
+
+
+/*
+Contorno de intersección en perspectiva.
+*/
+
+const SECTION_BORDER_COLOR =
+    BABYLON.Color3.FromHexString("#2664EB");
+
+
+/*
+Contorno de intersección cuando aparece
+el plano Blueprint.
+*/
+
+const SECTION_BORDER_ORTHO_COLOR =
+    BABYLON.Color3.FromHexString("#FFFFFF");
+
+
+/*
+Guía punteada en perspectiva.
+*/
+
+const CUT_GUIDE_COLOR =
+    BABYLON.Color3.FromHexString("#100F0F");
+
 
 /* =====================================================
    INDEXED DB
@@ -100,183 +101,170 @@ const replaceFileInput =
 
 function openDatabase() {
 
-    return new Promise(
-        (resolve, reject) => {
+    return new Promise((resolve, reject) => {
 
-            const request =
-                indexedDB.open(
-                    "renderizaDB",
-                    1
+        const request =
+            indexedDB.open(
+                "renderizaDB",
+                1
+            );
+
+
+        request.onupgradeneeded = event => {
+
+            const db =
+                event.target.result;
+
+
+            if (
+                !db.objectStoreNames.contains(
+                    "models"
+                )
+            ) {
+
+                db.createObjectStore(
+                    "models"
                 );
 
+            }
 
-            request.onupgradeneeded =
-                event => {
-
-                    const db =
-                        event.target.result;
+        };
 
 
-                    if (
-                        !db.objectStoreNames
-                            .contains("models")
-                    ) {
+        request.onsuccess = () => {
 
-                        db.createObjectStore(
-                            "models"
-                        );
+            resolve(
+                request.result
+            );
 
-                    }
-
-                };
+        };
 
 
-            request.onsuccess =
-                () => {
+        request.onerror = () => {
 
-                    resolve(
-                        request.result
-                    );
+            reject(
+                request.error
+            );
 
-                };
+        };
 
-
-            request.onerror =
-                () => {
-
-                    reject(
-                        request.error
-                    );
-
-                };
-
-        }
-    );
+    });
 
 }
+
 
 /* =====================================================
    GUARDAR NUEVO MODELO
 ===================================================== */
 
-async function replaceStoredModel(
-    file
-) {
+async function replaceStoredModel(file) {
 
     const db =
         await openDatabase();
 
 
-    return new Promise(
-        (resolve, reject) => {
+    return new Promise((resolve, reject) => {
 
-            const transaction =
-                db.transaction(
-                    "models",
-                    "readwrite"
-                );
-
-
-            const store =
-                transaction.objectStore(
-                    "models"
-                );
-
-
-            store.put(
-
-                {
-
-                    file: file,
-
-                    name: file.name,
-
-                    size: file.size,
-
-                    savedAt:
-                        Date.now()
-
-                },
-
-                "currentModel"
-
+        const transaction =
+            db.transaction(
+                "models",
+                "readwrite"
             );
 
 
-            transaction.oncomplete =
-                () => {
-
-                    db.close();
-
-                    resolve();
-
-                };
+        const store =
+            transaction.objectStore(
+                "models"
+            );
 
 
-            transaction.onerror =
-                () => {
+        store.put(
 
-                    reject(
-                        transaction.error
-                    );
+            {
+                file: file,
+                name: file.name,
+                size: file.size,
+                savedAt: Date.now()
+            },
 
-                };
+            "currentModel"
 
-        }
-    );
+        );
+
+
+        transaction.oncomplete = () => {
+
+            db.close();
+
+            resolve();
+
+        };
+
+
+        transaction.onerror = () => {
+
+            reject(
+                transaction.error
+            );
+
+        };
+
+    });
 
 }
+
+
+/* =====================================================
+   OBTENER MODELO
+===================================================== */
+
 async function getCurrentModel() {
 
     const db =
         await openDatabase();
 
 
-    return new Promise(
-        (resolve, reject) => {
+    return new Promise((resolve, reject) => {
 
-            const transaction =
-                db.transaction(
-                    "models",
-                    "readonly"
-                );
-
-
-            const store =
-                transaction.objectStore(
-                    "models"
-                );
+        const transaction =
+            db.transaction(
+                "models",
+                "readonly"
+            );
 
 
-            const request =
-                store.get(
-                    "currentModel"
-                );
+        const store =
+            transaction.objectStore(
+                "models"
+            );
 
 
-            request.onsuccess =
-                () => {
-
-                    db.close();
-
-                    resolve(
-                        request.result
-                    );
-
-                };
+        const request =
+            store.get(
+                "currentModel"
+            );
 
 
-            request.onerror =
-                () => {
+        request.onsuccess = () => {
 
-                    reject(
-                        request.error
-                    );
+            db.close();
 
-                };
+            resolve(
+                request.result
+            );
 
-        }
-    );
+        };
+
+
+        request.onerror = () => {
+
+            reject(
+                request.error
+            );
+
+        };
+
+    });
 
 }
 
@@ -345,32 +333,13 @@ camera.attachControl(
 );
 
 
-/* =====================================================
-   NAVEGACIÓN DE CÁMARA
-===================================================== */
-
 camera.panningSensibility = 0;
 
+camera.wheelDeltaPercentage = 0.01;
 
-/*
-El zoom pasa a ser proporcional a la distancia
-de cámara.
+camera.pinchDeltaPercentage = 0.01;
 
-Esto hace que se sienta parecido tanto en
-un objeto pequeño como en uno enorme.
-*/
-
-camera.wheelDeltaPercentage =
-    0.01;
-
-
-camera.pinchDeltaPercentage =
-    0.01;
-
-
-camera.lowerBetaLimit =
-    0.02;
-
+camera.lowerBetaLimit = 0.02;
 
 camera.upperBetaLimit =
     Math.PI - 0.02;
@@ -455,9 +424,7 @@ const LIGHT_BASE = {
 };
 
 
-function setLightIntensity(
-    percent
-) {
+function setLightIntensity(percent) {
 
     const factor =
         percent / 100;
@@ -535,6 +502,23 @@ let modelDimensions = {
 };
 
 
+/*
+Vista actual:
+
+null   = perspectiva
+front  = frontal
+side   = lateral
+top    = superior
+*/
+
+let activePresetView =
+    null;
+
+
+/* =====================================================
+   CUT STATE
+===================================================== */
+
 let cutAxis =
     "x";
 
@@ -543,13 +527,122 @@ let cutEnabled =
     false;
 
 
+let currentCutPoint =
+    BABYLON.Vector3.Zero();
+
+
+/* =====================================================
+   PLANO BLUEPRINT
+===================================================== */
+
+let cutVisualPlane =
+    null;
+
+
+let cutVisualMaterial =
+    null;
+
+
+/* =====================================================
+   CONTORNO
+===================================================== */
+
+let sectionBorderMesh =
+    null;
+
+
+/* =====================================================
+   GUÍA PUNTEADA
+===================================================== */
+
+let cutGuideMesh =
+    null;
+
+
+let cutGuideArrows =
+    null;
+
+
+/* =====================================================
+   CACHE GEOMETRÍA
+===================================================== */
+
+let sectionGeometryCache =
+    [];
+
+
+/* =====================================================
+   MATERIALES
+===================================================== */
+
+const originalMaterialStates =
+    new Map();
+
+
+/* =====================================================
+   VISIBILIDAD
+===================================================== */
+
+let cutOpacityMeshes =
+    [];
+
+
+const originalMeshVisibility =
+    new Map();
+
+
+/* =====================================================
+   FRAME UPDATE
+===================================================== */
+
+let sectionUpdateFrame =
+    null;
+
+
+/* =====================================================
+   VIEW HELPERS
+===================================================== */
+
+function isPresetViewActive() {
+
+    return (
+
+        activePresetView === "front" ||
+
+        activePresetView === "side" ||
+
+        activePresetView === "top"
+
+    );
+
+}
+
+
+/* =====================================================
+   COLOR DEL CONTORNO
+===================================================== */
+
+function getCurrentSectionBorderColor() {
+
+    if (
+        isPresetViewActive()
+    ) {
+
+        return SECTION_BORDER_ORTHO_COLOR;
+
+    }
+
+
+    return SECTION_BORDER_COLOR;
+
+}
+
+
 /* =====================================================
    LOADING UI
 ===================================================== */
 
-function setLoadingFakeProgress(
-    percent
-) {
+function setLoadingFakeProgress(percent) {
 
     const safePercent =
         Math.max(
@@ -562,13 +655,15 @@ function setLoadingFakeProgress(
 
 
     loadingProgress.style.width =
-        safePercent + "%";
+        safePercent +
+        "%";
 
 
     loadingPercent.textContent =
         Math.round(
             safePercent
-        ) + "%";
+        ) +
+        "%";
 
 }
 
@@ -621,18 +716,9 @@ async function loadUserModel() {
             );
 
 
-        /* -----------------------------------------
-           IMPORTANTE
-
-           Pasamos el File directamente a Babylon.
-
-           NO usamos:
-           URL.createObjectURL()
-           blob:
-        ------------------------------------------ */
-
-
-        setLoadingFakeProgress(10);
+        setLoadingFakeProgress(
+            10
+        );
 
 
         BABYLON.SceneLoader.ImportMesh(
@@ -649,44 +735,49 @@ async function loadUserModel() {
             /* SUCCESS */
 
             function (
-    meshes,
-    particleSystems,
-    skeletons,
-    animationGroups,
-    transformNodes
-) {
 
-    setLoadingFakeProgress(
-        90
-    );
+                meshes,
+
+                particleSystems,
+
+                skeletons,
+
+                animationGroups,
+
+                transformNodes
+
+            ) {
+
+                setLoadingFakeProgress(
+                    90
+                );
 
 
-    prepareLoadedModel(
-        meshes,
-        animationGroups,
-        transformNodes
-    );
+                prepareLoadedModel(
 
-},
+                    meshes,
+
+                    animationGroups,
+
+                    transformNodes
+
+                );
+
+            },
 
 
             /* PROGRESS */
 
-            function (
-                event
-            ) {
-
-                /*
-                Con archivos locales el navegador
-                puede no informar event.total.
-
-                Si existe, usamos el porcentaje real.
-                */
+            function (event) {
 
                 if (
+
                     event &&
+
                     event.lengthComputable &&
+
                     event.total > 0
+
                 ) {
 
                     const percent =
@@ -694,7 +785,11 @@ async function loadUserModel() {
                         (
                             event.loaded /
                             event.total
-                        ) * 80 + 10;
+                        )
+
+                        * 80 +
+
+                        10;
 
 
                     setLoadingFakeProgress(
@@ -705,19 +800,16 @@ async function loadUserModel() {
 
                 else {
 
-                    /*
-                    Evitamos que la pantalla quede
-                    visualmente clavada en 0%.
-                    */
-
                     const current =
                         Number(
+
                             loadingPercent
                                 .textContent
                                 .replace(
                                     "%",
                                     ""
                                 )
+
                         ) || 10;
 
 
@@ -726,7 +818,10 @@ async function loadUserModel() {
                     ) {
 
                         setLoadingFakeProgress(
-                            current + 3
+
+                            current +
+                            3
+
                         );
 
                     }
@@ -739,15 +834,23 @@ async function loadUserModel() {
             /* ERROR */
 
             function (
+
                 scene,
+
                 message,
+
                 exception
+
             ) {
 
                 console.error(
+
                     "Error cargando GLB:",
+
                     message,
+
                     exception
+
                 );
 
 
@@ -764,9 +867,7 @@ async function loadUserModel() {
 
     }
 
-    catch (
-        error
-    ) {
+    catch (error) {
 
         console.error(
             "Error:",
@@ -787,9 +888,7 @@ async function loadUserModel() {
    ERROR
 ===================================================== */
 
-function showLoadError(
-    message
-) {
+function showLoadError(message) {
 
     console.error(
         message
@@ -798,7 +897,9 @@ function showLoadError(
 
     loadingScreen
         .classList
-        .add("hidden");
+        .add(
+            "hidden"
+        );
 
 
     errorMessage.textContent =
@@ -807,25 +908,26 @@ function showLoadError(
 
     errorMessage
         .classList
-        .add("visible");
+        .add(
+            "visible"
+        );
 
 }
 
 
 /* =====================================================
-   PREPARE MODEL
-===================================================== */
-
-/* =====================================================
-   PREPARAR Y AUTO-CENTRAR MODELO
+   PREPARAR / AUTO-CENTRAR MODELO
 ===================================================== */
 
 function prepareLoadedModel(
-    meshes,
-    animationGroups,
-    transformNodes = []
-) {
 
+    meshes,
+
+    animationGroups,
+
+    transformNodes = []
+
+) {
 
     /* =================================================
        VALIDAR
@@ -868,10 +970,7 @@ function prepareLoadedModel(
 
 
     /* =================================================
-       CREAR UN CENTRO VISUAL PROPIO
-
-       El pivot original del archivo deja
-       de importar para la navegación.
+       JERARQUÍA
     ================================================= */
 
     const importedNodes = [
@@ -888,14 +987,6 @@ function prepareLoadedModel(
             importedNodes
         );
 
-
-    /*
-    Buscamos solamente los nodos superiores
-    de la jerarquía importada.
-
-    Así no destruimos la jerarquía interna
-    del GLB.
-    */
 
     const rootNodes =
         importedNodes.filter(
@@ -915,11 +1006,6 @@ function prepareLoadedModel(
         );
 
 
-    /*
-    Colgamos esos nodos del centro visual
-    creado por renderiza.me.
-    */
-
     rootNodes.forEach(
         node => {
 
@@ -931,7 +1017,7 @@ function prepareLoadedModel(
 
 
     /* =================================================
-       CALCULAR BOUNDING BOX REAL
+       BOUNDING BOX
     ================================================= */
 
     let minimum =
@@ -965,12 +1051,6 @@ function prepareLoadedModel(
     meshes.forEach(
         mesh => {
 
-
-            /*
-            Ignoramos nodos vacíos que algunos
-            exportadores crean como root.
-            */
-
             if (
                 !mesh.getBoundingInfo
             ) {
@@ -981,8 +1061,11 @@ function prepareLoadedModel(
 
 
             if (
+
                 mesh.getTotalVertices &&
+
                 mesh.getTotalVertices() === 0
+
             ) {
 
                 return;
@@ -1032,6 +1115,7 @@ function prepareLoadedModel(
     ================================================= */
 
     if (
+
         validMeshCount === 0 ||
 
         !Number.isFinite(
@@ -1041,6 +1125,7 @@ function prepareLoadedModel(
         !Number.isFinite(
             maximum.x
         )
+
     ) {
 
         showLoadError(
@@ -1053,11 +1138,10 @@ function prepareLoadedModel(
 
 
     /* =================================================
-       CENTRO GEOMÉTRICO
+       CENTRO
     ================================================= */
 
     const center =
-
         minimum
             .add(maximum)
             .scale(0.5);
@@ -1068,9 +1152,10 @@ function prepareLoadedModel(
     ================================================= */
 
     const dimensions =
-
         maximum
-            .subtract(minimum);
+            .subtract(
+                minimum
+            );
 
 
     modelDimensions = {
@@ -1097,10 +1182,7 @@ function prepareLoadedModel(
 
 
     /* =================================================
-       MOVER CENTRO VISUAL A 0,0,0
-
-       ÉSTA ES LA PARTE QUE HACE QUE
-       EL PIVOT ORIGINAL NO IMPORTE.
+       AUTO-CENTRAR
     ================================================= */
 
     modelRoot.position.set(
@@ -1119,8 +1201,34 @@ function prepareLoadedModel(
     );
 
 
+    meshes.forEach(
+        mesh => {
+
+            if (
+                mesh.computeWorldMatrix
+            ) {
+
+                mesh.computeWorldMatrix(
+                    true
+                );
+
+            }
+
+        }
+    );
+
+
     /* =================================================
-       CÁMARA APUNTA AL CENTRO VISUAL
+       PREPARAR CUTTING
+    ================================================= */
+
+    prepareCutSystem(
+        meshes
+    );
+
+
+    /* =================================================
+       CÁMARA
     ================================================= */
 
     camera.setTarget(
@@ -1128,47 +1236,38 @@ function prepareLoadedModel(
     );
 
 
-    /* =================================================
-       CALCULAR RADIO DEL MODELO
-    ================================================= */
-
     const boundingRadius =
-
         Math.max(
 
-            dimensions.length() / 2,
+            dimensions.length() /
+            2,
 
             0.000001
 
         );
 
 
-    /* =================================================
-       CALCULAR FOV REAL SEGÚN PANTALLA
-
-       En celular la pantalla es angosta,
-       por eso también consideramos el
-       FOV horizontal.
-    ================================================= */
-
     const renderWidth =
-
         Math.max(
+
             engine.getRenderWidth(),
+
             1
+
         );
 
 
     const renderHeight =
-
         Math.max(
+
             engine.getRenderHeight(),
+
             1
+
         );
 
 
     const aspect =
-
         renderWidth /
         renderHeight;
 
@@ -1180,23 +1279,22 @@ function prepareLoadedModel(
     const horizontalFov =
 
         2 *
+
         Math.atan(
 
             Math.tan(
-                verticalFov / 2
-            ) *
+                verticalFov /
+                2
+            )
+
+            *
 
             aspect
 
         );
 
 
-    /*
-    Usamos el ángulo más restrictivo.
-    */
-
     const limitingFov =
-
         Math.min(
 
             verticalFov,
@@ -1206,33 +1304,28 @@ function prepareLoadedModel(
         );
 
 
-    /* =================================================
-       DISTANCIA AUTOMÁTICA DE CÁMARA
-    ================================================= */
-
     let fittedRadius =
 
         boundingRadius /
 
         Math.sin(
-            limitingFov / 2
+            limitingFov /
+            2
         );
 
-
-    /*
-    Margen visual del 18%.
-    */
 
     fittedRadius *=
         1.18;
 
 
     if (
+
         !Number.isFinite(
             fittedRadius
         ) ||
 
         fittedRadius <= 0
+
     ) {
 
         fittedRadius =
@@ -1241,23 +1334,11 @@ function prepareLoadedModel(
     }
 
 
-    /* =================================================
-       POSICIÓN INICIAL
-    ================================================= */
-
     camera.radius =
         fittedRadius;
 
 
-    /* =================================================
-       ZOOM MÍNIMO
-
-       Se calcula respecto del tamaño
-       del objeto.
-    ================================================= */
-
     camera.lowerRadiusLimit =
-
         Math.max(
 
             boundingRadius *
@@ -1268,25 +1349,12 @@ function prepareLoadedModel(
         );
 
 
-    /* =================================================
-       ZOOM MÁXIMO
-    ================================================= */
-
     camera.upperRadiusLimit =
-
         fittedRadius *
         10;
 
 
-    /* =================================================
-       PLANOS DE CÁMARA
-
-       También se adaptan automáticamente
-       a la escala del GLB.
-    ================================================= */
-
     camera.minZ =
-
         Math.max(
 
             boundingRadius /
@@ -1298,7 +1366,6 @@ function prepareLoadedModel(
 
 
     camera.maxZ =
-
         Math.max(
 
             fittedRadius *
@@ -1308,10 +1375,6 @@ function prepareLoadedModel(
 
         );
 
-
-    /* =================================================
-       GUARDAR ESTADO PARA "CENTRAR"
-    ================================================= */
 
     initialCamera = {
 
@@ -1329,10 +1392,6 @@ function prepareLoadedModel(
 
     };
 
-
-    /* =================================================
-       DEBUG ÚTIL
-    ================================================= */
 
     console.log(
         "renderiza.me — Modelo cargado"
@@ -1384,11 +1443,10 @@ function prepareLoadedModel(
         },
 
         250
+
     );
 
 }
-
-
 
 
 /* =====================================================
@@ -1414,14 +1472,54 @@ scene.onBeforeRenderObservable.add(
 
 
 /* =====================================================
-   USER INTERACTION
+   SALIR DE VISTA PREDEFINIDA
+===================================================== */
+
+function leavePresetView() {
+
+    activePresetView =
+        null;
+
+
+    viewButtons.forEach(
+        button => {
+
+            button
+                .classList
+                .remove(
+                    "active"
+                );
+
+        }
+    );
+
+
+    /*
+    Al volver a perspectiva:
+
+    - desaparece Blueprint
+    - contorno vuelve a azul
+    - reaparece guía punteada
+    */
+
+    if (
+        cutEnabled
+    ) {
+
+        updateCutPlane();
+
+    }
+
+}
+
+
+/* =====================================================
+   INTERACCIÓN CON CANVAS
 ===================================================== */
 
 canvas.addEventListener(
     "pointerdown",
     () => {
-
-        /* detener autorrotación */
 
         autoRotate =
             false;
@@ -1434,10 +1532,8 @@ canvas.addEventListener(
             );
 
 
-        clearViewButtons();
+        leavePresetView();
 
-
-        /* esconder cartel de ayuda */
 
         interactionHelp
             .classList
@@ -1450,7 +1546,7 @@ canvas.addEventListener(
 
 
 /* =====================================================
-   ROTATION BUTTON
+   AUTOROTATE BUTTON
 ===================================================== */
 
 rotateButton.addEventListener(
@@ -1464,9 +1560,21 @@ rotateButton.addEventListener(
         rotateButton
             .classList
             .toggle(
+
                 "active",
+
                 autoRotate
+
             );
+
+
+        if (
+            autoRotate
+        ) {
+
+            leavePresetView();
+
+        }
 
     }
 );
@@ -1490,13 +1598,55 @@ function clearViewButtons() {
         }
     );
 
+
+    activePresetView =
+        null;
+
 }
 
 
+/* =====================================================
+   SINCRONIZAR EJE
+===================================================== */
+
+function setCutAxisState(axis) {
+
+    cutAxis =
+        axis;
+
+
+    axisButtons.forEach(
+        button => {
+
+            button.classList.toggle(
+
+                "active",
+
+                button.dataset.axis ===
+                    axis
+
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   CAMBIAR VISTA
+===================================================== */
+
 function setView(
+
     alpha,
+
     beta,
-    button
+
+    button,
+
+    viewName
+
 ) {
 
     autoRotate =
@@ -1526,14 +1676,81 @@ function setView(
     clearViewButtons();
 
 
+    activePresetView =
+        viewName;
+
+
     button
         .classList
         .add(
             "active"
         );
 
+
+    /*
+    IMPORTANTE:
+
+    Frontal
+        cámara mira eje Z
+        corte Z
+        plano XY
+
+    Lateral
+        cámara mira eje X
+        corte X
+        plano YZ
+
+    Superior
+        cámara mira eje Y
+        corte Y
+        plano XZ
+    */
+
+    if (
+        viewName === "front"
+    ) {
+
+        setCutAxisState(
+            "z"
+        );
+
+    }
+
+    else if (
+        viewName === "side"
+    ) {
+
+        setCutAxisState(
+            "x"
+        );
+
+    }
+
+    else if (
+        viewName === "top"
+    ) {
+
+        setCutAxisState(
+            "y"
+        );
+
+    }
+
+
+    if (
+        cutEnabled
+    ) {
+
+        updateCutPlane();
+
+    }
+
 }
 
+
+/* =====================================================
+   FRONTAL
+===================================================== */
 
 frontButton.addEventListener(
     "click",
@@ -1545,13 +1762,19 @@ frontButton.addEventListener(
 
             Math.PI / 2,
 
-            frontButton
+            frontButton,
+
+            "front"
 
         );
 
     }
 );
 
+
+/* =====================================================
+   LATERAL
+===================================================== */
 
 sideButton.addEventListener(
     "click",
@@ -1563,13 +1786,19 @@ sideButton.addEventListener(
 
             Math.PI / 2,
 
-            sideButton
+            sideButton,
+
+            "side"
 
         );
 
     }
 );
 
+
+/* =====================================================
+   SUPERIOR
+===================================================== */
 
 topButton.addEventListener(
     "click",
@@ -1579,9 +1808,11 @@ topButton.addEventListener(
 
             -Math.PI / 2,
 
-            .02,
+            0.02,
 
-            topButton
+            topButton,
+
+            "top"
 
         );
 
@@ -1609,59 +1840,129 @@ function closePanels() {
         );
 
 
-    cutButton
-        .classList
-        .remove(
-            "active"
-        );
-
-
     lightButton
         .classList
         .remove(
             "active"
         );
 
+
+    /*
+    El estado visual del botón Cortes
+    depende del estado REAL del clipping.
+    */
+
+    cutButton.classList.toggle(
+
+        "active",
+
+        cutEnabled
+
+    );
+
 }
 
+
+/* =====================================================
+   BOTÓN CORTES
+
+   Ahora sí activa/desactiva TODO.
+===================================================== */
 
 cutButton.addEventListener(
     "click",
     () => {
 
-        const open =
-            cutPanel
-                .classList
-                .contains(
-                    "visible"
-                );
-
-
-        closePanels();
-
+        /* =============================================
+           SI ESTÁ ACTIVO -> DESACTIVAR
+        ============================================= */
 
         if (
-            !open
+            cutEnabled
         ) {
+
+            cutEnabled =
+                false;
+
 
             cutPanel
                 .classList
-                .add(
+                .remove(
                     "visible"
                 );
 
 
             cutButton
                 .classList
-                .add(
+                .remove(
                     "active"
                 );
 
+
+            /*
+            Esto restaura:
+
+            - clipping
+            - opacidad
+            - Double Side
+            - borde
+            - guía
+            - plano Blueprint
+            */
+
+            updateCutPlane();
+
+
+            return;
+
         }
+
+
+        /* =============================================
+           ACTIVAR
+        ============================================= */
+
+        cutEnabled =
+            true;
+
+
+        lightPanel
+            .classList
+            .remove(
+                "visible"
+            );
+
+
+        lightButton
+            .classList
+            .remove(
+                "active"
+            );
+
+
+        cutPanel
+            .classList
+            .add(
+                "visible"
+            );
+
+
+        cutButton
+            .classList
+            .add(
+                "active"
+            );
+
+
+        updateCutPlane();
 
     }
 );
 
+
+/* =====================================================
+   LIGHT BUTTON
+===================================================== */
 
 lightButton.addEventListener(
     "click",
@@ -1702,53 +2003,1195 @@ lightButton.addEventListener(
 
 
 /* =====================================================
-   CUT
+   PREPARAR SISTEMA DE CORTE
 ===================================================== */
 
-function updateCutPlane() {
+function prepareCutSystem(meshes) {
+
+    sectionGeometryCache =
+        [];
+
+
+    originalMaterialStates.clear();
+
+
+    cutOpacityMeshes =
+        [];
+
+
+    originalMeshVisibility.clear();
+
+
+    meshes.forEach(
+        mesh => {
+
+            if (
+
+                !mesh ||
+
+                !mesh.getVerticesData ||
+
+                !mesh.getTotalVertices
+
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                mesh.getTotalVertices() === 0
+            ) {
+
+                return;
+
+            }
+
+
+            /* =========================================
+               VISIBILIDAD
+            ========================================= */
+
+            cutOpacityMeshes.push(
+                mesh
+            );
+
+
+            originalMeshVisibility.set(
+
+                mesh,
+
+                mesh.visibility
+
+            );
+
+
+            /* =========================================
+               MATERIAL
+            ========================================= */
+
+            collectCutMaterials(
+                mesh.material
+            );
+
+
+            /* =========================================
+               POSICIONES
+            ========================================= */
+
+            const positions =
+                mesh.getVerticesData(
+
+                    BABYLON.VertexBuffer
+                        .PositionKind
+
+                );
+
+
+            if (
+                !positions ||
+                positions.length === 0
+            ) {
+
+                return;
+
+            }
+
+
+            /* =========================================
+               ÍNDICES
+            ========================================= */
+
+            let indices =
+                mesh.getIndices();
+
+
+            if (
+                !indices ||
+                indices.length === 0
+            ) {
+
+                indices =
+                    [];
+
+
+                const vertexCount =
+                    positions.length /
+                    3;
+
+
+                for (
+                    let i = 0;
+                    i < vertexCount;
+                    i++
+                ) {
+
+                    indices.push(
+                        i
+                    );
+
+                }
+
+            }
+
+
+            /* =========================================
+               MATRIZ WORLD
+            ========================================= */
+
+            mesh.computeWorldMatrix(
+                true
+            );
+
+
+            const worldMatrix =
+                mesh
+                    .getWorldMatrix()
+                    .clone();
+
+
+            /* =========================================
+               WORLD POSITIONS
+            ========================================= */
+
+            const worldPositions =
+                new Float32Array(
+                    positions.length
+                );
+
+
+            const source =
+                BABYLON.Vector3.Zero();
+
+
+            const transformed =
+                BABYLON.Vector3.Zero();
+
+
+            for (
+                let i = 0;
+                i < positions.length;
+                i += 3
+            ) {
+
+                source.set(
+
+                    positions[i],
+
+                    positions[i + 1],
+
+                    positions[i + 2]
+
+                );
+
+
+                BABYLON.Vector3
+                    .TransformCoordinatesToRef(
+
+                        source,
+
+                        worldMatrix,
+
+                        transformed
+
+                    );
+
+
+                worldPositions[i] =
+                    transformed.x;
+
+
+                worldPositions[i + 1] =
+                    transformed.y;
+
+
+                worldPositions[i + 2] =
+                    transformed.z;
+
+            }
+
+
+            sectionGeometryCache.push({
+
+                positions:
+                    worldPositions,
+
+                indices:
+                    Array.from(
+                        indices
+                    )
+
+            });
+
+        }
+    );
+
+
+    /*
+    Grupo 2 para contornos y guías.
+    */
+
+    scene.setRenderingAutoClearDepthStencil(
+
+        2,
+
+        true,
+
+        true,
+
+        false
+
+    );
+
+}
+
+
+/* =====================================================
+   RECOLECTAR MATERIALES
+===================================================== */
+
+function collectCutMaterials(material) {
 
     if (
-        !cutEnabled
+        !material
     ) {
-
-        scene.clipPlane =
-            null;
 
         return;
 
     }
 
 
-    const percent =
+    if (
 
-        Number(
-            cutSlider.value
-        ) / 100;
+        material.subMaterials &&
+
+        material.subMaterials.length
+
+    ) {
+
+        material.subMaterials.forEach(
+            subMaterial => {
+
+                collectCutMaterials(
+                    subMaterial
+                );
+
+            }
+        );
 
 
-    let dimension;
+        return;
+
+    }
+
+
+    if (
+        originalMaterialStates.has(
+            material
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    originalMaterialStates.set(
+
+        material,
+
+        {
+
+            backFaceCulling:
+                material.backFaceCulling,
+
+            twoSidedLighting:
+                material.twoSidedLighting
+
+        }
+
+    );
+
+}
+
+
+/* =====================================================
+   DOUBLE SIDE
+===================================================== */
+
+function setCutDoubleSided(enabled) {
+
+    originalMaterialStates.forEach(
+        (
+            originalState,
+            material
+        ) => {
+
+            if (
+                enabled
+            ) {
+
+                material.backFaceCulling =
+                    false;
+
+
+                if (
+                    "twoSidedLighting"
+                    in material
+                ) {
+
+                    material.twoSidedLighting =
+                        true;
+
+                }
+
+            }
+
+            else {
+
+                material.backFaceCulling =
+                    originalState
+                        .backFaceCulling;
+
+
+                if (
+                    "twoSidedLighting"
+                    in material
+                ) {
+
+                    material.twoSidedLighting =
+                        originalState
+                            .twoSidedLighting;
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   OPACIDAD MODELO
+===================================================== */
+
+function setCutModelOpacity(enabled) {
+
+    cutOpacityMeshes.forEach(
+        mesh => {
+
+            const originalVisibility =
+                originalMeshVisibility.get(
+                    mesh
+                );
+
+
+            if (
+                originalVisibility ===
+                undefined
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                enabled
+            ) {
+
+                mesh.visibility =
+
+                    originalVisibility *
+
+                    CUT_MODEL_OPACITY;
+
+            }
+
+            else {
+
+                mesh.visibility =
+                    originalVisibility;
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   OVERLAY SIN CLIPPING
+===================================================== */
+
+function makeCutOverlay(
+
+    mesh,
+
+    renderingGroup = 2
+
+) {
+
+    if (
+        !mesh
+    ) {
+
+        return;
+
+    }
+
+
+    mesh.isPickable =
+        false;
+
+
+    mesh.renderingGroupId =
+        renderingGroup;
+
+
+    let previousClipPlane =
+        null;
+
+
+    mesh
+        .onBeforeRenderObservable
+        .add(
+            () => {
+
+                previousClipPlane =
+                    scene.clipPlane;
+
+
+                scene.clipPlane =
+                    null;
+
+            }
+        );
+
+
+    mesh
+        .onAfterRenderObservable
+        .add(
+            () => {
+
+                scene.clipPlane =
+                    previousClipPlane;
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+   DISTANCIA AL PLANO
+===================================================== */
+
+function planeDistanceXYZ(
+
+    x,
+
+    y,
+
+    z,
+
+    plane
+
+) {
+
+    return (
+
+        plane.normal.x *
+        x
+
+        +
+
+        plane.normal.y *
+        y
+
+        +
+
+        plane.normal.z *
+        z
+
+        +
+
+        plane.d
+
+    );
+
+}
+
+
+/* =====================================================
+   INTERSECCIÓN ARISTA / PLANO
+===================================================== */
+
+function intersectEdgeWithPlane(
+
+    ax,
+    ay,
+    az,
+
+    bx,
+    by,
+    bz,
+
+    distanceA,
+    distanceB,
+
+    epsilon
+
+) {
+
+    /*
+    Arista completamente sobre
+    el plano.
+    */
+
+    if (
+
+        Math.abs(distanceA) <=
+        epsilon
+
+        &&
+
+        Math.abs(distanceB) <=
+        epsilon
+
+    ) {
+
+        return null;
+
+    }
+
+
+    /*
+    Ambos puntos del mismo lado.
+    */
+
+    if (
+
+        (
+            distanceA > epsilon &&
+            distanceB > epsilon
+        )
+
+        ||
+
+        (
+            distanceA < -epsilon &&
+            distanceB < -epsilon
+        )
+
+    ) {
+
+        return null;
+
+    }
+
+
+    const denominator =
+        distanceA -
+        distanceB;
+
+
+    if (
+        Math.abs(denominator) <
+        epsilon
+    ) {
+
+        return null;
+
+    }
+
+
+    const t =
+        distanceA /
+        denominator;
+
+
+    if (
+        t < 0 ||
+        t > 1
+    ) {
+
+        return null;
+
+    }
+
+
+    return new BABYLON.Vector3(
+
+        ax +
+        (
+            bx - ax
+        ) * t,
+
+        ay +
+        (
+            by - ay
+        ) * t,
+
+        az +
+        (
+            bz - az
+        ) * t
+
+    );
+
+}
+
+
+/* =====================================================
+   PUNTO ÚNICO
+===================================================== */
+
+function addUniqueSectionPoint(
+
+    points,
+
+    point,
+
+    epsilon
+
+) {
+
+    if (
+        !point
+    ) {
+
+        return;
+
+    }
+
+
+    const epsilonSquared =
+        epsilon *
+        epsilon;
+
+
+    for (
+        const existing of points
+    ) {
+
+        if (
+
+            BABYLON.Vector3
+                .DistanceSquared(
+
+                    existing,
+
+                    point
+
+                )
+
+            <=
+
+            epsilonSquared
+
+        ) {
+
+            return;
+
+        }
+
+    }
+
+
+    points.push(
+        point
+    );
+
+}
+
+
+/* =====================================================
+   CALCULAR CONTORNO REAL
+===================================================== */
+
+function buildSectionBorder() {
+
+    if (
+        sectionBorderMesh
+    ) {
+
+        sectionBorderMesh.dispose();
+
+
+        sectionBorderMesh =
+            null;
+
+    }
+
+
+    if (
+
+        !cutEnabled ||
+
+        !scene.clipPlane
+
+    ) {
+
+        return;
+
+    }
+
+
+    const plane =
+        scene.clipPlane;
+
+
+    const maxDimension =
+        Math.max(
+
+            modelDimensions.x,
+
+            modelDimensions.y,
+
+            modelDimensions.z
+
+        );
+
+
+    const epsilon =
+        Math.max(
+
+            maxDimension *
+            0.000001,
+
+            0.00000001
+
+        );
+
+
+    const lines =
+        [];
+
+
+    sectionGeometryCache.forEach(
+        geometry => {
+
+            const positions =
+                geometry.positions;
+
+
+            const indices =
+                geometry.indices;
+
+
+            for (
+
+                let i = 0;
+
+                i + 2 <
+                indices.length;
+
+                i += 3
+
+            ) {
+
+                const i0 =
+                    indices[i] *
+                    3;
+
+
+                const i1 =
+                    indices[i + 1] *
+                    3;
+
+
+                const i2 =
+                    indices[i + 2] *
+                    3;
+
+
+                const ax =
+                    positions[i0];
+
+                const ay =
+                    positions[i0 + 1];
+
+                const az =
+                    positions[i0 + 2];
+
+
+                const bx =
+                    positions[i1];
+
+                const by =
+                    positions[i1 + 1];
+
+                const bz =
+                    positions[i1 + 2];
+
+
+                const cx =
+                    positions[i2];
+
+                const cy =
+                    positions[i2 + 1];
+
+                const cz =
+                    positions[i2 + 2];
+
+
+                const da =
+                    planeDistanceXYZ(
+
+                        ax,
+                        ay,
+                        az,
+                        plane
+
+                    );
+
+
+                const db =
+                    planeDistanceXYZ(
+
+                        bx,
+                        by,
+                        bz,
+                        plane
+
+                    );
+
+
+                const dc =
+                    planeDistanceXYZ(
+
+                        cx,
+                        cy,
+                        cz,
+                        plane
+
+                    );
+
+
+                /*
+                Triángulo completamente
+                de un lado.
+                */
+
+                if (
+
+                    (
+                        da > epsilon &&
+                        db > epsilon &&
+                        dc > epsilon
+                    )
+
+                    ||
+
+                    (
+                        da < -epsilon &&
+                        db < -epsilon &&
+                        dc < -epsilon
+                    )
+
+                ) {
+
+                    continue;
+
+                }
+
+
+                /*
+                Triángulo coplanar.
+                */
+
+                if (
+
+                    Math.abs(da) <= epsilon &&
+
+                    Math.abs(db) <= epsilon &&
+
+                    Math.abs(dc) <= epsilon
+
+                ) {
+
+                    continue;
+
+                }
+
+
+                const points =
+                    [];
+
+
+                addUniqueSectionPoint(
+
+                    points,
+
+                    intersectEdgeWithPlane(
+
+                        ax,
+                        ay,
+                        az,
+
+                        bx,
+                        by,
+                        bz,
+
+                        da,
+                        db,
+
+                        epsilon
+
+                    ),
+
+                    epsilon
+
+                );
+
+
+                addUniqueSectionPoint(
+
+                    points,
+
+                    intersectEdgeWithPlane(
+
+                        bx,
+                        by,
+                        bz,
+
+                        cx,
+                        cy,
+                        cz,
+
+                        db,
+                        dc,
+
+                        epsilon
+
+                    ),
+
+                    epsilon
+
+                );
+
+
+                addUniqueSectionPoint(
+
+                    points,
+
+                    intersectEdgeWithPlane(
+
+                        cx,
+                        cy,
+                        cz,
+
+                        ax,
+                        ay,
+                        az,
+
+                        dc,
+                        da,
+
+                        epsilon
+
+                    ),
+
+                    epsilon
+
+                );
+
+
+                if (
+                    points.length >= 2
+                ) {
+
+                    lines.push([
+
+                        points[0],
+
+                        points[1]
+
+                    ]);
+
+                }
+
+            }
+
+        }
+    );
+
+
+    if (
+        lines.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    sectionBorderMesh =
+        BABYLON.MeshBuilder
+            .CreateLineSystem(
+
+                "renderizaSectionBorder",
+
+                {
+                    lines:
+                        lines
+                },
+
+                scene
+
+            );
+
+
+    /*
+    Perspectiva -> azul
+    Vistas -> blanco
+    */
+
+    sectionBorderMesh.color =
+        getCurrentSectionBorderColor();
+
+
+    sectionBorderMesh.alpha =
+        1;
+
+
+    makeCutOverlay(
+
+        sectionBorderMesh,
+
+        2
+
+    );
+
+}
+
+
+/* =====================================================
+   ELIMINAR GUÍA
+===================================================== */
+
+function disposeCutGuide() {
+
+    if (
+        cutGuideMesh
+    ) {
+
+        cutGuideMesh.dispose();
+
+
+        cutGuideMesh =
+            null;
+
+    }
+
+
+    if (
+        cutGuideArrows
+    ) {
+
+        cutGuideArrows.dispose();
+
+
+        cutGuideArrows =
+            null;
+
+    }
+
+}
+
+
+/* =====================================================
+   LÍNEA PUNTEADA + FLECHAS
+
+   SOLO PERSPECTIVA
+===================================================== */
+
+function buildCutGuide(point) {
+
+    disposeCutGuide();
+
+
+    if (
+
+        !cutEnabled ||
+
+        isPresetViewActive()
+
+    ) {
+
+        return;
+
+    }
+
+
+    const maxDimension =
+        Math.max(
+
+            modelDimensions.x,
+
+            modelDimensions.y,
+
+            modelDimensions.z
+
+        );
+
+
+    const halfLength =
+        maxDimension *
+        0.70;
+
+
+    const offset =
+        maxDimension *
+        0.08;
+
+
+    let start;
+
+    let end;
 
     let normal;
 
 
-    const point =
-        BABYLON.Vector3.Zero();
-
+    /* =================================================
+       X
+    ================================================= */
 
     if (
         cutAxis === "x"
     ) {
 
-        dimension =
-            modelDimensions.x;
+        start =
+            new BABYLON.Vector3(
+
+                point.x,
+
+                modelDimensions.y /
+                2 +
+                offset,
+
+                -halfLength
+
+            );
 
 
-        point.x =
+        end =
+            new BABYLON.Vector3(
 
-            -dimension / 2 +
+                point.x,
 
-            dimension *
-            percent;
+                modelDimensions.y /
+                2 +
+                offset,
+
+                halfLength
+
+            );
 
 
         normal =
@@ -1760,21 +3203,41 @@ function updateCutPlane() {
 
     }
 
+
+    /* =================================================
+       Y
+    ================================================= */
 
     else if (
         cutAxis === "y"
     ) {
 
-        dimension =
-            modelDimensions.y;
+        start =
+            new BABYLON.Vector3(
+
+                -halfLength,
+
+                point.y,
+
+                modelDimensions.z /
+                2 +
+                offset
+
+            );
 
 
-        point.y =
+        end =
+            new BABYLON.Vector3(
 
-            -dimension / 2 +
+                halfLength,
 
-            dimension *
-            percent;
+                point.y,
+
+                modelDimensions.z /
+                2 +
+                offset
+
+            );
 
 
         normal =
@@ -1787,18 +3250,38 @@ function updateCutPlane() {
     }
 
 
+    /* =================================================
+       Z
+    ================================================= */
+
     else {
 
-        dimension =
-            modelDimensions.z;
+        start =
+            new BABYLON.Vector3(
+
+                -halfLength,
+
+                modelDimensions.y /
+                2 +
+                offset,
+
+                point.z
+
+            );
 
 
-        point.z =
+        end =
+            new BABYLON.Vector3(
 
-            -dimension / 2 +
+                halfLength,
 
-            dimension *
-            percent;
+                modelDimensions.y /
+                2 +
+                offset,
+
+                point.z
+
+            );
 
 
         normal =
@@ -1811,8 +3294,1058 @@ function updateCutPlane() {
     }
 
 
-    const d =
+    /* =================================================
+       DASHED LINE
+    ================================================= */
 
+    cutGuideMesh =
+        BABYLON.MeshBuilder
+            .CreateDashedLines(
+
+                "renderizaCutGuide",
+
+                {
+
+                    points: [
+                        start,
+                        end
+                    ],
+
+                    dashNb:
+                        24,
+
+                    dashSize:
+                        3,
+
+                    gapSize:
+                        2
+
+                },
+
+                scene
+
+            );
+
+
+    cutGuideMesh.color =
+        CUT_GUIDE_COLOR;
+
+
+    cutGuideMesh.alpha =
+        0.72;
+
+
+    makeCutOverlay(
+
+        cutGuideMesh,
+
+        2
+
+    );
+
+
+    /* =================================================
+       FLECHAS
+    ================================================= */
+
+    const direction =
+        end
+            .subtract(
+                start
+            )
+            .normalize();
+
+
+    let side =
+        BABYLON.Vector3.Cross(
+
+            normal,
+
+            direction
+
+        );
+
+
+    if (
+        side.lengthSquared() <
+        0.000001
+    ) {
+
+        side =
+            BABYLON.Vector3.Up();
+
+    }
+
+
+    side.normalize();
+
+
+    const arrowLength =
+        maxDimension *
+        0.055;
+
+
+    const arrowWidth =
+        arrowLength *
+        0.45;
+
+
+    const startOutDirection =
+        direction.scale(
+            -1
+        );
+
+
+    const startBase =
+        start.subtract(
+
+            startOutDirection
+                .scale(
+                    arrowLength
+                )
+
+        );
+
+
+    const endOutDirection =
+        direction;
+
+
+    const endBase =
+        end.subtract(
+
+            endOutDirection
+                .scale(
+                    arrowLength
+                )
+
+        );
+
+
+    const arrowLines = [
+
+        [
+            start,
+
+            startBase.add(
+                side.scale(
+                    arrowWidth
+                )
+            )
+        ],
+
+        [
+            start,
+
+            startBase.subtract(
+                side.scale(
+                    arrowWidth
+                )
+            )
+        ],
+
+        [
+            end,
+
+            endBase.add(
+                side.scale(
+                    arrowWidth
+                )
+            )
+        ],
+
+        [
+            end,
+
+            endBase.subtract(
+                side.scale(
+                    arrowWidth
+                )
+            )
+        ]
+
+    ];
+
+
+    cutGuideArrows =
+        BABYLON.MeshBuilder
+            .CreateLineSystem(
+
+                "renderizaCutGuideArrows",
+
+                {
+                    lines:
+                        arrowLines
+                },
+
+                scene
+
+            );
+
+
+    cutGuideArrows.color =
+        CUT_GUIDE_COLOR;
+
+
+    cutGuideArrows.alpha =
+        0.85;
+
+
+    makeCutOverlay(
+
+        cutGuideArrows,
+
+        2
+
+    );
+
+}
+
+
+/* =====================================================
+   GENERAR CUADRÍCULA BLUEPRINT
+
+   NO USA:
+   SVG
+   PNG
+   JPG
+   ASSETS
+
+   SE GENERA 100% POR CÓDIGO.
+===================================================== */
+
+function createBlueprintGridTexture() {
+
+    const textureSize =
+        1024;
+
+
+    const texture =
+        new BABYLON.DynamicTexture(
+
+            "renderizaBlueprintGrid",
+
+            {
+                width:
+                    textureSize,
+
+                height:
+                    textureSize
+            },
+
+            scene,
+
+            false
+
+        );
+
+
+    const ctx =
+        texture.getContext();
+
+
+    /* =================================================
+       FONDO
+    ================================================= */
+
+    ctx.clearRect(
+
+        0,
+
+        0,
+
+        textureSize,
+
+        textureSize
+
+    );
+
+
+    ctx.fillStyle =
+        CUT_PLANE_COLOR_HEX;
+
+
+    ctx.fillRect(
+
+        0,
+
+        0,
+
+        textureSize,
+
+        textureSize
+
+    );
+
+
+    /* =================================================
+       GRID
+    ================================================= */
+
+    const divisions =
+        24;
+
+
+    const step =
+        textureSize /
+        divisions;
+
+
+    for (
+        let i = 0;
+        i <= divisions;
+        i++
+    ) {
+
+        const position =
+            i *
+            step;
+
+
+        /*
+        Cada sexta línea:
+        línea principal.
+        */
+
+        const major =
+            i % 6 === 0;
+
+
+        ctx.beginPath();
+
+
+        ctx.strokeStyle =
+            major
+
+                ? "rgba(255,255,255,0.55)"
+
+                : "rgba(255,255,255,0.22)";
+
+
+        ctx.lineWidth =
+            major
+
+                ? 2
+
+                : 1;
+
+
+        /* vertical */
+
+        ctx.moveTo(
+
+            position,
+
+            0
+
+        );
+
+
+        ctx.lineTo(
+
+            position,
+
+            textureSize
+
+        );
+
+
+        /* horizontal */
+
+        ctx.moveTo(
+
+            0,
+
+            position
+
+        );
+
+
+        ctx.lineTo(
+
+            textureSize,
+
+            position
+
+        );
+
+
+        ctx.stroke();
+
+    }
+
+
+    texture.update(
+        false
+    );
+
+
+    return texture;
+
+}
+
+
+/* =====================================================
+   CREAR PLANO BLUEPRINT
+===================================================== */
+
+function createCutVisualPlane() {
+
+    if (
+        cutVisualPlane
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+    Plano base 1 x 1.
+
+    Después se escala uniformemente,
+    por lo que SIEMPRE será cuadrado.
+    */
+
+    cutVisualPlane =
+        BABYLON.MeshBuilder
+            .CreatePlane(
+
+                "renderizaCutVisualPlane",
+
+                {
+
+                    width:
+                        1,
+
+                    height:
+                        1,
+
+                    sideOrientation:
+                        BABYLON.Mesh.DOUBLESIDE
+
+                },
+
+                scene
+
+            );
+
+
+    cutVisualPlane.isPickable =
+        false;
+
+
+    const blueprintTexture =
+        createBlueprintGridTexture();
+
+
+    blueprintTexture.wrapU =
+        BABYLON.Texture.CLAMP_ADDRESSMODE;
+
+
+    blueprintTexture.wrapV =
+        BABYLON.Texture.CLAMP_ADDRESSMODE;
+
+
+    /* =================================================
+       MATERIAL
+    ================================================= */
+
+    cutVisualMaterial =
+        new BABYLON.StandardMaterial(
+
+            "renderizaCutVisualMaterial",
+
+            scene
+
+        );
+
+
+    /*
+    Textura creada por DynamicTexture.
+    */
+
+    cutVisualMaterial.diffuseTexture =
+        blueprintTexture;
+
+
+    cutVisualMaterial.emissiveTexture =
+        blueprintTexture;
+
+
+    cutVisualMaterial.diffuseColor =
+        BABYLON.Color3.White();
+
+
+    cutVisualMaterial.emissiveColor =
+        BABYLON.Color3.White();
+
+
+    cutVisualMaterial.specularColor =
+        BABYLON.Color3.Black();
+
+
+    cutVisualMaterial.disableLighting =
+        true;
+
+
+    cutVisualMaterial.alpha =
+        CUT_PLANE_OPACITY;
+
+
+    cutVisualMaterial.backFaceCulling =
+        false;
+
+
+    cutVisualMaterial.transparencyMode =
+        BABYLON.Material
+            .MATERIAL_ALPHABLEND;
+
+
+    /*
+    El plano no escribe profundidad.
+    */
+
+    cutVisualMaterial.disableDepthWrite =
+        true;
+
+
+    cutVisualPlane.material =
+        cutVisualMaterial;
+
+
+    cutVisualPlane.setEnabled(
+        false
+    );
+
+
+    /*
+    Plano = grupo 1
+    Contornos = grupo 2
+    */
+
+    makeCutOverlay(
+
+        cutVisualPlane,
+
+        1
+
+    );
+
+}
+
+
+/* =====================================================
+   ACTUALIZAR PLANO BLUEPRINT
+===================================================== */
+
+function updateCutVisualPlane(point) {
+
+    /*
+    Solo aparece si:
+
+    1. hay corte
+    2. estamos en vista
+       Frontal / Lateral / Superior
+    */
+
+    if (
+
+        !cutEnabled ||
+
+        !isPresetViewActive()
+
+    ) {
+
+        if (
+            cutVisualPlane
+        ) {
+
+            cutVisualPlane
+                .setEnabled(
+                    false
+                );
+
+        }
+
+
+        return;
+
+    }
+
+
+    if (
+        !cutVisualPlane
+    ) {
+
+        createCutVisualPlane();
+
+    }
+
+
+    cutVisualPlane.setEnabled(
+        true
+    );
+
+
+    /* =================================================
+       POSICIÓN
+    ================================================= */
+
+    cutVisualPlane.position.copyFrom(
+        point
+    );
+
+
+    /* =================================================
+       RESET ROTACIÓN
+    ================================================= */
+
+    cutVisualPlane.rotation.set(
+
+        0,
+
+        0,
+
+        0
+
+    );
+
+
+    /* =================================================
+       TAMAÑO
+
+       SIEMPRE CUADRADO.
+
+       mayor dimensión del bounding box
+       + 15%
+    ================================================= */
+
+    const largestBoundingEdge =
+        Math.max(
+
+            modelDimensions.x,
+
+            modelDimensions.y,
+
+            modelDimensions.z
+
+        );
+
+
+    const squareSize =
+        largestBoundingEdge *
+        CUT_PLANE_SIZE_FACTOR;
+
+
+    cutVisualPlane.scaling.set(
+
+        squareSize,
+
+        squareSize,
+
+        1
+
+    );
+
+
+    /* =================================================
+       FRONTAL
+
+       Cámara -> Z
+       Plano -> XY
+
+       CreatePlane ya nace en XY.
+    ================================================= */
+
+    if (
+        activePresetView === "front"
+    ) {
+
+        cutVisualPlane.rotation.set(
+
+            0,
+
+            0,
+
+            0
+
+        );
+
+    }
+
+
+    /* =================================================
+       LATERAL
+
+       Cámara -> X
+       Plano -> YZ
+    ================================================= */
+
+    else if (
+        activePresetView === "side"
+    ) {
+
+        cutVisualPlane.rotation.set(
+
+            0,
+
+            Math.PI / 2,
+
+            0
+
+        );
+
+    }
+
+
+    /* =================================================
+       SUPERIOR
+
+       Cámara -> Y
+       Plano -> XZ
+    ================================================= */
+
+    else if (
+        activePresetView === "top"
+    ) {
+
+        cutVisualPlane.rotation.set(
+
+            Math.PI / 2,
+
+            0,
+
+            0
+
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   ACTUALIZAR VISUALES
+===================================================== */
+
+function scheduleSectionVisualUpdate(point) {
+
+    if (
+        sectionUpdateFrame
+    ) {
+
+        cancelAnimationFrame(
+            sectionUpdateFrame
+        );
+
+    }
+
+
+    const pointCopy =
+        point.clone();
+
+
+    sectionUpdateFrame =
+        requestAnimationFrame(
+            () => {
+
+                sectionUpdateFrame =
+                    null;
+
+
+                /*
+                Borde:
+                siempre.
+                */
+
+                buildSectionBorder();
+
+
+                /*
+                Perspectiva:
+                guía punteada.
+
+                Vista:
+                sin guía.
+                */
+
+                if (
+                    isPresetViewActive()
+                ) {
+
+                    disposeCutGuide();
+
+                }
+
+                else {
+
+                    buildCutGuide(
+                        pointCopy
+                    );
+
+                }
+
+
+                /*
+                Blueprint:
+                solo vistas.
+                */
+
+                updateCutVisualPlane(
+                    pointCopy
+                );
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+   LIMPIAR VISUALES DEL CORTE
+===================================================== */
+
+function clearSectionVisuals() {
+
+    /*
+    Cancelamos cualquier actualización
+    pendiente para evitar que reaparezca
+    un overlay después de apagar Cortes.
+    */
+
+    if (
+        sectionUpdateFrame
+    ) {
+
+        cancelAnimationFrame(
+            sectionUpdateFrame
+        );
+
+
+        sectionUpdateFrame =
+            null;
+
+    }
+
+
+    if (
+        sectionBorderMesh
+    ) {
+
+        sectionBorderMesh.dispose();
+
+
+        sectionBorderMesh =
+            null;
+
+    }
+
+
+    disposeCutGuide();
+
+
+    if (
+        cutVisualPlane
+    ) {
+
+        cutVisualPlane
+            .setEnabled(
+                false
+            );
+
+    }
+
+}
+
+
+/* =====================================================
+   ACTUALIZAR CLIPPING PLANE
+===================================================== */
+
+function updateCutPlane() {
+
+    /* =================================================
+       CORTE APAGADO
+    ================================================= */
+
+    if (
+        !cutEnabled
+    ) {
+
+        scene.clipPlane =
+            null;
+
+
+        /*
+        Restaurar materiales.
+        */
+
+        setCutDoubleSided(
+            false
+        );
+
+
+        /*
+        Restaurar opacidad.
+        */
+
+        setCutModelOpacity(
+            false
+        );
+
+
+        /*
+        Eliminar:
+        - borde
+        - guía
+        - blueprint
+        */
+
+        clearSectionVisuals();
+
+
+        return;
+
+    }
+
+
+    /* =================================================
+       SLIDER
+    ================================================= */
+
+    const percent =
+        Number(
+            cutSlider.value
+        ) /
+        100;
+
+
+    let dimension;
+
+    let normal;
+
+
+    const point =
+        BABYLON.Vector3.Zero();
+
+
+    /* =================================================
+       X
+    ================================================= */
+
+    if (
+        cutAxis === "x"
+    ) {
+
+        dimension =
+            modelDimensions.x;
+
+
+        point.x =
+            -dimension /
+            2
+
+            +
+
+            dimension *
+            percent;
+
+
+        normal =
+            new BABYLON.Vector3(
+
+                1,
+
+                0,
+
+                0
+
+            );
+
+    }
+
+
+    /* =================================================
+       Y
+    ================================================= */
+
+    else if (
+        cutAxis === "y"
+    ) {
+
+        dimension =
+            modelDimensions.y;
+
+
+        point.y =
+            -dimension /
+            2
+
+            +
+
+            dimension *
+            percent;
+
+
+        normal =
+            new BABYLON.Vector3(
+
+                0,
+
+                1,
+
+                0
+
+            );
+
+    }
+
+
+    /* =================================================
+       Z
+    ================================================= */
+
+    else {
+
+        dimension =
+            modelDimensions.z;
+
+
+        point.z =
+            -dimension /
+            2
+
+            +
+
+            dimension *
+            percent;
+
+
+        normal =
+            new BABYLON.Vector3(
+
+                0,
+
+                0,
+
+                1
+
+            );
+
+    }
+
+
+    currentCutPoint.copyFrom(
+        point
+    );
+
+
+    /* =================================================
+       PLANO REAL DE CLIPPING
+    ================================================= */
+
+    const d =
         -BABYLON.Vector3.Dot(
 
             normal,
@@ -1823,7 +4356,6 @@ function updateCutPlane() {
 
 
     scene.clipPlane =
-
         new BABYLON.Plane(
 
             normal.x,
@@ -1836,6 +4368,33 @@ function updateCutPlane() {
 
         );
 
+
+    /* =================================================
+       DOUBLE SIDE
+    ================================================= */
+
+    setCutDoubleSided(
+        true
+    );
+
+
+    /* =================================================
+       MODELO 20%
+    ================================================= */
+
+    setCutModelOpacity(
+        true
+    );
+
+
+    /* =================================================
+       ACTUALIZAR VISUALES
+    ================================================= */
+
+    scheduleSectionVisualUpdate(
+        point
+    );
+
 }
 
 
@@ -1847,12 +4406,23 @@ cutSlider.addEventListener(
     "input",
     () => {
 
+        /*
+        Si el usuario mueve el slider,
+        el corte queda activo.
+        */
+
         cutEnabled =
             true;
 
 
-        cutValue.textContent =
+        cutButton
+            .classList
+            .add(
+                "active"
+            );
 
+
+        cutValue.textContent =
             cutSlider.value +
             "%";
 
@@ -1864,7 +4434,7 @@ cutSlider.addEventListener(
 
 
 /* =====================================================
-   AXES
+   AXIS BUTTONS
 ===================================================== */
 
 axisButtons.forEach(
@@ -1874,32 +4444,102 @@ axisButtons.forEach(
             "click",
             () => {
 
-                axisButtons.forEach(
-                    item => {
+                const selectedAxis =
+                    button.dataset.axis;
 
-                        item
-                            .classList
-                            .remove(
-                                "active"
-                            );
+
+                /*
+                Si estamos en una vista ortogonal,
+                mantenemos plano y cámara alineados.
+
+                X -> Lateral
+                Y -> Superior
+                Z -> Frontal
+                */
+
+                if (
+                    isPresetViewActive()
+                ) {
+
+                    if (
+                        selectedAxis === "x"
+                    ) {
+
+                        setView(
+
+                            0,
+
+                            Math.PI / 2,
+
+                            sideButton,
+
+                            "side"
+
+                        );
 
                     }
+
+
+                    else if (
+                        selectedAxis === "y"
+                    ) {
+
+                        setView(
+
+                            -Math.PI / 2,
+
+                            0.02,
+
+                            topButton,
+
+                            "top"
+
+                        );
+
+                    }
+
+
+                    else {
+
+                        setView(
+
+                            -Math.PI / 2,
+
+                            Math.PI / 2,
+
+                            frontButton,
+
+                            "front"
+
+                        );
+
+                    }
+
+
+                    return;
+
+                }
+
+
+                /*
+                Perspectiva:
+                solo cambiamos eje.
+                */
+
+                setCutAxisState(
+                    selectedAxis
                 );
-
-
-                button
-                    .classList
-                    .add(
-                        "active"
-                    );
-
-
-                cutAxis =
-                    button.dataset.axis;
 
 
                 cutEnabled =
                     true;
+
+
+                cutButton
+                    .classList
+                    .add(
+                        "active"
+                    );
 
 
                 updateCutPlane();
@@ -1912,7 +4552,7 @@ axisButtons.forEach(
 
 
 /* =====================================================
-   REMOVE CUT
+   X DEL SLIDER / QUITAR CORTE
 ===================================================== */
 
 cutReset.addEventListener(
@@ -1923,16 +4563,34 @@ cutReset.addEventListener(
             false;
 
 
-        scene.clipPlane =
-            null;
-
-
         cutSlider.value =
             50;
 
 
         cutValue.textContent =
             "50%";
+
+
+        cutPanel
+            .classList
+            .remove(
+                "visible"
+            );
+
+
+        cutButton
+            .classList
+            .remove(
+                "active"
+            );
+
+
+        /*
+        Misma restauración que apagar
+        el botón Cortes.
+        */
+
+        updateCutPlane();
 
     }
 );
@@ -1959,7 +4617,7 @@ lightSlider.addEventListener(
 
 
 /* =====================================================
-   RESET
+   RESET / CENTRAR
 ===================================================== */
 
 resetButton.addEventListener(
@@ -1994,15 +4652,37 @@ resetButton.addEventListener(
             );
 
 
+        /*
+        Volvemos a perspectiva.
+        */
+
         clearViewButtons();
+
+
+        /*
+        Si hay corte activo:
+
+        desaparece Blueprint
+        y vuelve el modo perspectiva.
+        */
+
+        if (
+            cutEnabled
+        ) {
+
+            updateCutPlane();
+
+        }
+
 
         closePanels();
 
+
         interactionHelp
-    .classList
-    .remove(
-        "hidden"
-    );
+            .classList
+            .remove(
+                "hidden"
+            );
 
     }
 );
@@ -2037,9 +4717,7 @@ fullscreenButton.addEventListener(
 
         }
 
-        catch (
-            error
-        ) {
+        catch (error) {
 
             console.error(
                 error
@@ -2052,7 +4730,7 @@ fullscreenButton.addEventListener(
 
 
 /* =====================================================
-   PUBLISH
+   PUBLICAR
 ===================================================== */
 
 publishButton.addEventListener(
@@ -2092,6 +4770,8 @@ window.addEventListener(
 
     }
 );
+
+
 /* =====================================================
    REEMPLAZAR ARCHIVO
 ===================================================== */
@@ -2101,8 +4781,8 @@ replaceFileButton.addEventListener(
     () => {
 
         /*
-        Esto permite incluso volver a
-        seleccionar el mismo archivo.
+        Permite seleccionar incluso
+        nuevamente el mismo archivo.
         */
 
         replaceFileInput.value =
@@ -2123,26 +4803,31 @@ replaceFileInput.addEventListener(
             event.target.files[0];
 
 
-        if (!file) {
+        if (
+            !file
+        ) {
 
             return;
 
         }
 
 
-        /* -----------------------------------------
+        /* =================================================
            VALIDAR GLB
-        ------------------------------------------ */
+        ================================================= */
 
         if (
             !file.name
                 .toLowerCase()
-                .endsWith(".glb")
+                .endsWith(
+                    ".glb"
+                )
         ) {
 
             alert(
                 "Seleccioná un archivo en formato GLB."
             );
+
 
             return;
 
@@ -2150,9 +4835,6 @@ replaceFileInput.addEventListener(
 
 
         try {
-
-
-            /* mostrar pantalla de carga */
 
             loadingScreen
                 .classList
@@ -2166,37 +4848,34 @@ replaceFileInput.addEventListener(
             );
 
 
-            /* reemplazar archivo */
-
             await replaceStoredModel(
                 file
             );
 
 
             /*
-            Recargamos el visor.
+            Recargar visor completo.
 
-            Así limpiamos completamente:
+            Limpia:
             - modelo anterior
-            - materiales
-            - animaciones
             - clipping
+            - overlays
+            - materiales
             - cámara
             */
 
             window.location.reload();
 
-
         }
 
-        catch (
-            error
-        ) {
-
+        catch (error) {
 
             console.error(
+
                 "Error reemplazando GLB:",
+
                 error
+
             );
 
 
@@ -2215,6 +4894,7 @@ replaceFileInput.addEventListener(
 
     }
 );
+
 
 /* =====================================================
    START
