@@ -45,7 +45,10 @@
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
 
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+<script src="./demo.js"></script>
 
+<!-- mismo sistema de subida del index -->
+<script src="./upload-flow.js"></script>
 </head>
 
 
@@ -58,29 +61,32 @@
 
     <header class="demo-header">
 
+    <a
+        class="demo-logo"
+        href="./index.html"
+    >
+        renderiza<span>.me</span>
+    </a>
 
-        <a
-            href="./index.html"
-            class="demo-brand"
+    <div class="demo-header-actions">
+
+        <button
+            class="demo-upload-button upload-trigger"
+            type="button"
         >
-            renderiza<span>.me</span>
-        </a>
-
-
-        <div class="demo-header-center">
-            DEMO 3D
-        </div>
-
+            Subir mi 3D
+        </button>
 
         <a
-            href="./index.html"
             class="back-button"
+            href="./index.html"
         >
             ← Volver
         </a>
 
+    </div>
 
-    </header>
+</header>
 
 
 
@@ -544,7 +550,12 @@
 
 
     <script src="./demo.js"></script>
-
+<input
+    id="modelFileInput"
+    type="file"
+    accept=".glb,model/gltf-binary"
+    hidden
+>
 
 </body>
 
