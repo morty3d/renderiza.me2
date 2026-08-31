@@ -1360,5 +1360,112 @@ body {
         flex-basis: 29px;
 
     }
+/* =====================================================
+   DEMO HEADER ACTIONS
+===================================================== */
 
+.demo-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+/* =====================================================
+   SUBIR MI 3D
+===================================================== */
+
+.demo-upload-button {
+    min-height: 46px;
+
+    padding: 0 22px;
+
+    border: 1px solid #100F0F;
+    border-radius: 6px;
+
+    background: #100F0F;
+    color: #FFFFFF;
+
+    font-family: "Instrument Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease;
+}
+
+
+.demo-upload-button:hover {
+    background: #2664EB;
+    border-color: #2664EB;
+}
+
+
+.demo-upload-button:active {
+    transform: scale(.98);
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 650px) {
+
+    /*
+    El header mantiene:
+    logo izquierda
+    volver derecha
+    */
+
+    .demo-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        flex-wrap: wrap;
+    }
+
+
+    .demo-header-actions {
+        display: contents;
+    }
+
+
+    /*
+    Volver sigue arriba a la derecha.
+    */
+
+    .back-button {
+        order: 2;
+    }
+
+
+    /*
+    SUBIR MI 3D pasa a una segunda fila
+    y ocupa todo el ancho.
+
+    Queda como en tu imagen.
+    */
+
+    .demo-upload-button {
+        order: 3;
+
+        width: 100%;
+
+        min-height: 58px;
+
+        margin-top: 18px;
+
+        flex-basis: 100%;
+
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+}
 }
