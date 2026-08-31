@@ -80,6 +80,11 @@ const axisButtons =
 const viewButtons =
     document.querySelectorAll(".view-button");
 
+const interactionHelp =
+    document.getElementById(
+        "interactionHelp"
+    );
+
 
 /* =====================================================
    INDEXED DB
@@ -1004,8 +1009,10 @@ function prepareLoadedModel(
 }
 
 
+
+
 /* =====================================================
-   AUTOROTATION
+   AUTOROTACIÓN
 ===================================================== */
 
 scene.onBeforeRenderObservable.add(
@@ -1015,11 +1022,10 @@ scene.onBeforeRenderObservable.add(
             autoRotate
         ) {
 
-            modelRoot.rotation.y +=
+            camera.alpha +=
 
-                engine
-                    .getDeltaTime()
-                * 0.00018;
+                engine.getDeltaTime()
+                * 0.00012;
 
         }
 
@@ -1035,6 +1041,8 @@ canvas.addEventListener(
     "pointerdown",
     () => {
 
+        /* detener autorrotación */
+
         autoRotate =
             false;
 
@@ -1047,6 +1055,15 @@ canvas.addEventListener(
 
 
         clearViewButtons();
+
+
+        /* esconder cartel de ayuda */
+
+        interactionHelp
+            .classList
+            .add(
+                "hidden"
+            );
 
     }
 );
@@ -1600,6 +1617,12 @@ resetButton.addEventListener(
         clearViewButtons();
 
         closePanels();
+
+        interactionHelp
+    .classList
+    .remove(
+        "hidden"
+    );
 
     }
 );
