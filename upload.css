@@ -121,84 +121,270 @@
    MOBILE
 ===================================================== */
 
-@media
-(max-width: 900px) {
+@media (max-width: 900px) {
 
     .upload-controls {
 
-        bottom:
-            90px;
+        bottom: 90px;
 
     }
 
 
-    .upload-viewer
-    .tool-panel {
+    .upload-viewer .tool-panel {
 
-        bottom:
-            195px;
+        bottom: 195px;
+
+    }
+
+
+    .upload-viewer .interaction-help {
+
+        bottom: 210px;
 
     }
 
 
     .publish-button {
 
-        bottom:
-            14px;
+        bottom: 14px;
 
-        min-height:
-            58px;
+        min-height: 58px;
 
     }
 
 }
 
 
-@media
-(max-width: 650px) {
+@media (max-width: 650px) {
 
     .upload-controls {
 
-        bottom:
-            86px;
+        bottom: 86px;
 
     }
 
 
-    .upload-viewer
-    .tool-panel {
+    .upload-viewer .tool-panel {
 
-        bottom:
-            192px;
+        bottom: 192px;
+
+    }
+
+
+    /*
+       CARTEL:
+       "Deslizá para girar · Pellizcá para acercar"
+
+       Lo subimos para que no se choque
+       con las dos filas de controles.
+    */
+
+    .upload-viewer .interaction-help {
+
+        bottom: 250px;
 
     }
 
 
     .publish-button {
 
-        left:
-            10px;
+        left: 10px;
 
-        right:
-            10px;
+        right: 10px;
 
-        bottom:
-            10px;
+        bottom: 10px;
 
-        width:
-            auto;
+        width: auto;
 
-        transform:
-            none;
+        transform: none;
 
     }
 
 
     .publish-button:hover {
 
-        transform:
-            none;
+        transform: none;
 
     }
 
 }
+
+
+/* =====================================================
+   REEMPLAZAR ARCHIVO
+===================================================== */
+
+.replace-file-button {
+
+    position: absolute;
+
+    z-index: 16;
+
+    top: 96px;
+    right: 28px;
+
+    height: 46px;
+
+    padding: 0;
+
+    display: flex;
+
+    align-items: stretch;
+
+    border:
+        1px solid
+        rgba(16, 15, 15, .25);
+
+    border-radius: 6px;
+
+    overflow: hidden;
+
+    background:
+        rgba(232, 233, 229, .90);
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    color: #100F0F;
+
+    cursor: pointer;
+
+    font-family:
+        "Instrument Sans",
+        sans-serif;
+
+}
+
+
+/* =====================================================
+   TEXTO
+===================================================== */
+
+.replace-file-text {
+
+    padding:
+        0 16px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+}
+
+
+/* =====================================================
+   ICONO
+===================================================== */
+
+.replace-file-icon {
+
+    width: 46px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-left:
+        1px solid
+        rgba(16, 15, 15, .20);
+
+}
+
+
+.replace-file-icon svg {
+
+    width: 18px;
+    height: 18px;
+
+    fill: none;
+
+    stroke: currentColor;
+
+    stroke-width: 1.7;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+
+}
+
+
+/* =====================================================
+   HOVER
+===================================================== */
+
+.replace-file-button:hover {
+
+    background: #100F0F;
+
+    color: #FFFFFF;
+
+}
+
+
+.replace-file-button:hover
+.replace-file-icon {
+
+    border-left-color:
+        rgba(255, 255, 255, .25);
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 650px) {
+
+    .replace-file-button {
+
+        top: 82px;
+        right: 12px;
+
+        height: 44px;
+
+    }
+
+
+    .replace-file-text {
+
+        padding:
+            0 13px;
+
+        font-size: 11px;
+
+    }
+
+
+    .replace-file-icon {
+
+        width: 44px;
+
+    }
+
+
+    .replace-file-icon svg {
+
+        width: 18px;
+        height: 18px;
+
+    }
+
+}
+
+
+
