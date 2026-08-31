@@ -84,7 +84,15 @@ const interactionHelp =
     document.getElementById(
         "interactionHelp"
     );
+const replaceFileButton =
+    document.getElementById(
+        "replaceFileButton"
+    );
 
+const replaceFileInput =
+    document.getElementById(
+        "replaceFileInput"
+    );
 
 /* =====================================================
    INDEXED DB
@@ -147,7 +155,77 @@ function openDatabase() {
 
 }
 
+/* =====================================================
+   GUARDAR NUEVO MODELO
+===================================================== */
 
+async function replaceStoredModel(
+    file
+) {
+
+    const db =
+        await openDatabase();
+
+
+    return new Promise(
+        (resolve, reject) => {
+
+            const transaction =
+                db.transaction(
+                    "models",
+                    "readwrite"
+                );
+
+
+            const store =
+                transaction.objectStore(
+                    "models"
+                );
+
+
+            store.put(
+
+                {
+
+                    file: file,
+
+                    name: file.name,
+
+                    size: file.size,
+
+                    savedAt:
+                        Date.now()
+
+                },
+
+                "currentModel"
+
+            );
+
+
+            transaction.oncomplete =
+                () => {
+
+                    db.close();
+
+                    resolve();
+
+                };
+
+
+            transaction.onerror =
+                () => {
+
+                    reject(
+                        transaction.error
+                    );
+
+                };
+
+        }
+    );
+
+}
 async function getCurrentModel() {
 
     const db =
@@ -267,14 +345,32 @@ camera.attachControl(
 );
 
 
-camera.wheelPrecision = 45;
-
-camera.pinchPrecision = 75;
+/* =====================================================
+   NAVEGACIÓN DE CÁMARA
+===================================================== */
 
 camera.panningSensibility = 0;
 
 
-camera.lowerBetaLimit = 0.02;
+/*
+El zoom pasa a ser proporcional a la distancia
+de cámara.
+
+Esto hace que se sienta parecido tanto en
+un objeto pequeño como en uno enorme.
+*/
+
+camera.wheelDeltaPercentage =
+    0.01;
+
+
+camera.pinchDeltaPercentage =
+    0.01;
+
+
+camera.lowerBetaLimit =
+    0.02;
+
 
 camera.upperBetaLimit =
     Math.PI - 0.02;
@@ -553,23 +649,25 @@ async function loadUserModel() {
             /* SUCCESS */
 
             function (
-                meshes,
-                particleSystems,
-                skeletons,
-                animationGroups
-            ) {
+    meshes,
+    particleSystems,
+    skeletons,
+    animationGroups,
+    transformNodes
+) {
 
-                setLoadingFakeProgress(
-                    90
-                );
+    setLoadingFakeProgress(
+        90
+    );
 
 
-                prepareLoadedModel(
-                    meshes,
-                    animationGroups
-                );
+    prepareLoadedModel(
+        meshes,
+        animationGroups,
+        transformNodes
+    );
 
-            },
+},
 
 
             /* PROGRESS */
@@ -718,11 +816,20 @@ function showLoadError(
    PREPARE MODEL
 ===================================================== */
 
+/* =====================================================
+   PREPARAR Y AUTO-CENTRAR MODELO
+===================================================== */
+
 function prepareLoadedModel(
     meshes,
-    animationGroups
+    animationGroups,
+    transformNodes = []
 ) {
 
+
+    /* =================================================
+       VALIDAR
+    ================================================= */
 
     if (
         !meshes ||
@@ -730,7 +837,7 @@ function prepareLoadedModel(
     ) {
 
         showLoadError(
-            "El GLB no contiene meshes."
+            "El GLB no contiene geometría."
         );
 
         return;
@@ -739,7 +846,7 @@ function prepareLoadedModel(
 
 
     /* =================================================
-       ANIMATIONS
+       ANIMACIONES
     ================================================= */
 
     if (
@@ -761,7 +868,70 @@ function prepareLoadedModel(
 
 
     /* =================================================
-       BOUNDING BOX
+       CREAR UN CENTRO VISUAL PROPIO
+
+       El pivot original del archivo deja
+       de importar para la navegación.
+    ================================================= */
+
+    const importedNodes = [
+
+        ...meshes,
+
+        ...(transformNodes || [])
+
+    ];
+
+
+    const importedNodeSet =
+        new Set(
+            importedNodes
+        );
+
+
+    /*
+    Buscamos solamente los nodos superiores
+    de la jerarquía importada.
+
+    Así no destruimos la jerarquía interna
+    del GLB.
+    */
+
+    const rootNodes =
+        importedNodes.filter(
+            node => {
+
+                return (
+
+                    !node.parent ||
+
+                    !importedNodeSet.has(
+                        node.parent
+                    )
+
+                );
+
+            }
+        );
+
+
+    /*
+    Colgamos esos nodos del centro visual
+    creado por renderiza.me.
+    */
+
+    rootNodes.forEach(
+        node => {
+
+            node.parent =
+                modelRoot;
+
+        }
+    );
+
+
+    /* =================================================
+       CALCULAR BOUNDING BOX REAL
     ================================================= */
 
     let minimum =
@@ -788,12 +958,31 @@ function prepareLoadedModel(
         );
 
 
+    let validMeshCount =
+        0;
+
+
     meshes.forEach(
         mesh => {
 
 
+            /*
+            Ignoramos nodos vacíos que algunos
+            exportadores crean como root.
+            */
+
             if (
                 !mesh.getBoundingInfo
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                mesh.getTotalVertices &&
+                mesh.getTotalVertices() === 0
             ) {
 
                 return;
@@ -806,10 +995,10 @@ function prepareLoadedModel(
             );
 
 
-            const box =
+            const boundingBox =
                 mesh
-                .getBoundingInfo()
-                .boundingBox;
+                    .getBoundingInfo()
+                    .boundingBox;
 
 
             minimum =
@@ -817,7 +1006,7 @@ function prepareLoadedModel(
 
                     minimum,
 
-                    box.minimumWorld
+                    boundingBox.minimumWorld
 
                 );
 
@@ -827,29 +1016,35 @@ function prepareLoadedModel(
 
                     maximum,
 
-                    box.maximumWorld
+                    boundingBox.maximumWorld
 
                 );
+
+
+            validMeshCount++;
 
         }
     );
 
 
     /* =================================================
-       VALIDATE BOUNDS
+       VALIDAR BOUNDS
     ================================================= */
 
     if (
+        validMeshCount === 0 ||
+
         !Number.isFinite(
             minimum.x
         ) ||
+
         !Number.isFinite(
             maximum.x
         )
     ) {
 
         showLoadError(
-            "No fue posible calcular las dimensiones."
+            "No pudimos calcular las dimensiones del modelo."
         );
 
         return;
@@ -857,17 +1052,25 @@ function prepareLoadedModel(
     }
 
 
+    /* =================================================
+       CENTRO GEOMÉTRICO
+    ================================================= */
+
     const center =
 
         minimum
-        .add(maximum)
-        .scale(.5);
+            .add(maximum)
+            .scale(0.5);
 
+
+    /* =================================================
+       DIMENSIONES
+    ================================================= */
 
     const dimensions =
 
         maximum
-        .subtract(minimum);
+            .subtract(minimum);
 
 
     modelDimensions = {
@@ -875,72 +1078,49 @@ function prepareLoadedModel(
         x:
             Math.max(
                 dimensions.x,
-                .001
+                0.000001
             ),
 
         y:
             Math.max(
                 dimensions.y,
-                .001
+                0.000001
             ),
 
         z:
             Math.max(
                 dimensions.z,
-                .001
+                0.000001
             )
 
     };
 
 
-    let size =
-        Math.max(
-
-            dimensions.x,
-
-            dimensions.y,
-
-            dimensions.z
-
-        );
-
-
-    if (
-        !Number.isFinite(size) ||
-        size <= 0
-    ) {
-
-        size = 1;
-
-    }
-
-
     /* =================================================
-       CENTER
+       MOVER CENTRO VISUAL A 0,0,0
 
-       En lugar de reparentar todos los meshes,
-       movemos únicamente los meshes raíz.
+       ÉSTA ES LA PARTE QUE HACE QUE
+       EL PIVOT ORIGINAL NO IMPORTE.
     ================================================= */
 
-    meshes.forEach(
-        mesh => {
+    modelRoot.position.set(
 
-            if (
-                !mesh.parent
-            ) {
+        -center.x,
 
-                mesh.position.subtractInPlace(
-                    center
-                );
+        -center.y,
 
-            }
+        -center.z
 
-        }
+    );
+
+
+    modelRoot.computeWorldMatrix(
+        true
     );
 
 
     /* =================================================
-       CAMERA
+       CÁMARA APUNTA AL CENTRO VISUAL
     ================================================= */
 
     camera.setTarget(
@@ -948,28 +1128,190 @@ function prepareLoadedModel(
     );
 
 
-    camera.radius =
-        size * 2.1;
+    /* =================================================
+       CALCULAR RADIO DEL MODELO
+    ================================================= */
 
+    const boundingRadius =
+
+        Math.max(
+
+            dimensions.length() / 2,
+
+            0.000001
+
+        );
+
+
+    /* =================================================
+       CALCULAR FOV REAL SEGÚN PANTALLA
+
+       En celular la pantalla es angosta,
+       por eso también consideramos el
+       FOV horizontal.
+    ================================================= */
+
+    const renderWidth =
+
+        Math.max(
+            engine.getRenderWidth(),
+            1
+        );
+
+
+    const renderHeight =
+
+        Math.max(
+            engine.getRenderHeight(),
+            1
+        );
+
+
+    const aspect =
+
+        renderWidth /
+        renderHeight;
+
+
+    const verticalFov =
+        camera.fov;
+
+
+    const horizontalFov =
+
+        2 *
+        Math.atan(
+
+            Math.tan(
+                verticalFov / 2
+            ) *
+
+            aspect
+
+        );
+
+
+    /*
+    Usamos el ángulo más restrictivo.
+    */
+
+    const limitingFov =
+
+        Math.min(
+
+            verticalFov,
+
+            horizontalFov
+
+        );
+
+
+    /* =================================================
+       DISTANCIA AUTOMÁTICA DE CÁMARA
+    ================================================= */
+
+    let fittedRadius =
+
+        boundingRadius /
+
+        Math.sin(
+            limitingFov / 2
+        );
+
+
+    /*
+    Margen visual del 18%.
+    */
+
+    fittedRadius *=
+        1.18;
+
+
+    if (
+        !Number.isFinite(
+            fittedRadius
+        ) ||
+
+        fittedRadius <= 0
+    ) {
+
+        fittedRadius =
+            5;
+
+    }
+
+
+    /* =================================================
+       POSICIÓN INICIAL
+    ================================================= */
+
+    camera.radius =
+        fittedRadius;
+
+
+    /* =================================================
+       ZOOM MÍNIMO
+
+       Se calcula respecto del tamaño
+       del objeto.
+    ================================================= */
 
     camera.lowerRadiusLimit =
-        size * .55;
 
+        Math.max(
+
+            boundingRadius *
+            0.20,
+
+            0.000001
+
+        );
+
+
+    /* =================================================
+       ZOOM MÁXIMO
+    ================================================= */
 
     camera.upperRadiusLimit =
-        size * 7;
 
+        fittedRadius *
+        10;
+
+
+    /* =================================================
+       PLANOS DE CÁMARA
+
+       También se adaptan automáticamente
+       a la escala del GLB.
+    ================================================= */
 
     camera.minZ =
+
         Math.max(
-            .001,
-            size / 10000
+
+            boundingRadius /
+            10000,
+
+            0.000001
+
         );
 
 
     camera.maxZ =
-        size * 1000;
 
+        Math.max(
+
+            fittedRadius *
+            1000,
+
+            100
+
+        );
+
+
+    /* =================================================
+       GUARDAR ESTADO PARA "CENTRAR"
+    ================================================= */
 
     initialCamera = {
 
@@ -988,6 +1330,43 @@ function prepareLoadedModel(
     };
 
 
+    /* =================================================
+       DEBUG ÚTIL
+    ================================================= */
+
+    console.log(
+        "renderiza.me — Modelo cargado"
+    );
+
+
+    console.log(
+        "Dimensiones:",
+        modelDimensions
+    );
+
+
+    console.log(
+        "Centro original:",
+        center
+    );
+
+
+    console.log(
+        "Radio visual:",
+        boundingRadius
+    );
+
+
+    console.log(
+        "Distancia cámara:",
+        fittedRadius
+    );
+
+
+    /* =================================================
+       TERMINAR CARGA
+    ================================================= */
+
     setLoadingFakeProgress(
         100
     );
@@ -1003,6 +1382,7 @@ function prepareLoadedModel(
                 );
 
         },
+
         250
     );
 
@@ -1712,7 +2092,129 @@ window.addEventListener(
 
     }
 );
+/* =====================================================
+   REEMPLAZAR ARCHIVO
+===================================================== */
 
+replaceFileButton.addEventListener(
+    "click",
+    () => {
+
+        /*
+        Esto permite incluso volver a
+        seleccionar el mismo archivo.
+        */
+
+        replaceFileInput.value =
+            "";
+
+
+        replaceFileInput.click();
+
+    }
+);
+
+
+replaceFileInput.addEventListener(
+    "change",
+    async event => {
+
+        const file =
+            event.target.files[0];
+
+
+        if (!file) {
+
+            return;
+
+        }
+
+
+        /* -----------------------------------------
+           VALIDAR GLB
+        ------------------------------------------ */
+
+        if (
+            !file.name
+                .toLowerCase()
+                .endsWith(".glb")
+        ) {
+
+            alert(
+                "Seleccioná un archivo en formato GLB."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+
+            /* mostrar pantalla de carga */
+
+            loadingScreen
+                .classList
+                .remove(
+                    "hidden"
+                );
+
+
+            setLoadingFakeProgress(
+                10
+            );
+
+
+            /* reemplazar archivo */
+
+            await replaceStoredModel(
+                file
+            );
+
+
+            /*
+            Recargamos el visor.
+
+            Así limpiamos completamente:
+            - modelo anterior
+            - materiales
+            - animaciones
+            - clipping
+            - cámara
+            */
+
+            window.location.reload();
+
+
+        }
+
+        catch (
+            error
+        ) {
+
+
+            console.error(
+                "Error reemplazando GLB:",
+                error
+            );
+
+
+            loadingScreen
+                .classList
+                .add(
+                    "hidden"
+                );
+
+
+            alert(
+                "No pudimos reemplazar el archivo."
+            );
+
+        }
+
+    }
+);
 
 /* =====================================================
    START
