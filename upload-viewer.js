@@ -4737,9 +4737,8 @@ publishButton.addEventListener(
     "click",
     () => {
 
-        alert(
-            "Siguiente paso: elegir vigencia y generar link / QR."
-        );
+        window.location.href =
+            "./publish.html";
 
     }
 );

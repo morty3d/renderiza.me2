@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Publicar modelo | renderiza.me</title>
+
+
+    <!-- FUENTES -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- CSS -->
+
+    <link
+        rel="stylesheet"
+        href="./publish.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="publish-header">
+
+        <a
+            class="publish-brand"
+            href="./index.html"
+        >
+            renderiza<span>.me</span>
+        </a>
+
+
+        <a
+            class="back-button"
+            href="./upload.html"
+        >
+            ← Volver
+        </a>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         CONTENIDO
+    ====================================================== -->
+
+    <main class="publish-page">
+
+
+        <!-- =================================================
+             INTRO
+        ================================================== -->
+
+        <section class="publish-intro">
+
+            <div class="section-kicker">
+                PUBLICAR MODELO
+            </div>
+
+
+            <h1>
+                Elegí cuánto tiempo
+                <span>querés compartirlo.</span>
+            </h1>
+
+
+            <p>
+                Seleccioná la vigencia de tu link y QR.
+                Pagás una sola vez, sin suscripciones.
+            </p>
+
+
+            <p> 
+                Seleccioná la opción que más te convenga
+                    y pagá con Mercado Pago.
+                    </p>
+        </section>
+
+
+
+        <!-- =================================================
+             PLANES
+        ================================================== -->
+
+        <section class="plans-grid">
+
+
+            <!-- EXPRESS -->
+
+            <button
+                class="plan-card"
+                type="button"
+                data-plan="express"
+                data-duration="24 horas"
+                data-price="4500"
+            >
+
+                <div class="plan-top">
+
+                    <span class="plan-number">
+                        01
+                    </span>
+
+                    <span class="plan-tag">
+                        EXPRESS
+                    </span>
+
+                </div>
+
+
+                <div class="plan-content">
+
+                    <h2>
+                        Link + QR
+                        <span>Express</span>
+                    </h2>
+
+
+                    <div class="plan-duration">
+                        24 hs
+                    </div>
+
+
+                    <div class="plan-price">
+                        $4.500
+                    </div>
+
+
+                    <div class="plan-note">
+                        Pago único
+                    </div>
+
+                </div>
+
+            </button>
+
+
+
+            <!-- 72 HORAS -->
+
+            <button
+                class="plan-card"
+                type="button"
+                data-plan="72h"
+                data-duration="72 horas"
+                data-price="8500"
+            >
+
+                <div class="plan-top">
+
+                    <span class="plan-number">
+                        02
+                    </span>
+
+                    <span class="plan-tag">
+                        72 HORAS
+                    </span>
+
+                </div>
+
+
+                <div class="plan-content">
+
+                    <h2>
+                        Link + QR
+                        <span>72 hs</span>
+                    </h2>
+
+
+                    <div class="plan-duration">
+                        3 días
+                    </div>
+
+
+                    <div class="plan-price">
+                        $8.500
+                    </div>
+
+
+                    <div class="plan-note">
+                        Pago único
+                    </div>
+
+                </div>
+
+            </button>
+
+
+
+            <!-- 7 DÍAS -->
+
+            <button
+                class="plan-card"
+                type="button"
+                data-plan="7d"
+                data-duration="7 días"
+                data-price="14500"
+            >
+
+                <div class="plan-top">
+
+                    <span class="plan-number">
+                        03
+                    </span>
+
+                    <span class="plan-tag">
+                        SEMANAL
+                    </span>
+
+                </div>
+
+
+                <div class="plan-content">
+
+                    <h2>
+                        Link + QR
+                        <span>7 días</span>
+                    </h2>
+
+
+                    <div class="plan-duration">
+                        1 semana
+                    </div>
+
+
+                    <div class="plan-price">
+                        $14.500
+                    </div>
+
+
+                    <div class="plan-note">
+                        Pago único
+                    </div>
+
+                </div>
+
+            </button>
+
+
+
+            <!-- 30 DÍAS -->
+
+            <button
+                class="plan-card"
+                type="button"
+                data-plan="30d"
+                data-duration="30 días"
+                data-price="22500"
+            >
+
+                <div class="plan-top">
+
+                    <span class="plan-number">
+                        04
+                    </span>
+
+                    <span class="plan-tag">
+                        MENSUAL
+                    </span>
+
+                </div>
+
+
+                <div class="plan-content">
+
+                    <h2>
+                        Link + QR
+                        <span>Mensual</span>
+                    </h2>
+
+
+                    <div class="plan-duration">
+                        30 días
+                    </div>
+
+
+                    <div class="plan-price">
+                        $22.500
+                    </div>
+
+
+                    <div class="plan-note">
+                        Pago único
+                    </div>
+
+                </div>
+
+            </button>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             RESUMEN / PAGO
+        ================================================== -->
+
+        <section
+            class="payment-box"
+            id="paymentBox"
+        >
+
+
+            <div class="payment-copy">
+
+                <div class="section-kicker">
+                    SIGUIENTE PASO
+                </div>
+
+
+                <h3>
+                    
+                </h3>
+
+
+                <p>
+                    Una vez acreditado el pago, vas a poder
+                    descargar tu código QR y copiar el link
+                    para compartir tu modelo.
+                </p>
+
+            </div>
+
+
+
+            <div class="payment-action">
+
+
+                <div
+                    class="selected-plan"
+                    id="selectedPlan"
+                >
+                    Seleccioná una opción
+                </div>
+
+
+                <button
+                    class="mercadopago-button"
+                    id="payButton"
+                    type="button"
+                    disabled
+                >
+                    Pagar con Mercado Pago
+                </button>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <script src="./publish.js"></script>
+
+
+</body>
+
+</html>
