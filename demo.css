@@ -102,6 +102,10 @@ body {
 }
 
 
+/* =====================================================
+   LOGO
+===================================================== */
+
 .demo-brand {
 
     justify-self: start;
@@ -126,20 +130,20 @@ body {
 }
 
 
+/* =====================================================
+   CENTRO HEADER
+===================================================== */
+
 .demo-header-center {
 
-    font-family:
-        "Roboto Mono",
-        monospace;
-
-    font-size: 10px;
-
-    font-weight: 500;
-
-    letter-spacing: .14em;
+    justify-self: center;
 
 }
 
+
+/* =====================================================
+   VOLVER
+===================================================== */
 
 .back-button {
 
@@ -182,7 +186,72 @@ body {
 
     background: var(--black);
 
-    color: white;
+    color: var(--white);
+
+}
+
+
+/* =====================================================
+   SUBIR MI 3D — DESKTOP
+
+   En PC:
+   sin fondo negro.
+===================================================== */
+
+.demo-upload-button {
+
+    height: 42px;
+
+    padding: 0 22px;
+
+    border:
+        1px solid
+        var(--black);
+
+    border-radius: 5px;
+
+    background:
+        transparent;
+
+    color:
+        var(--black);
+
+    cursor: pointer;
+
+    font-family:
+        "Instrument Sans",
+        sans-serif;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .15s ease;
+
+}
+
+
+.demo-upload-button:hover {
+
+    background:
+        var(--black);
+
+    color:
+        var(--white);
+
+}
+
+
+.demo-upload-button:active {
+
+    transform:
+        scale(.98);
 
 }
 
@@ -198,7 +267,8 @@ body {
     width: 100%;
     height: 100%;
 
-    background: var(--background);
+    background:
+        var(--background);
 
 }
 
@@ -235,7 +305,8 @@ body {
 
     justify-content: center;
 
-    background: var(--background);
+    background:
+        var(--background);
 
     transition:
         opacity .5s ease,
@@ -326,7 +397,8 @@ body {
     width: 0%;
     height: 100%;
 
-    background: var(--blue);
+    background:
+        var(--blue);
 
     transition:
         width .15s linear;
@@ -390,47 +462,14 @@ body {
 
 /* =====================================================
    INFO MODELO
+
+   En DEMO no queremos mostrar:
+   MODELO / Demo renderiza.me
 ===================================================== */
 
 .model-info {
 
-    position: absolute;
-
-    z-index: 10;
-
-    left: 32px;
-
-    bottom: 31px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 3px;
-
-}
-
-
-.model-info span {
-
-    color: var(--gray);
-
-    font-family:
-        "Roboto Mono",
-        monospace;
-
-    font-size: 9px;
-
-    letter-spacing: .1em;
-
-}
-
-
-.model-info strong {
-
-    font-size: 14px;
-
-    font-weight: 600;
+    display: none !important;
 
 }
 
@@ -466,7 +505,11 @@ body {
     backdrop-filter:
         blur(8px);
 
-    color: var(--gray);
+    -webkit-backdrop-filter:
+        blur(8px);
+
+    color:
+        var(--gray);
 
     font-family:
         "Roboto Mono",
@@ -509,7 +552,6 @@ body {
     z-index: 12;
 
     left: 50%;
-
     bottom: 25px;
 
     transform:
@@ -563,9 +605,11 @@ body {
 
     border-radius: 4px;
 
-    background: transparent;
+    background:
+        transparent;
 
-    color: var(--black);
+    color:
+        var(--black);
 
     cursor: pointer;
 
@@ -595,13 +639,16 @@ body {
 
     fill: none;
 
-    stroke: currentColor;
+    stroke:
+        currentColor;
 
     stroke-width: 1.6;
 
-    stroke-linecap: round;
+    stroke-linecap:
+        round;
 
-    stroke-linejoin: round;
+    stroke-linejoin:
+        round;
 
 }
 
@@ -616,9 +663,11 @@ body {
 
 .viewer-button.active {
 
-    background: var(--blue);
+    background:
+        var(--blue);
 
-    color: white;
+    color:
+        var(--white);
 
 }
 
@@ -632,7 +681,8 @@ body {
 
     margin: 0 3px;
 
-    background: var(--border);
+    background:
+        var(--border);
 
 }
 
@@ -648,7 +698,6 @@ body {
     z-index: 14;
 
     left: 50%;
-
     bottom: 86px;
 
     transform:
@@ -663,7 +712,8 @@ body {
 
     min-height: 58px;
 
-    padding: 8px 10px;
+    padding:
+        8px 10px;
 
     display: flex;
 
@@ -760,9 +810,11 @@ body {
 
     border-radius: 4px;
 
-    background: transparent;
+    background:
+        transparent;
 
-    color: var(--black);
+    color:
+        var(--black);
 
     cursor: pointer;
 
@@ -779,11 +831,14 @@ body {
 
 .axis-button.active {
 
-    border-color: var(--blue);
+    border-color:
+        var(--blue);
 
-    background: var(--blue);
+    background:
+        var(--blue);
 
-    color: white;
+    color:
+        var(--white);
 
 }
 
@@ -814,16 +869,20 @@ body {
 
     appearance: none;
 
-    -webkit-appearance: none;
+    -webkit-appearance:
+        none;
 
     background:
         rgba(16, 15, 15, .18);
 
-    border-radius: 999px;
+    border-radius:
+        999px;
 
-    outline: none;
+    outline:
+        none;
 
-    cursor: pointer;
+    cursor:
+        pointer;
 
 }
 
@@ -832,20 +891,24 @@ body {
 
     appearance: none;
 
-    -webkit-appearance: none;
+    -webkit-appearance:
+        none;
 
     width: 18px;
     height: 18px;
 
-    border: 2px solid
+    border:
+        2px solid
         var(--blue);
 
-    border-radius: 50%;
+    border-radius:
+        50%;
 
     background:
         var(--background);
 
-    cursor: pointer;
+    cursor:
+        pointer;
 
 }
 
@@ -855,15 +918,18 @@ body {
     width: 16px;
     height: 16px;
 
-    border: 2px solid
+    border:
+        2px solid
         var(--blue);
 
-    border-radius: 50%;
+    border-radius:
+        50%;
 
     background:
         var(--background);
 
-    cursor: pointer;
+    cursor:
+        pointer;
 
 }
 
@@ -872,17 +938,21 @@ body {
 
     width: 42px;
 
-    flex: 0 0 42px;
+    flex:
+        0 0 42px;
 
-    color: var(--gray);
+    color:
+        var(--gray);
 
     font-family:
         "Roboto Mono",
         monospace;
 
-    font-size: 10px;
+    font-size:
+        10px;
 
-    text-align: right;
+    text-align:
+        right;
 
 }
 
@@ -891,29 +961,37 @@ body {
 
     min-height: 36px;
 
-    flex: 0 0 auto;
+    flex:
+        0 0 auto;
 
-    padding: 0 11px;
+    padding:
+        0 11px;
 
     border:
         1px solid
         var(--border);
 
-    border-radius: 4px;
+    border-radius:
+        4px;
 
-    background: transparent;
+    background:
+        transparent;
 
-    color: var(--black);
+    color:
+        var(--black);
 
-    cursor: pointer;
+    cursor:
+        pointer;
 
     font-family:
         "Instrument Sans",
         sans-serif;
 
-    font-size: 11px;
+    font-size:
+        11px;
 
-    font-weight: 600;
+    font-weight:
+        600;
 
 }
 
@@ -930,11 +1008,14 @@ body {
 
     width: 30px;
 
-    flex: 0 0 30px;
+    flex:
+        0 0 30px;
 
-    text-align: center;
+    text-align:
+        center;
 
-    font-size: 18px;
+    font-size:
+        18px;
 
 }
 
@@ -958,7 +1039,10 @@ body {
         display: grid;
 
         grid-template-columns:
-            repeat(4, minmax(0, 1fr));
+            repeat(
+                4,
+                minmax(0, 1fr)
+            );
 
         gap: 4px;
 
@@ -970,55 +1054,41 @@ body {
     .viewer-button {
 
         width: 100%;
+
         min-width: 0;
 
-        padding: 0 7px;
+        padding:
+            0 7px;
 
-        flex: initial;
+        flex:
+            initial;
 
-        font-size: 11px;
+        font-size:
+            11px;
 
     }
 
 
     .controls-separator {
 
-        display: none;
+        display:
+            none;
 
     }
 
 
-    /*
-    Los 8 botones quedan:
-    
-    fila 1:
-    Rotación / Frontal / Lateral / Superior
-
-    fila 2:
-    Cortes / Luz / Centrar / Fullscreen
-    */
-
-
     .tool-panel {
 
-        bottom: 124px;
+        bottom:
+            124px;
 
     }
 
 
     .interaction-help {
 
-        bottom: 190px;
-
-    }
-
-
-    .model-info {
-
-        top: 94px;
-        left: 20px;
-
-        bottom: auto;
+        bottom:
+            190px;
 
     }
 
@@ -1026,107 +1096,254 @@ body {
 
 
 /* =====================================================
-   CELULAR
+   MOBILE
 ===================================================== */
 
 @media (max-width: 650px) {
 
-    /* HEADER */
+    /* =================================================
+       HEADER
+    ================================================= */
 
     .demo-header {
 
-        height: 67px;
+        height:
+            67px;
 
-        padding: 0 16px;
+        padding:
+            0 16px;
 
         grid-template-columns:
-            1fr 1fr;
-
-    }
-
-
-    .demo-header-center {
-
-        display: none;
+            1fr auto;
 
     }
 
 
     .demo-brand {
 
-        font-size: 19px;
+        grid-column:
+            1;
+
+        grid-row:
+            1;
+
+        justify-self:
+            start;
+
+        font-size:
+            19px;
 
     }
 
 
     .back-button {
 
-        min-height: 38px;
+        grid-column:
+            2;
 
-        padding: 0 13px;
+        grid-row:
+            1;
 
-        font-size: 12px;
+        justify-self:
+            end;
+
+        min-height:
+            38px;
+
+        padding:
+            0 13px;
+
+        font-size:
+            12px;
 
     }
 
 
-    /* CONTROLES */
+    /* =================================================
+       SUBIR MI 3D
+
+       Sale del centro del header y pasa
+       a ocupar TODO el ancho debajo.
+    ================================================= */
+
+    .demo-header-center {
+
+        position:
+            fixed;
+
+        top:
+            77px;
+
+        left:
+            10px;
+
+        right:
+            10px;
+
+        z-index:
+            31;
+
+        display:
+            block;
+
+        width:
+            auto;
+
+        margin:
+            0;
+
+        padding:
+            0;
+
+    }
+
+
+    .demo-upload-button {
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+
+        width:
+            100%;
+
+        max-width:
+            none;
+
+        height:
+            58px;
+
+        margin:
+            0;
+
+        padding:
+            0 20px;
+
+        border:
+            1px solid
+            var(--black);
+
+        border-radius:
+            5px;
+
+        background:
+            var(--black);
+
+        color:
+            var(--white);
+
+        font-size:
+            16px;
+
+        font-weight:
+            600;
+
+    }
+
+
+    /*
+    En mobile no queremos el hover
+    de escritorio sobre el botón negro.
+    */
+
+    .demo-upload-button:hover {
+
+        background:
+            var(--black);
+
+        color:
+            var(--white);
+
+        border-color:
+            var(--black);
+
+    }
+
+
+    /* =================================================
+       CONTROLES
+    ================================================= */
 
     .viewer-controls {
 
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
+        left:
+            10px;
 
-        width: auto;
+        right:
+            10px;
 
-        padding: 5px;
+        bottom:
+            10px;
 
-        gap: 4px;
+        width:
+            auto;
+
+        padding:
+            5px;
+
+        gap:
+            4px;
 
         grid-template-columns:
-            repeat(4, minmax(0, 1fr));
+            repeat(
+                4,
+                minmax(0, 1fr)
+            );
 
-        overflow: visible;
+        overflow:
+            visible;
 
     }
 
 
     .viewer-button {
 
-        width: 100%;
-        min-width: 0;
+        width:
+            100%;
 
-        height: 42px;
+        min-width:
+            0;
 
-        padding: 0 4px;
+        height:
+            42px;
 
-        gap: 3px;
+        padding:
+            0 4px;
 
-        overflow: hidden;
+        gap:
+            3px;
 
-        font-size: 10px;
+        overflow:
+            hidden;
 
-        text-overflow: clip;
+        font-size:
+            10px;
+
+        text-overflow:
+            clip;
 
     }
 
 
     .viewer-button svg {
 
-        width: 18px;
-        height: 18px;
+        width:
+            18px;
+
+        height:
+            18px;
 
     }
 
 
-    /*
-       En mobile dejamos SOLO ICONO
-       en las herramientas.
-
-       Frontal / lateral / superior
-       siguen escritas.
-    */
+    /* =================================================
+       SOLO ICONOS EN HERRAMIENTAS
+    ================================================= */
 
     #rotateButton span,
     #cutButton span,
@@ -1134,7 +1351,8 @@ body {
     #resetButton span,
     #fullscreenButton span {
 
-        display: none;
+        display:
+            none;
 
     }
 
@@ -1143,27 +1361,38 @@ body {
     #sideButton span,
     #topButton span {
 
-        display: inline;
+        display:
+            inline;
 
     }
 
 
-    /* PANELES */
+    /* =================================================
+       PANELES
+    ================================================= */
 
     .tool-panel {
 
-        left: 10px;
-        right: 10px;
+        left:
+            10px;
 
-        bottom: 122px;
+        right:
+            10px;
 
-        width: auto;
+        bottom:
+            122px;
 
-        min-height: 55px;
+        width:
+            auto;
 
-        padding: 7px;
+        min-height:
+            55px;
 
-        gap: 6px;
+        padding:
+            7px;
+
+        gap:
+            6px;
 
         transform:
             translateY(8px);
@@ -1181,126 +1410,149 @@ body {
 
     .tool-panel-title {
 
-        display: none;
+        display:
+            none;
 
     }
 
 
-    /* EJES */
+    /* =================================================
+       EJES
+    ================================================= */
 
     .axis-buttons {
 
-        gap: 2px;
+        gap:
+            2px;
 
     }
 
 
     .axis-button {
 
-        width: 31px;
-        height: 34px;
+        width:
+            31px;
 
-        font-size: 10px;
+        height:
+            34px;
+
+        font-size:
+            10px;
 
     }
 
 
-    /* SLIDER */
+    /* =================================================
+       SLIDER
+    ================================================= */
 
     .slider-wrapper {
 
-        min-width: 55px;
+        min-width:
+            55px;
 
     }
 
 
     .slider-value {
 
-        width: 32px;
+        width:
+            32px;
 
-        flex-basis: 32px;
+        flex-basis:
+            32px;
 
-        font-size: 9px;
+        font-size:
+            9px;
 
     }
 
 
-    /* QUITAR CORTE */
+    /* =================================================
+       QUITAR CORTE
+    ================================================= */
 
     .panel-reset {
 
-        width: 34px;
-        min-width: 34px;
+        width:
+            34px;
 
-        padding: 0;
+        min-width:
+            34px;
 
-        font-size: 0;
+        padding:
+            0;
+
+        font-size:
+            0;
 
     }
 
 
     .panel-reset::after {
 
-        content: "×";
+        content:
+            "×";
 
-        font-size: 20px;
+        font-size:
+            20px;
 
-        line-height: 1;
+        line-height:
+            1;
 
     }
 
 
     .light-icon {
 
-        width: 25px;
+        width:
+            25px;
 
-        flex-basis: 25px;
+        flex-basis:
+            25px;
 
-        font-size: 17px;
+        font-size:
+            17px;
 
     }
 
 
-    /* AYUDA */
+    /* =================================================
+       AYUDA
+    ================================================= */
 
     .desktop-help {
 
-        display: none;
+        display:
+            none;
 
     }
 
 
     .mobile-help {
 
-        display: inline;
+        display:
+            inline;
 
     }
 
 
     .interaction-help {
 
-        bottom: 190px;
+        bottom:
+            190px;
 
         max-width:
             calc(100% - 30px);
 
-        overflow: hidden;
+        overflow:
+            hidden;
 
-        font-size: 8px;
+        font-size:
+            8px;
 
-        text-overflow: ellipsis;
-
-    }
-
-
-    /* INFO */
-
-    .model-info {
-
-        top: 84px;
-        left: 16px;
-
-        bottom: auto;
+        text-overflow:
+            ellipsis;
 
     }
 
@@ -1313,159 +1565,78 @@ body {
 
 @media (max-width: 380px) {
 
+    .demo-header-center {
+
+        left:
+            6px;
+
+        right:
+            6px;
+
+    }
+
+
     .viewer-controls {
 
-        left: 6px;
-        right: 6px;
+        left:
+            6px;
 
-        gap: 2px;
+        right:
+            6px;
 
-        padding: 4px;
+        gap:
+            2px;
+
+        padding:
+            4px;
 
     }
 
 
     .viewer-button {
 
-        padding: 0 2px;
+        padding:
+            0 2px;
 
-        font-size: 9px;
+        font-size:
+            9px;
 
     }
 
 
     .tool-panel {
 
-        left: 6px;
-        right: 6px;
+        left:
+            6px;
 
-        gap: 4px;
+        right:
+            6px;
 
-        padding: 6px;
+        gap:
+            4px;
+
+        padding:
+            6px;
 
     }
 
 
     .axis-button {
 
-        width: 29px;
+        width:
+            29px;
 
     }
 
 
     .slider-value {
 
-        width: 29px;
+        width:
+            29px;
 
-        flex-basis: 29px;
+        flex-basis:
+            29px;
 
     }
-/* =====================================================
-   DEMO HEADER ACTIONS
-===================================================== */
 
-.demo-header-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-
-/* =====================================================
-   SUBIR MI 3D
-===================================================== */
-
-.demo-upload-button {
-    min-height: 46px;
-
-    padding: 0 22px;
-
-    border: 1px solid #100F0F;
-    border-radius: 6px;
-
-    background: #100F0F;
-    color: #FFFFFF;
-
-    font-family: "Instrument Sans", sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition:
-        background .2s ease,
-        color .2s ease,
-        transform .2s ease;
-}
-
-
-.demo-upload-button:hover {
-    background: #2664EB;
-    border-color: #2664EB;
-}
-
-
-.demo-upload-button:active {
-    transform: scale(.98);
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 650px) {
-
-    /*
-    El header mantiene:
-    logo izquierda
-    volver derecha
-    */
-
-    .demo-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        flex-wrap: wrap;
-    }
-
-
-    .demo-header-actions {
-        display: contents;
-    }
-
-
-    /*
-    Volver sigue arriba a la derecha.
-    */
-
-    .back-button {
-        order: 2;
-    }
-
-
-    /*
-    SUBIR MI 3D pasa a una segunda fila
-    y ocupa todo el ancho.
-
-    Queda como en tu imagen.
-    */
-
-    .demo-upload-button {
-        order: 3;
-
-        width: 100%;
-
-        min-height: 58px;
-
-        margin-top: 18px;
-
-        flex-basis: 100%;
-
-        font-size: 16px;
-        font-weight: 600;
-    }
-
-}
 }
