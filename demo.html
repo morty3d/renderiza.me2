@@ -45,10 +45,7 @@
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
 
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
-<script src="./demo.js"></script>
 
-<!-- mismo sistema de subida del index -->
-<script src="./upload-flow.js"></script>
 </head>
 
 
@@ -61,21 +58,26 @@
 
     <header class="demo-header">
 
-    <a
-        class="demo-logo"
-        href="./index.html"
-    >
-        renderiza<span>.me</span>
-    </a>
 
-    <div class="demo-header-actions">
-
-        <button
-            class="demo-upload-button upload-trigger"
-            type="button"
+        <a
+            class="demo-brand"
+            href="./index.html"
         >
-            Subir mi 3D
-        </button>
+            renderiza<span>.me</span>
+        </a>
+
+
+        <div class="demo-header-center">
+
+            <button
+                class="demo-upload-button upload-trigger"
+                type="button"
+            >
+                Subir mi 3D
+            </button>
+
+        </div>
+
 
         <a
             class="back-button"
@@ -84,9 +86,8 @@
             ← Volver
         </a>
 
-    </div>
 
-</header>
+    </header>
 
 
 
@@ -163,21 +164,6 @@
 
 
 
-        <!-- =================================================
-             INFORMACIÓN MODELO
-        ================================================== -->
-
-        <div class="model-info">
-
-            <span>
-                MODELO
-            </span>
-
-            <strong>
-                Demo renderiza.me
-            </strong>
-
-        </div>
 
 
 
@@ -336,7 +322,7 @@
 
 
         <!-- =================================================
-             CONTROLES PRINCIPALES
+             CONTROLES
         ================================================== -->
 
         <div class="viewer-controls">
@@ -370,9 +356,7 @@
             </button>
 
 
-
             <div class="controls-separator"></div>
-
 
 
             <!-- FRONTAL -->
@@ -386,7 +370,6 @@
             </button>
 
 
-
             <!-- LATERAL -->
 
             <button
@@ -396,7 +379,6 @@
             >
                 <span>Lateral</span>
             </button>
-
 
 
             <!-- SUPERIOR -->
@@ -410,42 +392,44 @@
             </button>
 
 
-
             <div class="controls-separator"></div>
-
 
 
             <!-- CORTES -->
 
             <button
-    class="viewer-button"
-    id="cutButton"
-    type="button"
-    title="Cortes"
->
+                class="viewer-button"
+                id="cutButton"
+                type="button"
+                title="Cortes"
+            >
 
-    <svg viewBox="0 0 24 24">
+                <svg viewBox="0 0 24 24">
 
-        <!-- circunferencia -->
-        <circle cx="12" cy="12" r="7.5"></circle>
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="7.5"
+                    ></circle>
 
-        <!-- centro -->
-        <circle cx="12" cy="12" r="2.2"></circle>
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="2.2"
+                    ></circle>
 
-        <!-- líneas guía -->
-        <path d="M12 2v4"></path>
-        <path d="M12 18v4"></path>
-        <path d="M2 12h4"></path>
-        <path d="M18 12h4"></path>
+                    <path d="M12 2v4"></path>
+                    <path d="M12 18v4"></path>
+                    <path d="M2 12h4"></path>
+                    <path d="M18 12h4"></path>
 
-    </svg>
+                </svg>
 
-    <span>
-        Cortes
-    </span>
+                <span>
+                    Cortes
+                </span>
 
-</button>
-
+            </button>
 
 
             <!-- LUZ -->
@@ -483,9 +467,7 @@
             </button>
 
 
-
             <div class="controls-separator"></div>
-
 
 
             <!-- CENTRAR -->
@@ -514,7 +496,6 @@
                 </span>
 
             </button>
-
 
 
             <!-- FULLSCREEN -->
@@ -549,13 +530,30 @@
 
 
 
+    <!-- =====================================================
+         INPUT SUBIR GLB
+    ====================================================== -->
+
+    <input
+        id="modelFileInput"
+        type="file"
+        accept=".glb,model/gltf-binary"
+        hidden
+    >
+
+
+
+    <!-- =====================================================
+         JS
+
+         IMPORTANTE:
+         ESTOS VAN AL FINAL DEL BODY.
+    ====================================================== -->
+
     <script src="./demo.js"></script>
-<input
-    id="modelFileInput"
-    type="file"
-    accept=".glb,model/gltf-binary"
-    hidden
->
+
+    <script src="./upload-flow.js"></script>
+
 
 </body>
 
