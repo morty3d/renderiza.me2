@@ -13,6 +13,10 @@
     <title>Tu modelo | renderiza.me</title>
 
 
+    <!-- =====================================================
+         FUENTES
+    ====================================================== -->
+
     <link
         rel="preconnect"
         href="https://fonts.googleapis.com"
@@ -30,7 +34,9 @@
     >
 
 
-    <!-- usamos el mismo estilo del demo -->
+    <!-- =====================================================
+         CSS
+    ====================================================== -->
 
     <link
         rel="stylesheet"
@@ -42,6 +48,10 @@
         href="./upload.css"
     >
 
+
+    <!-- =====================================================
+         BABYLON
+    ====================================================== -->
 
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
 
@@ -57,19 +67,32 @@
          HEADER
     ====================================================== -->
 
-    <header class="demo-header">
+    <header class="demo-header upload-header">
 
+
+        <!-- LOGO -->
 
         <a
             href="./index.html"
-            class="demo-brand"
+            class="demo-brand upload-brand"
+            aria-label="renderiza.me - Inicio"
         >
-            renderiza<span>.me</span>
+
+            <img
+                src="./assets/logo-renderiza.svg"
+                class="upload-brand-logo"
+                alt=""
+            >
+
+            <span class="upload-brand-name">
+                renderiza<span>.me</span>
+            </span>
+
         </a>
 
 
-        
 
+        <!-- VOLVER -->
 
         <a
             href="./index.html"
@@ -97,7 +120,9 @@
 
 
 
-        <!-- CARGA -->
+        <!-- =================================================
+             CARGA
+        ================================================== -->
 
         <div
             class="loading-screen"
@@ -141,7 +166,9 @@
 
 
 
-        <!-- ERROR -->
+        <!-- =================================================
+             ERROR
+        ================================================== -->
 
         <div
             class="error-message"
@@ -152,7 +179,9 @@
 
 
 
-        <!-- INFO MODELO -->
+        <!-- =================================================
+             INFO MODELO
+        ================================================== -->
 
         <div class="model-info">
 
@@ -160,81 +189,83 @@
                 MODELO
             </span>
 
-            <strong
-                id="modelName"
-            >
+            <strong id="modelName">
                 Tu proyecto
             </strong>
 
         </div>
 
 
-<!-- =================================================
-REEMPLAZAR ARCHIVO
-================================================== -->
-
-<!-- =================================================
-     REEMPLAZAR ARCHIVO
-================================================== -->
-
-<button
-    class="replace-file-button"
-    id="replaceFileButton"
-    type="button"
-    title="Reemplazar archivo GLB"
->
-
-    <span class="replace-file-text">
-        Reemplazar archivo
-    </span>
-
-
-    <span class="replace-file-icon">
-
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-
-            <path d="M12 16V5"></path>
-
-            <path d="M8 9l4-4 4 4"></path>
-
-            <path d="M5 15v4h14v-4"></path>
-
-        </svg>
-
-    </span>
-
-</button>
-
-
-<input
-    id="replaceFileInput"
-    type="file"
-    accept=".glb,model/gltf-binary"
-    hidden
->
 
         <!-- =================================================
-     AYUDA DE NAVEGACIÓN
-================================================== -->
+             REEMPLAZAR ARCHIVO
+        ================================================== -->
 
-<div
-    class="interaction-help"
-    id="interactionHelp"
->
+        <button
+            class="replace-file-button"
+            id="replaceFileButton"
+            type="button"
+            title="Reemplazar archivo GLB"
+        >
 
-    <span class="desktop-help">
-        Arrastrá para girar · Scroll para acercar
-    </span>
-
-    <span class="mobile-help">
-        Deslizá para girar · Pellizcá para acercar
-    </span>
-
-</div>
+            <span class="replace-file-text">
+                Reemplazar archivo
+            </span>
 
 
+            <span class="replace-file-icon">
 
-        <!-- PANEL CORTES -->
+                <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+
+                    <path d="M12 16V5"></path>
+
+                    <path d="M8 9l4-4 4 4"></path>
+
+                    <path d="M5 15v4h14v-4"></path>
+
+                </svg>
+
+            </span>
+
+        </button>
+
+
+        <input
+            id="replaceFileInput"
+            type="file"
+            accept=".glb,model/gltf-binary"
+            hidden
+        >
+
+
+
+        <!-- =================================================
+             AYUDA DE NAVEGACIÓN
+        ================================================== -->
+
+        <div
+            class="interaction-help"
+            id="interactionHelp"
+        >
+
+            <span class="desktop-help">
+                Arrastrá para girar · Scroll para acercar
+            </span>
+
+            <span class="mobile-help">
+                Deslizá para girar · Pellizcá para acercar
+            </span>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PANEL CORTES
+        ================================================== -->
 
         <div
             class="tool-panel"
@@ -309,7 +340,9 @@ REEMPLAZAR ARCHIVO
 
 
 
-        <!-- PANEL LUZ -->
+        <!-- =================================================
+             PANEL LUZ
+        ================================================== -->
 
         <div
             class="tool-panel"
@@ -378,7 +411,9 @@ REEMPLAZAR ARCHIVO
 
                 </svg>
 
-                <span>Rotación</span>
+                <span>
+                    Rotación
+                </span>
 
             </button>
 
@@ -391,7 +426,9 @@ REEMPLAZAR ARCHIVO
                 id="frontButton"
                 type="button"
             >
-                <span>Frontal</span>
+                <span>
+                    Frontal
+                </span>
             </button>
 
 
@@ -403,7 +440,9 @@ REEMPLAZAR ARCHIVO
                 id="sideButton"
                 type="button"
             >
-                <span>Lateral</span>
+                <span>
+                    Lateral
+                </span>
             </button>
 
 
@@ -415,7 +454,9 @@ REEMPLAZAR ARCHIVO
                 id="topButton"
                 type="button"
             >
-                <span>Superior</span>
+                <span>
+                    Superior
+                </span>
             </button>
 
 
@@ -449,7 +490,9 @@ REEMPLAZAR ARCHIVO
 
                 </svg>
 
-                <span>Cortes</span>
+                <span>
+                    Cortes
+                </span>
 
             </button>
 
@@ -478,7 +521,9 @@ REEMPLAZAR ARCHIVO
 
                 </svg>
 
-                <span>Luz</span>
+                <span>
+                    Luz
+                </span>
 
             </button>
 
@@ -504,7 +549,9 @@ REEMPLAZAR ARCHIVO
 
                 </svg>
 
-                <span>Centrar</span>
+                <span>
+                    Centrar
+                </span>
 
             </button>
 
@@ -521,13 +568,18 @@ REEMPLAZAR ARCHIVO
                 <svg viewBox="0 0 24 24">
 
                     <path d="M8 3H3v5"></path>
+
                     <path d="M16 3h5v5"></path>
+
                     <path d="M8 21H3v-5"></path>
+
                     <path d="M16 21h5v-5"></path>
 
                 </svg>
 
-                <span>Pantalla completa</span>
+                <span>
+                    Pantalla completa
+                </span>
 
             </button>
 
@@ -545,14 +597,17 @@ REEMPLAZAR ARCHIVO
             id="publishButton"
             type="button"
         >
-
             Obtener link / QR
-
         </button>
 
 
     </main>
 
+
+
+    <!-- =====================================================
+         JS
+    ====================================================== -->
 
     <script src="./upload-viewer.js"></script>
 

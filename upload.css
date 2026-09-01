@@ -1,4 +1,265 @@
 /* =====================================================
+   VARIABLES DEL UPLOAD
+===================================================== */
+
+:root {
+
+    --upload-background:
+        #E8E9E5;
+
+    --upload-black:
+        #100F0F;
+
+    --upload-white:
+        #FFFFFF;
+
+    --upload-blue:
+        #146CFF;
+
+    --upload-container:
+        1480px;
+
+}
+
+
+/* =====================================================
+   HEADER
+
+   SOBRESCRIBE demo.css PARA QUE QUEDE
+   EN LA MISMA POSICIÓN QUE INDEX / PUBLISH
+===================================================== */
+
+.upload-header {
+
+    position:
+        fixed;
+
+    top:
+        0;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    z-index:
+        100;
+
+    width:
+        100%;
+
+    height:
+        78px;
+
+    margin:
+        0;
+
+    padding-left:
+        max(
+            32px,
+            calc(
+                (100vw - var(--upload-container)) / 2
+            )
+        );
+
+    padding-right:
+        max(
+            32px,
+            calc(
+                (100vw - var(--upload-container)) / 2
+            )
+        );
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    background:
+        rgba(232, 233, 229, .88);
+
+    backdrop-filter:
+        blur(14px);
+
+    -webkit-backdrop-filter:
+        blur(14px);
+
+    border-bottom:
+        1px solid
+        rgba(16, 15, 15, .18);
+
+}
+
+
+/* =====================================================
+   LOGO HEADER
+===================================================== */
+
+.upload-brand {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    margin-left:
+        8px;
+
+    color:
+        var(--upload-black);
+
+    text-decoration:
+        none;
+
+}
+
+
+/* SVG */
+
+.upload-brand-logo {
+
+    display:
+        block;
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    object-fit:
+        contain;
+
+    flex:
+        0 0 auto;
+
+}
+
+
+/* TEXTO renderiza.me */
+
+.upload-brand-name {
+
+    display:
+        inline-block;
+
+    font-family:
+        "Instrument Sans",
+        Arial,
+        sans-serif;
+
+    font-size:
+        20px;
+
+    font-weight:
+        600;
+
+    letter-spacing:
+        -.04em;
+
+    line-height:
+        1;
+
+    color:
+        var(--upload-black);
+
+    white-space:
+        nowrap;
+
+}
+
+
+.upload-brand-name span {
+
+    color:
+        var(--upload-blue);
+
+}
+
+
+/* =====================================================
+   BOTÓN VOLVER
+===================================================== */
+
+.upload-header
+.back-button {
+
+    margin:
+        0;
+
+    min-height:
+        42px;
+
+    padding:
+        0 18px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        1px solid
+        var(--upload-black);
+
+    border-radius:
+        5px;
+
+    background:
+        transparent;
+
+    color:
+        var(--upload-black);
+
+    font-family:
+        "Instrument Sans",
+        sans-serif;
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+
+    text-decoration:
+        none;
+
+    white-space:
+        nowrap;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+
+}
+
+
+.upload-header
+.back-button:hover {
+
+    background:
+        var(--upload-black);
+
+    color:
+        var(--upload-white);
+
+}
+
+
+/* =====================================================
    VISOR DE SUBIDA
 ===================================================== */
 
@@ -44,16 +305,17 @@
         0 28px;
 
     border:
-        1px solid #100F0F;
+        1px solid
+        var(--upload-black);
 
     border-radius:
         6px;
 
     background:
-        #100F0F;
+        var(--upload-black);
 
     color:
-        #FFFFFF;
+        var(--upload-white);
 
     cursor:
         pointer;
@@ -118,126 +380,44 @@
 
 
 /* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 900px) {
-
-    .upload-controls {
-
-        bottom: 90px;
-
-    }
-
-
-    .upload-viewer .tool-panel {
-
-        bottom: 195px;
-
-    }
-
-
-    .upload-viewer .interaction-help {
-
-        bottom: 210px;
-
-    }
-
-
-    .publish-button {
-
-        bottom: 14px;
-
-        min-height: 58px;
-
-    }
-
-}
-
-
-@media (max-width: 650px) {
-
-    .upload-controls {
-
-        bottom: 86px;
-
-    }
-
-
-    .upload-viewer .tool-panel {
-
-        bottom: 192px;
-
-    }
-
-
-    /*
-       CARTEL:
-       "Deslizá para girar · Pellizcá para acercar"
-
-       Lo subimos para que no se choque
-       con las dos filas de controles.
-    */
-
-    .upload-viewer .interaction-help {
-
-        bottom: 250px;
-
-    }
-
-
-    .publish-button {
-
-        left: 10px;
-
-        right: 10px;
-
-        bottom: 10px;
-
-        width: auto;
-
-        transform: none;
-
-    }
-
-
-    .publish-button:hover {
-
-        transform: none;
-
-    }
-
-}
-
-
-/* =====================================================
    REEMPLAZAR ARCHIVO
 ===================================================== */
 
 .replace-file-button {
 
-    position: absolute;
+    position:
+        absolute;
 
-    z-index: 16;
+    z-index:
+        16;
 
-    top: 96px;
-    right: 28px;
+    top:
+        96px;
 
-    height: 46px;
+    right:
+        28px;
 
-    padding: 0;
+    height:
+        46px;
 
-    display: flex;
+    padding:
+        0;
 
-    align-items: stretch;
+    display:
+        flex;
+
+    align-items:
+        stretch;
 
     border:
         1px solid
         rgba(16, 15, 15, .25);
 
-    border-radius: 6px;
+    border-radius:
+        6px;
 
-    overflow: hidden;
+    overflow:
+        hidden;
 
     background:
         rgba(232, 233, 229, .90);
@@ -248,9 +428,11 @@
     -webkit-backdrop-filter:
         blur(12px);
 
-    color: #100F0F;
+    color:
+        var(--upload-black);
 
-    cursor: pointer;
+    cursor:
+        pointer;
 
     font-family:
         "Instrument Sans",
@@ -260,7 +442,7 @@
 
 
 /* =====================================================
-   TEXTO
+   TEXTO REEMPLAZAR
 ===================================================== */
 
 .replace-file-text {
@@ -268,34 +450,44 @@
     padding:
         0 16px;
 
-    display: flex;
+    display:
+        flex;
 
-    align-items: center;
+    align-items:
+        center;
 
-    justify-content: center;
+    justify-content:
+        center;
 
-    font-size: 12px;
+    font-size:
+        12px;
 
-    font-weight: 600;
+    font-weight:
+        600;
 
-    white-space: nowrap;
+    white-space:
+        nowrap;
 
 }
 
 
 /* =====================================================
-   ICONO
+   ICONO REEMPLAZAR
 ===================================================== */
 
 .replace-file-icon {
 
-    width: 46px;
+    width:
+        46px;
 
-    display: flex;
+    display:
+        flex;
 
-    align-items: center;
+    align-items:
+        center;
 
-    justify-content: center;
+    justify-content:
+        center;
 
     border-left:
         1px solid
@@ -306,31 +498,41 @@
 
 .replace-file-icon svg {
 
-    width: 18px;
-    height: 18px;
+    width:
+        18px;
 
-    fill: none;
+    height:
+        18px;
 
-    stroke: currentColor;
+    fill:
+        none;
 
-    stroke-width: 1.7;
+    stroke:
+        currentColor;
 
-    stroke-linecap: round;
+    stroke-width:
+        1.7;
 
-    stroke-linejoin: round;
+    stroke-linecap:
+        round;
+
+    stroke-linejoin:
+        round;
 
 }
 
 
 /* =====================================================
-   HOVER
+   HOVER REEMPLAZAR
 ===================================================== */
 
 .replace-file-button:hover {
 
-    background: #100F0F;
+    background:
+        var(--upload-black);
 
-    color: #FFFFFF;
+    color:
+        var(--upload-white);
 
 }
 
@@ -345,17 +547,205 @@
 
 
 /* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+
+    .upload-controls {
+
+        bottom:
+            90px;
+
+    }
+
+
+    .upload-viewer
+    .tool-panel {
+
+        bottom:
+            195px;
+
+    }
+
+
+    .upload-viewer
+    .interaction-help {
+
+        bottom:
+            210px;
+
+    }
+
+
+    .publish-button {
+
+        bottom:
+            14px;
+
+        min-height:
+            58px;
+
+    }
+
+}
+
+
+/* =====================================================
    MOBILE
 ===================================================== */
 
 @media (max-width: 650px) {
 
+
+    /* =================================================
+       HEADER
+    ================================================= */
+
+    .upload-header {
+
+        width:
+            100%;
+
+        height:
+            67px;
+
+        padding-left:
+            14px;
+
+        padding-right:
+            14px;
+
+    }
+
+
+    .upload-brand {
+
+        gap:
+            8px;
+
+        margin-left:
+            4px;
+
+    }
+
+
+    .upload-brand-logo {
+
+        width:
+            36px;
+
+        height:
+            36px;
+
+    }
+
+
+    .upload-brand-name {
+
+        font-size:
+            16px;
+
+    }
+
+
+    .upload-header
+    .back-button {
+
+        min-height:
+            38px;
+
+        padding:
+            0 13px;
+
+        font-size:
+            12px;
+
+    }
+
+
+    /* =================================================
+       CONTROLES
+    ================================================= */
+
+    .upload-controls {
+
+        bottom:
+            86px;
+
+    }
+
+
+    .upload-viewer
+    .tool-panel {
+
+        bottom:
+            192px;
+
+    }
+
+
+    /*
+    Deslizá para girar ·
+    Pellizcá para acercar
+    */
+
+    .upload-viewer
+    .interaction-help {
+
+        bottom:
+            250px;
+
+    }
+
+
+    /* =================================================
+       CTA
+    ================================================= */
+
+    .publish-button {
+
+        left:
+            10px;
+
+        right:
+            10px;
+
+        bottom:
+            10px;
+
+        width:
+            auto;
+
+        transform:
+            none;
+
+    }
+
+
+    .publish-button:hover {
+
+        transform:
+            none;
+
+    }
+
+
+    /* =================================================
+       REEMPLAZAR ARCHIVO
+    ================================================= */
+
     .replace-file-button {
 
-        top: 82px;
-        right: 12px;
+        top:
+            82px;
 
-        height: 44px;
+        right:
+            12px;
+
+        height:
+            44px;
 
     }
 
@@ -365,26 +755,28 @@
         padding:
             0 13px;
 
-        font-size: 11px;
+        font-size:
+            11px;
 
     }
 
 
     .replace-file-icon {
 
-        width: 44px;
+        width:
+            44px;
 
     }
 
 
     .replace-file-icon svg {
 
-        width: 18px;
-        height: 18px;
+        width:
+            18px;
+
+        height:
+            18px;
 
     }
 
 }
-
-
-

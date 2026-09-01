@@ -13,7 +13,9 @@
     <title>Demo | renderiza.me</title>
 
 
-    <!-- FUENTES -->
+    <!-- =====================================================
+         FUENTES
+    ====================================================== -->
 
     <link
         rel="preconnect"
@@ -32,7 +34,9 @@
     >
 
 
-    <!-- CSS -->
+    <!-- =====================================================
+         CSS
+    ====================================================== -->
 
     <link
         rel="stylesheet"
@@ -40,7 +44,9 @@
     >
 
 
-    <!-- BABYLON -->
+    <!-- =====================================================
+         BABYLON
+    ====================================================== -->
 
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
 
@@ -59,13 +65,29 @@
     <header class="demo-header">
 
 
+        <!-- LOGO -->
+
         <a
             class="demo-brand"
             href="./index.html"
+            aria-label="renderiza.me - Inicio"
         >
-            renderiza<span>.me</span>
+
+            <img
+                src="./assets/logo-renderiza.svg"
+                class="demo-brand-logo"
+                alt=""
+            >
+
+            <span class="demo-brand-name">
+                renderiza<span>.me</span>
+            </span>
+
         </a>
 
+
+
+        <!-- BOTÓN CENTRAL -->
 
         <div class="demo-header-center">
 
@@ -78,6 +100,9 @@
 
         </div>
 
+
+
+        <!-- VOLVER -->
 
         <a
             class="back-button"
@@ -161,9 +186,6 @@
         >
             No pudimos cargar el modelo 3D.
         </div>
-
-
-
 
 
 
@@ -359,6 +381,7 @@
             <div class="controls-separator"></div>
 
 
+
             <!-- FRONTAL -->
 
             <button
@@ -366,8 +389,11 @@
                 id="frontButton"
                 type="button"
             >
-                <span>Frontal</span>
+                <span>
+                    Frontal
+                </span>
             </button>
+
 
 
             <!-- LATERAL -->
@@ -377,8 +403,11 @@
                 id="sideButton"
                 type="button"
             >
-                <span>Lateral</span>
+                <span>
+                    Lateral
+                </span>
             </button>
+
 
 
             <!-- SUPERIOR -->
@@ -388,11 +417,14 @@
                 id="topButton"
                 type="button"
             >
-                <span>Superior</span>
+                <span>
+                    Superior
+                </span>
             </button>
 
 
             <div class="controls-separator"></div>
+
 
 
             <!-- CORTES -->
@@ -430,6 +462,7 @@
                 </span>
 
             </button>
+
 
 
             <!-- LUZ -->
@@ -470,6 +503,7 @@
             <div class="controls-separator"></div>
 
 
+
             <!-- CENTRAR -->
 
             <button
@@ -496,6 +530,7 @@
                 </span>
 
             </button>
+
 
 
             <!-- FULLSCREEN -->
@@ -545,9 +580,6 @@
 
     <!-- =====================================================
          JS
-
-         IMPORTANTE:
-         ESTOS VAN AL FINAL DEL BODY.
     ====================================================== -->
 
     <script src="./demo.js"></script>
