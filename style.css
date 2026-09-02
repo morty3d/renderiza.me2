@@ -30,46 +30,6 @@
         32px;
 
 }
-.brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-
-    margin-left: 8px;
-
-    text-decoration: none;
-}
-
-
-.brand-logo {
-    display: block;
-
-    width: 38px;
-    height: 38px;
-
-    object-fit: contain;
-}
-
-
-.brand-name {
-    display: inline-block;
-
-    font-family: "Instrument Sans", Arial, sans-serif;
-
-    font-size: 20px;
-    font-weight: 600;
-
-    letter-spacing: -0.04em;
-
-    color: var(--black);
-
-    white-space: nowrap;
-}
-
-
-.brand-name span {
-    color: var(--blue);
-}
 
 
 /* =====================================================
@@ -245,6 +205,9 @@ a {
     gap:
         10px;
 
+    margin-left:
+        8px;
+
     text-decoration:
         none;
 
@@ -256,6 +219,59 @@ a {
 
     z-index:
         6;
+
+}
+
+
+.brand-logo {
+
+    display:
+        block;
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    object-fit:
+        contain;
+
+}
+
+
+.brand-name {
+
+    display:
+        inline-block;
+
+    font-family:
+        "Instrument Sans",
+        Arial,
+        sans-serif;
+
+    font-size:
+        20px;
+
+    font-weight:
+        600;
+
+    letter-spacing:
+        -.04em;
+
+    color:
+        var(--black);
+
+    white-space:
+        nowrap;
+
+}
+
+
+.brand-name span {
+
+    color:
+        var(--blue);
 
 }
 
@@ -288,29 +304,6 @@ a {
 
     font-size:
         17px;
-
-}
-
-
-.brand-name {
-
-    font-size:
-        20px;
-
-    font-weight:
-        600;
-
-    letter-spacing:
-        -.04em;
-
-}
-
-
-.brand-name span,
-.footer-logo span {
-
-    color:
-        var(--blue);
 
 }
 
@@ -392,12 +385,6 @@ a {
 }
 
 
-/*
-Cuando aparece el CTA central,
-ocultamos los links para que
-no se superpongan.
-*/
-
 .navbar.show-upload-cta
 .nav-links {
 
@@ -474,8 +461,7 @@ no se superpongan.
         5px;
 
     border:
-        1px solid
-        var(--black);
+        1px solid var(--black);
 
     font:
         inherit;
@@ -564,8 +550,6 @@ no se superpongan.
 
 /* =====================================================
    CTA CENTRAL DEL NAVBAR
-
-   OCULTO POR DEFECTO
 ===================================================== */
 
 .navbar-upload-cta {
@@ -581,13 +565,6 @@ no se superpongan.
 
     z-index:
         5;
-
-    /*
-    Fundamental:
-    mantiene el botón centrado
-    independientemente del logo
-    y del menú.
-    */
 
     transform:
         translate(-50%, -50%)
@@ -615,182 +592,6 @@ no se superpongan.
 
 }
 
-/* =====================================================
-   FORMATOS COMPATIBLES
-===================================================== */
-
-.supported-formats {
-    width: 100%;
-    margin-top: 42px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-
-/* ETIQUETA */
-
-.supported-formats-label {
-    margin-bottom: 22px;
-
-    font-family: "Roboto Mono", monospace;
-    font-size: 12px;
-    font-weight: 500;
-
-    letter-spacing: .15em;
-    text-transform: uppercase;
-
-    color: #100F0F;
-}
-
-
-/* GRID */
-
-.formats-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, 150px);
-
-    gap: 12px;
-}
-
-
-/* TARJETA */
-
-.format-card {
-    height: 120px;
-
-    display: flex;
-    flex-direction: column;
-
-    align-items: center;
-    justify-content: center;
-
-    gap: 10px;
-
-    border:
-        1px solid rgba(16, 15, 15, .28);
-
-    border-radius: 12px;
-
-    background:
-        rgba(255, 255, 255, .18);
-
-    transition:
-        transform .25s ease,
-        border-color .25s ease,
-        background .25s ease;
-}
-
-
-/* ICONO */
-
-.format-icon {
-    width: 46px;
-    height: 46px;
-
-    fill: none;
-
-    stroke: #100F0F;
-    stroke-width: 1.8;
-
-    stroke-linecap: round;
-    stroke-linejoin: round;
-
-    transition:
-        stroke .25s ease,
-        transform .25s ease;
-}
-
-
-/* TEXTO */
-
-.format-card span {
-    font-family:
-        "Instrument Sans",
-        Arial,
-        sans-serif;
-
-    font-size: 15px;
-    font-weight: 600;
-
-    color: #100F0F;
-}
-
-
-/* HOVER */
-
-.format-card:hover {
-    transform:
-        translateY(-3px);
-
-    border-color:
-        #146CFF;
-
-    background:
-        rgba(20, 108, 255, .055);
-}
-
-
-.format-card:hover
-.format-icon {
-
-    stroke:
-        #146CFF;
-
-    transform:
-        translateY(-2px);
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 650px) {
-
-    .supported-formats {
-        margin-top: 34px;
-    }
-
-
-    .supported-formats-label {
-        margin-bottom: 16px;
-        font-size: 10px;
-    }
-
-
-    .formats-grid {
-        width: 100%;
-
-        grid-template-columns:
-            repeat(2, 1fr);
-
-        gap: 8px;
-    }
-
-
-    .format-card {
-        height: 100px;
-    }
-
-
-    .format-icon {
-        width: 38px;
-        height: 38px;
-    }
-
-
-    .format-card span {
-        font-size: 13px;
-    }
-
-}
-/* =====================================================
-   CTA VISIBLE AL HACER SCROLL
-===================================================== */
 
 .navbar.show-upload-cta
 .navbar-upload-cta {
@@ -809,14 +610,6 @@ no se superpongan.
 
 }
 
-
-/*
-La regla global .button:hover modifica
-transform.
-
-La corregimos para no perder
-el centrado absoluto.
-*/
 
 .navbar.show-upload-cta
 .navbar-upload-cta:hover {
@@ -883,6 +676,10 @@ el centrado absoluto.
 }
 
 
+/* =====================================================
+   HERO TITLE
+===================================================== */
+
 .hero-title {
 
     max-width:
@@ -899,7 +696,7 @@ el centrado absoluto.
         );
 
     line-height:
-        .88;
+        .96;
 
     letter-spacing:
         -.04em;
@@ -912,23 +709,39 @@ el centrado absoluto.
 
 .hero-title-top,
 .hero-title-main {
-    display: block;
+
+    display:
+        block;
+
 }
 
 
-/* Lo tenés en 3D. */
+/* Lo tenés en 3D */
 
 .hero-title-top {
-    color: var(--black);
-    font-size: .78em;
+
+    color:
+        var(--black);
+
+    font-size:
+        .78em;
+
+    margin-bottom:
+        .08em;
+
 }
 
 
-/* Mostralo en 3D. */
+/* Mostralo en 3D */
 
 .hero-title-main {
-    color: var(--blue);
-    font-size: 1em;
+
+    color:
+        var(--blue);
+
+    font-size:
+        1em;
+
 }
 
 
@@ -970,6 +783,258 @@ el centrado absoluto.
 
 
 /* =====================================================
+   FORMATOS COMPATIBLES
+===================================================== */
+
+.supported-formats {
+
+    width:
+        100%;
+
+    margin-top:
+        42px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+}
+
+
+.supported-formats-label {
+
+    margin-bottom:
+        22px;
+
+    font-family:
+        "Roboto Mono",
+        monospace;
+
+    font-size:
+        12px;
+
+    font-weight:
+        500;
+
+    letter-spacing:
+        .15em;
+
+    text-transform:
+        uppercase;
+
+    color:
+        #100F0F;
+
+}
+
+
+/* =====================================================
+   FORMATOS - DESKTOP
+===================================================== */
+
+.formats-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(4, 150px);
+
+    gap:
+        12px;
+
+    justify-content:
+        center;
+
+}
+
+
+.format-card {
+
+    width:
+        150px;
+
+    height:
+        120px;
+
+    min-width:
+        0;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        10px;
+
+    padding:
+        0;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid rgba(16, 15, 15, .28);
+
+    border-radius:
+        12px;
+
+    background:
+        rgba(255, 255, 255, .18);
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        background .25s ease;
+
+}
+
+
+/* =====================================================
+   ICONOS FORMATOS
+===================================================== */
+
+.supported-formats
+.format-icon {
+
+    display:
+        block;
+
+    flex:
+        0 0 auto;
+
+    width:
+        48px;
+
+    height:
+        48px;
+
+    color:
+        var(--blue);
+
+    fill:
+        none;
+
+    stroke:
+        currentColor;
+
+    stroke-width:
+        1.8;
+
+    stroke-linecap:
+        round;
+
+    stroke-linejoin:
+        round;
+
+    filter:
+        drop-shadow(
+            0 2px 0
+            rgba(0, 50, 150, .28)
+        )
+        drop-shadow(
+            0 6px 10px
+            rgba(20, 108, 255, .18)
+        );
+
+    transition:
+        transform .25s ease,
+        filter .25s ease;
+
+}
+
+
+/* =====================================================
+   TEXTO FORMATOS
+===================================================== */
+
+.format-card span {
+
+    display:
+        block;
+
+    max-width:
+        100%;
+
+    font-family:
+        "Instrument Sans",
+        Arial,
+        sans-serif;
+
+    font-size:
+        15px;
+
+    font-weight:
+        600;
+
+    line-height:
+        1;
+
+    color:
+        #100F0F;
+
+    white-space:
+        nowrap;
+
+    text-align:
+        center;
+
+}
+
+
+/* =====================================================
+   HOVER FORMATOS
+===================================================== */
+
+.format-card:hover {
+
+    transform:
+        translateY(-3px);
+
+    border-color:
+        var(--blue);
+
+    background:
+        rgba(20, 108, 255, .055);
+
+}
+
+
+.supported-formats
+.format-card:hover
+.format-icon {
+
+    transform:
+        translateY(-3px)
+        scale(1.06);
+
+    filter:
+        drop-shadow(
+            0 3px 0
+            rgba(0, 45, 135, .34)
+        )
+        drop-shadow(
+            0 9px 13px
+            rgba(20, 108, 255, .25)
+        );
+
+}
+
+
+/* =====================================================
    HERO ART
 ===================================================== */
 
@@ -979,8 +1044,7 @@ el centrado absoluto.
         92px;
 
     border:
-        1px solid
-        var(--black);
+        1px solid var(--black);
 
     background:
         var(--black);
@@ -1212,8 +1276,7 @@ el centrado absoluto.
         var(--white);
 
     border:
-        1px solid
-        var(--black);
+        1px solid var(--black);
 
 }
 
@@ -1221,8 +1284,7 @@ el centrado absoluto.
 .hero-qr span {
 
     border:
-        7px solid
-        var(--black);
+        7px solid var(--black);
 
 }
 
@@ -1319,8 +1381,7 @@ el centrado absoluto.
         );
 
     border:
-        1px solid
-        var(--black);
+        1px solid var(--black);
 
 }
 
@@ -1340,8 +1401,7 @@ el centrado absoluto.
         column;
 
     border-right:
-        1px solid
-        var(--black);
+        1px solid var(--black);
 
 }
 
@@ -1433,8 +1493,7 @@ el centrado absoluto.
         block;
 
     border:
-        2px solid
-        var(--black);
+        2px solid var(--black);
 
     border-radius:
         50%;
@@ -1461,8 +1520,7 @@ el centrado absoluto.
         50%;
 
     border:
-        1.5px solid
-        var(--black);
+        1.5px solid var(--black);
 
     border-radius:
         50%;
@@ -1724,8 +1782,7 @@ el centrado absoluto.
         column;
 
     border:
-        1px solid
-        var(--black);
+        1px solid var(--black);
 
     overflow:
         hidden;
@@ -1892,6 +1949,10 @@ el centrado absoluto.
 }
 
 
+/* =====================================================
+   QR DECORATIVO
+===================================================== */
+
 .fake-qr {
 
     position:
@@ -1913,8 +1974,7 @@ el centrado absoluto.
         var(--white);
 
     border:
-        1px solid
-        var(--black);
+        1px solid var(--black);
 
 }
 
@@ -1931,8 +1991,7 @@ el centrado absoluto.
         31px;
 
     border:
-        7px solid
-        var(--black);
+        7px solid var(--black);
 
 }
 
@@ -1993,6 +2052,10 @@ el centrado absoluto.
 }
 
 
+/* =====================================================
+   DECORACIONES USES
+===================================================== */
+
 .use-line {
 
     position:
@@ -2011,8 +2074,7 @@ el centrado absoluto.
         46px;
 
     border:
-        1px solid
-        var(--black);
+        1px solid var(--black);
 
     border-radius:
         50%;
@@ -2032,8 +2094,7 @@ el centrado absoluto.
         36px;
 
     border:
-        1px solid
-        var(--black);
+        1px solid var(--black);
 
     border-radius:
         50%;
@@ -2059,8 +2120,7 @@ el centrado absoluto.
         28px;
 
     border:
-        2px solid
-        var(--black);
+        2px solid var(--black);
 
     border-radius:
         13px;
@@ -2113,16 +2173,13 @@ el centrado absoluto.
         34px;
 
     border-left:
-        2px solid
-        var(--black);
+        2px solid var(--black);
 
     border-right:
-        2px solid
-        var(--black);
+        2px solid var(--black);
 
     border-bottom:
-        2px solid
-        var(--black);
+        2px solid var(--black);
 
 }
 
@@ -2301,8 +2358,7 @@ el centrado absoluto.
         absolute;
 
     border:
-        1px solid
-        var(--black);
+        1px solid var(--black);
 
     border-radius:
         50%;
@@ -2507,8 +2563,7 @@ el centrado absoluto.
 .faq {
 
     border-top:
-        1px solid
-        var(--black);
+        1px solid var(--black);
 
 }
 
@@ -2516,8 +2571,7 @@ el centrado absoluto.
 details {
 
     border-bottom:
-        1px solid
-        var(--black);
+        1px solid var(--black);
 
 }
 
@@ -2592,7 +2646,8 @@ summary::after {
 }
 
 
-details[open] summary::after {
+details[open]
+summary::after {
 
     content:
         "−";
@@ -2648,8 +2703,7 @@ details p {
         center;
 
     border-top:
-        1px solid
-        var(--black);
+        1px solid var(--black);
 
 }
 
@@ -2741,40 +2795,73 @@ footer {
 
 
 .footer-logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
 
-    text-decoration: none;
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    text-decoration:
+        none;
+
 }
 
 
 .footer-logo-img {
-    display: block;
-    width: 38px;
-    height: 38px;
-    object-fit: contain;
 
-    filter: brightness(0) invert(1);
+    display:
+        block;
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    object-fit:
+        contain;
+
+    filter:
+        brightness(0)
+        invert(1);
+
 }
 
 
 .footer-brand-name {
-    font-family: "Instrument Sans", Arial, sans-serif;
 
-    font-size: 24px;
-    font-weight: 600;
+    font-family:
+        "Instrument Sans",
+        Arial,
+        sans-serif;
 
-    letter-spacing: -0.04em;
+    font-size:
+        24px;
 
-    color: var(--white);
+    font-weight:
+        600;
 
-    white-space: nowrap;
+    letter-spacing:
+        -.04em;
+
+    color:
+        var(--white);
+
+    white-space:
+        nowrap;
+
 }
 
 
 .footer-brand-name span {
-    color: var(--blue);
+
+    color:
+        var(--blue);
+
 }
 
 
@@ -2873,8 +2960,7 @@ footer {
             7px;
 
         border:
-            1px solid
-            var(--black);
+            1px solid var(--black);
 
         border-radius:
             5px;
@@ -2908,7 +2994,8 @@ footer {
     }
 
 
-    .menu-toggle.is-open span:first-child {
+    .menu-toggle.is-open
+    span:first-child {
 
         transform:
             translateY(4.25px)
@@ -2917,7 +3004,8 @@ footer {
     }
 
 
-    .menu-toggle.is-open span:last-child {
+    .menu-toggle.is-open
+    span:last-child {
 
         transform:
             translateY(-4.25px)
@@ -2956,12 +3044,10 @@ footer {
             var(--background);
 
         border-top:
-            1px solid
-            var(--border);
+            1px solid var(--border);
 
         border-bottom:
-            1px solid
-            var(--black);
+            1px solid var(--black);
 
     }
 
@@ -2980,8 +3066,7 @@ footer {
             18px 0;
 
         border-bottom:
-            1px solid
-            var(--border);
+            1px solid var(--border);
 
         font-size:
             24px;
@@ -3014,19 +3099,12 @@ footer {
             0;
 
     }
-.hero-title-top {
-    font-size: .68em;
-}
 
-.hero-title-main {
-    font-size: 1em;
-}
 
     .step-card:nth-child(-n+2) {
 
         border-bottom:
-            1px solid
-            var(--black);
+            1px solid var(--black);
 
     }
 
@@ -3109,15 +3187,44 @@ footer {
     }
 
 
+    /* =================================================
+       NAV
+    ================================================= */
+
     .navbar {
 
-    width: 100%;
-    height: 76px;
+        width:
+            100%;
 
-    padding-left: 14px;
-    padding-right: 14px;
+        height:
+            76px;
 
-}
+        padding-left:
+            14px;
+
+        padding-right:
+            14px;
+
+    }
+
+
+    .brand {
+
+        margin-left:
+            4px;
+
+    }
+
+
+    .brand-logo {
+
+        width:
+            36px;
+
+        height:
+            36px;
+
+    }
 
 
     .brand-name {
@@ -3135,10 +3242,6 @@ footer {
 
     }
 
-
-    /* =================================================
-       CTA DEL NAVBAR MOBILE
-    ================================================= */
 
     .navbar-upload-cta {
 
@@ -3171,6 +3274,10 @@ footer {
     }
 
 
+    /* =================================================
+       HERO
+    ================================================= */
+
     .hero,
     .section,
     .preview-inner {
@@ -3184,7 +3291,7 @@ footer {
     .hero {
 
         padding-top:
-            05px;
+            5px;
 
     }
 
@@ -3209,6 +3316,31 @@ footer {
                 78px
             );
 
+        line-height:
+            .96;
+
+        letter-spacing:
+            -.035em;
+
+    }
+
+
+    .hero-title-top {
+
+        font-size:
+            .68em;
+
+        margin-bottom:
+            .10em;
+
+    }
+
+
+    .hero-title-main {
+
+        font-size:
+            1em;
+
     }
 
 
@@ -3230,6 +3362,154 @@ footer {
 
     }
 
+
+    /* =================================================
+       FORMATOS COMPATIBLES MOBILE
+    ================================================= */
+
+    .supported-formats {
+
+        margin-top:
+            28px;
+
+    }
+
+
+    .supported-formats-label {
+
+        margin-bottom:
+            12px;
+
+        font-size:
+            9px;
+
+        letter-spacing:
+            .12em;
+
+    }
+
+
+    /*
+       100% del ancho
+       menos los 3 espacios de 5px.
+
+       Cada tarjeta recibe exactamente
+       el mismo ancho.
+    */
+
+    .formats-grid {
+
+        width:
+            100%;
+
+        display:
+            flex;
+
+        align-items:
+            stretch;
+
+        justify-content:
+            flex-start;
+
+        gap:
+            5px;
+
+    }
+
+
+    .format-card {
+
+        flex:
+            0 0 calc(
+                (100% - 15px) / 4
+            );
+
+        width:
+            calc(
+                (100% - 15px) / 4
+            );
+
+        min-width:
+            0;
+
+        max-width:
+            calc(
+                (100% - 15px) / 4
+            );
+
+        height:
+            72px;
+
+        padding:
+            6px 2px;
+
+        gap:
+            5px;
+
+        border-radius:
+            8px;
+
+        overflow:
+            hidden;
+
+    }
+
+
+    .supported-formats
+    .format-icon {
+
+        width:
+            28px;
+
+        height:
+            28px;
+
+        flex:
+            0 0 28px;
+
+        stroke-width:
+            2.4;
+
+    }
+
+
+    .format-card span {
+
+        width:
+            100%;
+
+        max-width:
+            100%;
+
+        overflow:
+            hidden;
+
+        font-size:
+            10px;
+
+        line-height:
+            1;
+
+        white-space:
+            nowrap;
+
+        text-align:
+            center;
+
+    }
+
+
+    .format-card:last-child span {
+
+        font-size:
+            8px;
+
+    }
+
+
+    /* =================================================
+       HERO ART
+    ================================================= */
 
     .hero-art {
 
@@ -3281,6 +3561,10 @@ footer {
     }
 
 
+    /* =================================================
+       COMMON SECTION
+    ================================================= */
+
     .section {
 
         padding:
@@ -3312,6 +3596,10 @@ footer {
     }
 
 
+    /* =================================================
+       STEPS
+    ================================================= */
+
     .steps {
 
         margin-top:
@@ -3333,8 +3621,7 @@ footer {
             0;
 
         border-bottom:
-            1px solid
-            var(--black);
+            1px solid var(--black);
 
     }
 
@@ -3354,6 +3641,10 @@ footer {
 
     }
 
+
+    /* =================================================
+       PREVIEW
+    ================================================= */
 
     .preview-inner {
 
@@ -3415,6 +3706,10 @@ footer {
     }
 
 
+    /* =================================================
+       USES
+    ================================================= */
+
     .use-grid {
 
         margin-top:
@@ -3460,6 +3755,10 @@ footer {
 
     }
 
+
+    /* =================================================
+       PRICING
+    ================================================= */
 
     .pricing-section {
 
@@ -3533,6 +3832,10 @@ footer {
     }
 
 
+    /* =================================================
+       COMPANY
+    ================================================= */
+
     .company-section {
 
         padding:
@@ -3564,6 +3867,10 @@ footer {
     }
 
 
+    /* =================================================
+       FAQ
+    ================================================= */
+
     .faq-section h2 {
 
         margin-bottom:
@@ -3592,6 +3899,10 @@ footer {
 
     }
 
+
+    /* =================================================
+       FINAL CTA
+    ================================================= */
 
     .final-cta {
 
@@ -3627,6 +3938,10 @@ footer {
     }
 
 
+    /* =================================================
+       FOOTER
+    ================================================= */
+
     footer {
 
         grid-template-columns:
@@ -3660,6 +3975,79 @@ footer {
 
 
 /* =====================================================
+   MOBILE MUY CHICO
+===================================================== */
+
+@media (max-width: 380px) {
+
+    .formats-grid {
+
+        gap:
+            4px;
+
+    }
+
+
+    .format-card {
+
+        flex:
+            0 0 calc(
+                (100% - 12px) / 4
+            );
+
+        width:
+            calc(
+                (100% - 12px) / 4
+            );
+
+        max-width:
+            calc(
+                (100% - 12px) / 4
+            );
+
+        height:
+            68px;
+
+        padding:
+            5px 1px;
+
+    }
+
+
+    .supported-formats
+    .format-icon {
+
+        width:
+            25px;
+
+        height:
+            25px;
+
+        flex:
+            0 0 25px;
+
+    }
+
+
+    .format-card span {
+
+        font-size:
+            9px;
+
+    }
+
+
+    .format-card:last-child span {
+
+        font-size:
+            7px;
+
+    }
+
+}
+
+
+/* =====================================================
    REDUCED MOTION
 ===================================================== */
 
@@ -3686,79 +4074,6 @@ footer {
         transition-duration:
             .01ms !important;
 
-    }
-
-}
-/* SOLO ICONOS DE FORMATOS COMPATIBLES */
-
-.supported-formats .format-icon {
-    width: 48px;
-    height: 48px;
-
-    color: #146CFF;
-
-    fill: none;
-    stroke: currentColor;
-
-    filter:
-        drop-shadow(0 2px 0 rgba(0, 50, 150, .28))
-        drop-shadow(0 6px 10px rgba(20, 108, 255, .18));
-
-    transition:
-        transform .25s ease,
-        filter .25s ease;
-}
-
-
-.supported-formats .format-card:hover .format-icon {
-    transform:
-        translateY(-3px)
-        scale(1.06);
-
-    filter:
-        drop-shadow(0 3px 0 rgba(0, 45, 135, .34))
-        drop-shadow(0 9px 13px rgba(20, 108, 255, .25));
-}
-
-@media (max-width: 650px) {
-
-    .supported-formats {
-        margin-top: 28px;
-    }
-
-    .supported-formats-label {
-        margin-bottom: 12px;
-        font-size: 9px;
-        letter-spacing: .12em;
-    }
-
-    .formats-grid {
-        width: 100%;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 5px;
-    }
-
-    .format-card {
-        min-width: 0;
-        height: 72px;
-        padding: 6px 2px;
-
-        gap: 5px;
-
-        border-radius: 8px;
-    }
-
-    .supported-formats .format-icon {
-        width: 28px;
-        height: 28px;
-
-        stroke-width: 2.4;
-    }
-
-    .format-card span {
-        font-size: 10px;
-        line-height: 1;
-        white-space: nowrap;
     }
 
 }
