@@ -3981,37 +3981,32 @@ footer {
 @media (max-width: 380px) {
 
     .formats-grid {
+    width: 100%;
 
-        gap:
-            4px;
+    display: flex;
 
-    }
+    justify-content: center;
+    align-items: stretch;
+
+    gap: 5px;
+}
 
 
-    .format-card {
+.format-card {
+    flex: 0 0 78px;
 
-        flex:
-            0 0 calc(
-                (100% - 12px) / 4
-            );
+    width: 78px;
+    min-width: 78px;
+    max-width: 78px;
 
-        width:
-            calc(
-                (100% - 12px) / 4
-            );
+    height: 72px;
 
-        max-width:
-            calc(
-                (100% - 12px) / 4
-            );
+    padding: 6px 2px;
 
-        height:
-            68px;
+    gap: 5px;
 
-        padding:
-            5px 1px;
-
-    }
+    border-radius: 8px;
+}
 
 
     .supported-formats
