@@ -57,6 +57,10 @@
 
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
 
+    <!-- OPEN CASCADE / STEP -->
+
+<script src="./assets/occt/occt-import-js.js"></script>
+
 </head>
 
 
@@ -205,7 +209,7 @@
             class="replace-file-button"
             id="replaceFileButton"
             type="button"
-            title="Reemplazar archivo GLB"
+            title="Reemplazar archivo 3D"
         >
 
             <span class="replace-file-text">
@@ -234,11 +238,11 @@
 
 
         <input
-            id="replaceFileInput"
-            type="file"
-            accept=".glb,model/gltf-binary"
-            hidden
-        >
+    id="replaceFileInput"
+    type="file"
+    accept=".glb,.stl,.obj,.step,.stp"
+    hidden
+>
 
 
 

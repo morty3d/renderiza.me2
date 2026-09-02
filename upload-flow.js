@@ -1,4 +1,17 @@
 /* =====================================================
+   FORMATOS SOPORTADOS
+===================================================== */
+
+const SUPPORTED_MODEL_EXTENSIONS = [
+    "glb",
+    "stl",
+    "obj",
+    "step",
+    "stp"
+];
+
+
+/* =====================================================
    SUBIR MODELO DESDE HOME
 ===================================================== */
 
@@ -7,10 +20,65 @@ const uploadButtons =
         ".upload-trigger"
     );
 
+
 const modelFileInput =
     document.getElementById(
         "modelFileInput"
     );
+
+
+/* =====================================================
+   EXTENSIÓN
+===================================================== */
+
+function getModelExtension(file) {
+
+    if (
+        !file ||
+        !file.name
+    ) {
+
+        return "";
+
+    }
+
+
+    const parts =
+        file.name
+            .toLowerCase()
+            .split(".");
+
+
+    if (
+        parts.length < 2
+    ) {
+
+        return "";
+
+    }
+
+
+    return parts.pop();
+
+}
+
+
+/* =====================================================
+   VALIDAR FORMATO
+===================================================== */
+
+function isSupportedModelFile(file) {
+
+    const extension =
+        getModelExtension(file);
+
+
+    return SUPPORTED_MODEL_EXTENSIONS
+        .includes(
+            extension
+        );
+
+}
 
 
 /* =====================================================
@@ -25,6 +93,16 @@ uploadButtons.forEach(
             event => {
 
                 event.preventDefault();
+
+
+                /*
+                Permite volver a elegir
+                incluso el mismo archivo.
+                */
+
+                modelFileInput.value =
+                    "";
+
 
                 modelFileInput.click();
 
@@ -47,25 +125,33 @@ modelFileInput.addEventListener(
             event.target.files[0];
 
 
-        if (!file) {
+        if (
+            !file
+        ) {
+
             return;
+
         }
 
 
-        /* SOLO GLB */
+        /* =================================================
+           VALIDAR FORMATO
+        ================================================= */
 
         if (
-            !file.name
-                .toLowerCase()
-                .endsWith(".glb")
+            !isSupportedModelFile(
+                file
+            )
         ) {
 
             alert(
-                "Por ahora renderiza.me acepta archivos GLB."
+                "renderiza.me acepta archivos GLB, STL, OBJ, STEP y STP."
             );
+
 
             modelFileInput.value =
                 "";
+
 
             return;
 
@@ -74,19 +160,27 @@ modelFileInput.addEventListener(
 
         try {
 
-            await saveModelFile(file);
+            await saveModelFile(
+                file
+            );
+
 
             window.location.href =
                 "./upload.html";
 
         }
 
+
         catch (error) {
 
             console.error(
+
                 "Error guardando modelo:",
+
                 error
+
             );
+
 
             alert(
                 "No pudimos preparar el modelo."
@@ -174,6 +268,12 @@ async function saveModelFile(
         await openDatabase();
 
 
+    const extension =
+        getModelExtension(
+            file
+        );
+
+
     return new Promise(
         (resolve, reject) => {
 
@@ -191,13 +291,28 @@ async function saveModelFile(
 
 
             store.put(
+
                 {
-                    file: file,
-                    name: file.name,
-                    size: file.size,
-                    savedAt: Date.now()
+
+                    file:
+                        file,
+
+                    name:
+                        file.name,
+
+                    size:
+                        file.size,
+
+                    format:
+                        extension,
+
+                    savedAt:
+                        Date.now()
+
                 },
+
                 "currentModel"
+
             );
 
 

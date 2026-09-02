@@ -666,8 +666,684 @@ function setLoadingFakeProgress(percent) {
         "%";
 
 }
+/* =====================================================
+   FORMATOS SOPORTADOS
+===================================================== */
+
+const SUPPORTED_VIEWER_FORMATS = [
+    "glb",
+    "stl",
+    "obj",
+    "step",
+    "stp"
+];
 
 
+/* =====================================================
+   OBTENER EXTENSIÓN
+===================================================== */
+
+function getViewerFileExtension(file) {
+
+    if (
+        !file ||
+        !file.name
+    ) {
+
+        return "";
+
+    }
+
+
+    const parts =
+        file.name
+            .toLowerCase()
+            .split(".");
+
+
+    if (
+        parts.length < 2
+    ) {
+
+        return "";
+
+    }
+
+
+    return parts.pop();
+
+}
+
+
+/* =====================================================
+   VALIDAR FORMATO
+===================================================== */
+
+function isViewerFormatSupported(file) {
+
+    const extension =
+        getViewerFileExtension(
+            file
+        );
+
+
+    return SUPPORTED_VIEWER_FORMATS
+        .includes(
+            extension
+        );
+
+}
+
+/* =====================================================
+   MATERIAL AUTOMÁTICO PARA STL
+===================================================== */
+
+function applyAutomaticStlMaterial(meshes) {
+
+    const stlMaterial =
+        new BABYLON.PBRMaterial(
+            "renderizaStlMaterial",
+            scene
+        );
+
+
+    /*
+    Gris neutro.
+    Evita que el STL aparezca blanco / quemado.
+    */
+
+    stlMaterial.albedoColor =
+        BABYLON.Color3.FromHexString(
+            "#8E8E88"
+        );
+
+
+    /*
+    STL normalmente representa
+    piezas físicas / prototipos.
+
+    Lo dejamos mate.
+    */
+
+    stlMaterial.metallic =
+        0;
+
+
+    stlMaterial.roughness =
+        0.88;
+
+
+    /*
+    Reducimos un poco la influencia
+    general de iluminación sobre
+    este material.
+    */
+
+    stlMaterial.environmentIntensity =
+        0.55;
+
+
+    stlMaterial.directIntensity =
+        0.80;
+
+
+    /*
+    Permite que los cortes sigan
+    funcionando correctamente.
+    */
+
+    stlMaterial.backFaceCulling =
+        true;
+
+
+    meshes.forEach(
+        mesh => {
+
+            if (
+                !mesh ||
+                !mesh.getTotalVertices
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                mesh.getTotalVertices() === 0
+            ) {
+
+                return;
+
+            }
+
+
+            mesh.material =
+                stlMaterial;
+
+        }
+    );
+
+}
+/* =====================================================
+   OPEN CASCADE / STEP
+===================================================== */
+
+let occtModulePromise =
+    null;
+
+
+/* =====================================================
+   INICIAR OPEN CASCADE
+===================================================== */
+
+async function getOcctModule() {
+
+    if (
+        typeof occtimportjs ===
+        "undefined"
+    ) {
+
+        throw new Error(
+            "No se cargó el conversor STEP."
+        );
+
+    }
+
+
+    /*
+    Lo inicializamos una sola vez.
+
+    El WASM pesa varios MB,
+    así que no queremos cargarlo
+    nuevamente cada vez.
+    */
+
+    if (
+        !occtModulePromise
+    ) {
+
+        occtModulePromise =
+            occtimportjs({
+
+                locateFile:
+                    function (fileName) {
+
+                        if (
+                            fileName.endsWith(
+                                ".wasm"
+                            )
+                        ) {
+
+                            return (
+                                "./assets/occt/" +
+                                fileName
+                            );
+
+                        }
+
+
+                        return (
+                            "./assets/occt/" +
+                            fileName
+                        );
+
+                    }
+
+            });
+
+    }
+
+
+    return await occtModulePromise;
+
+}
+
+
+/* =====================================================
+   MATERIAL CAD
+===================================================== */
+
+function createAutomaticCadMaterial(
+
+    sourceColor,
+
+    index
+
+) {
+
+    const material =
+        new BABYLON.PBRMaterial(
+
+            "renderizaCadMaterial_" +
+            index,
+
+            scene
+
+        );
+
+
+    /*
+    Si STEP contiene color,
+    intentamos conservarlo.
+
+    Si no:
+    gris neutro renderiza.me.
+    */
+
+    if (
+        sourceColor &&
+        sourceColor.length >= 3
+    ) {
+
+        material.albedoColor =
+            new BABYLON.Color3(
+
+                sourceColor[0],
+
+                sourceColor[1],
+
+                sourceColor[2]
+
+            );
+
+    }
+
+    else {
+
+        material.albedoColor =
+            BABYLON.Color3
+                .FromHexString(
+                    "#8E8E88"
+                );
+
+    }
+
+
+    material.metallic =
+        0;
+
+
+    material.roughness =
+        0.88;
+
+
+    material.environmentIntensity =
+        0.55;
+
+
+    material.directIntensity =
+        0.80;
+
+
+    material.backFaceCulling =
+        true;
+
+
+    return material;
+
+}
+
+
+/* =====================================================
+   CONVERTIR RESULTADO OCCT A BABYLON
+===================================================== */
+
+function buildBabylonMeshesFromStep(
+    result
+) {
+
+    const meshes =
+        [];
+
+
+    if (
+        !result ||
+        !result.meshes
+    ) {
+
+        return meshes;
+
+    }
+
+
+    result.meshes.forEach(
+        (
+            sourceMesh,
+            index
+        ) => {
+
+            if (
+                !sourceMesh ||
+                !sourceMesh.attributes ||
+                !sourceMesh.attributes.position
+            ) {
+
+                return;
+
+            }
+
+
+            const sourcePositions =
+                sourceMesh
+                    .attributes
+                    .position
+                    .array;
+
+
+            const sourceIndices =
+                sourceMesh.index
+                    ? sourceMesh.index.array
+                    : null;
+
+
+            if (
+                !sourcePositions ||
+                sourcePositions.length === 0 ||
+                !sourceIndices ||
+                sourceIndices.length === 0
+            ) {
+
+                return;
+
+            }
+
+
+            /* =========================================
+               CREAR MESH BABYLON
+            ========================================= */
+
+            const mesh =
+                new BABYLON.Mesh(
+
+                    sourceMesh.name ||
+                    (
+                        "STEP_Part_" +
+                        index
+                    ),
+
+                    scene
+
+                );
+
+
+            const vertexData =
+                new BABYLON.VertexData();
+
+
+            /* =========================================
+               POSICIONES
+            ========================================= */
+
+            vertexData.positions =
+                Array.from(
+                    sourcePositions
+                );
+
+
+            /* =========================================
+               ÍNDICES
+            ========================================= */
+
+            vertexData.indices =
+                Array.from(
+                    sourceIndices
+                );
+
+
+            /* =========================================
+               NORMALES
+            ========================================= */
+
+            if (
+                sourceMesh.attributes.normal &&
+                sourceMesh.attributes.normal.array &&
+                sourceMesh.attributes.normal.array.length > 0
+            ) {
+
+                vertexData.normals =
+                    Array.from(
+
+                        sourceMesh
+                            .attributes
+                            .normal
+                            .array
+
+                    );
+
+            }
+
+            else {
+
+                const normals =
+                    [];
+
+
+                BABYLON.VertexData
+                    .ComputeNormals(
+
+                        vertexData.positions,
+
+                        vertexData.indices,
+
+                        normals
+
+                    );
+
+
+                vertexData.normals =
+                    normals;
+
+            }
+
+
+            /* =========================================
+               APLICAR GEOMETRÍA
+            ========================================= */
+
+            vertexData.applyToMesh(
+
+                mesh,
+
+                true
+
+            );
+
+
+            /* =========================================
+               MATERIAL
+            ========================================= */
+
+            mesh.material =
+    createAutomaticCadMaterial(
+
+        sourceMesh.color,
+
+        index
+
+    );
+
+
+/* =========================================
+   CORREGIR ORIENTACIÓN STEP
+
+   OCCT devuelve geometría con orientación
+   compatible con Three.js / right-handed.
+
+   Babylon trabaja por defecto en left-handed,
+   por eso corregimos solamente los STEP.
+========================================= */
+
+mesh.overrideMaterialSideOrientation =
+    BABYLON.Material.ClockWiseSideOrientation;
+
+
+meshes.push(
+    mesh
+);
+
+        }
+    );
+
+
+    return meshes;
+
+}
+
+
+/* =====================================================
+   CARGAR STEP
+===================================================== */
+
+async function loadStepModel(
+    file
+) {
+
+    try {
+
+        /*
+        El archivo sigue estando
+        completamente local.
+        */
+
+        setLoadingFakeProgress(
+            15
+        );
+
+
+        const arrayBuffer =
+            await file.arrayBuffer();
+
+
+        setLoadingFakeProgress(
+            25
+        );
+
+
+        const fileBuffer =
+            new Uint8Array(
+                arrayBuffer
+            );
+
+
+        /*
+        Inicializamos OpenCascade.
+        */
+
+        const occt =
+            await getOcctModule();
+
+
+        setLoadingFakeProgress(
+            45
+        );
+
+
+        console.log(
+            "renderiza.me — convirtiendo STEP..."
+        );
+
+
+        /*
+        ReadStepFile triangula
+        el modelo CAD.
+        */
+
+        const result =
+            occt.ReadStepFile(
+
+                fileBuffer,
+
+                null
+
+            );
+
+
+        setLoadingFakeProgress(
+            75
+        );
+
+
+        console.log(
+            "Resultado STEP:",
+            result
+        );
+
+
+        if (
+            !result ||
+            result.success === false
+        ) {
+
+            throw new Error(
+                "OpenCascade no pudo leer el archivo STEP."
+            );
+
+        }
+
+
+        /* =============================================
+           CONVERTIR A BABYLON
+        ============================================= */
+
+        const meshes =
+            buildBabylonMeshesFromStep(
+                result
+            );
+
+
+        if (
+            meshes.length === 0
+        ) {
+
+            throw new Error(
+                "El STEP no contiene geometría utilizable."
+            );
+
+        }
+
+
+        setLoadingFakeProgress(
+            90
+        );
+
+
+        /*
+        A partir de acá usamos EXACTAMENTE
+        el mismo sistema que GLB/STL/OBJ.
+        */
+
+        prepareLoadedModel(
+
+            meshes,
+
+            [],
+
+            []
+
+        );
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+
+            "Error cargando STEP:",
+
+            error
+
+        );
+
+
+        showLoadError(
+            error.message
+        );
+
+    }
+
+}
 /* =====================================================
    LOAD USER MODEL
 ===================================================== */
@@ -696,30 +1372,88 @@ async function loadUserModel() {
             record.file;
 
 
+        const extension =
+            getViewerFileExtension(
+                file
+            );
+
+
+        /* =================================================
+           VALIDAR FORMATO
+        ================================================= */
+
         if (
-            !file.name
-                .toLowerCase()
-                .endsWith(".glb")
+            !isViewerFormatSupported(
+                file
+            )
         ) {
 
             throw new Error(
-                "El archivo seleccionado no es GLB."
+                "Formato 3D no compatible."
             );
 
         }
 
 
+        /* =================================================
+           NOMBRE
+        ================================================= */
+
         modelName.textContent =
             file.name.replace(
-                /\.glb$/i,
+
+                /\.[^/.]+$/,
+
                 ""
+
             );
 
+            
+/* =================================================
+   STEP / STP
+================================================= */
+
+if (
+    extension === "step" ||
+    extension === "stp"
+) {
+
+    await loadStepModel(
+        file
+    );
+
+
+    return;
+
+}
+
+        /* =================================================
+           LOADING
+        ================================================= */
 
         setLoadingFakeProgress(
             10
         );
 
+
+        console.log(
+
+            "renderiza.me — cargando:",
+
+            extension.toUpperCase()
+
+        );
+
+
+        /* =================================================
+           IMPORTAR
+
+           Babylon selecciona el loader
+           según la extensión:
+
+           .glb
+           .stl
+        ================================================= */
 
         BABYLON.SceneLoader.ImportMesh(
 
@@ -732,7 +1466,9 @@ async function loadUserModel() {
             scene,
 
 
-            /* SUCCESS */
+            /* =============================================
+               SUCCESS
+            ============================================= */
 
             function (
 
@@ -749,24 +1485,55 @@ async function loadUserModel() {
             ) {
 
                 setLoadingFakeProgress(
-                    90
-                );
+    90
+);
 
 
-                prepareLoadedModel(
+console.log(
 
-                    meshes,
+    "Formato cargado:",
 
-                    animationGroups,
+    extension
 
-                    transformNodes
+);
 
-                );
+
+/* =================================================
+   MATERIAL AUTOMÁTICO PARA STL Y OBJ
+================================================= */
+
+if (
+    extension === "stl" ||
+    extension === "obj"
+) {
+
+    applyAutomaticStlMaterial(
+        meshes
+    );
+
+}
+
+
+/* =================================================
+   PREPARAR MODELO
+================================================= */
+
+prepareLoadedModel(
+
+    meshes,
+
+    animationGroups,
+
+    transformNodes
+
+);
 
             },
 
 
-            /* PROGRESS */
+            /* =============================================
+               PROGRESS
+            ============================================= */
 
             function (event) {
 
@@ -797,6 +1564,7 @@ async function loadUserModel() {
                     );
 
                 }
+
 
                 else {
 
@@ -831,7 +1599,9 @@ async function loadUserModel() {
             },
 
 
-            /* ERROR */
+            /* =============================================
+               ERROR
+            ============================================= */
 
             function (
 
@@ -845,7 +1615,7 @@ async function loadUserModel() {
 
                 console.error(
 
-                    "Error cargando GLB:",
+                    "Error cargando modelo:",
 
                     message,
 
@@ -861,17 +1631,26 @@ async function loadUserModel() {
             },
 
 
-            ".glb"
+            /*
+            Forzamos explícitamente
+            el loader correcto.
+            */
+
+            "." + extension
 
         );
 
     }
 
+
     catch (error) {
 
         console.error(
+
             "Error:",
+
             error
+
         );
 
 
@@ -939,7 +1718,7 @@ function prepareLoadedModel(
     ) {
 
         showLoadError(
-            "El GLB no contiene geometría."
+            "El archivo no contiene geometría 3D."
         );
 
         return;
@@ -4815,22 +5594,38 @@ replaceFileInput.addEventListener(
            VALIDAR GLB
         ================================================= */
 
-        if (
-            !file.name
-                .toLowerCase()
-                .endsWith(
-                    ".glb"
-                )
-        ) {
+        /* =================================================
+   VALIDAR FORMATO
+================================================= */
 
-            alert(
-                "Seleccioná un archivo en formato GLB."
-            );
+if (
+    !isViewerFormatSupported(
+        file
+    )
+) {
+
+    alert(
+    "Seleccioná un archivo GLB, STL, OBJ, STEP o STP."
+);
 
 
-            return;
+    return;
 
-        }
+}
+            
+        
+                
+                
+                
+        
+
+            
+            
+        
+
+            
+
+        
 
 
         try {
@@ -4871,7 +5666,7 @@ replaceFileInput.addEventListener(
 
             console.error(
 
-                "Error reemplazando GLB:",
+                "Error reemplazando modelo 3D:",
 
                 error
 

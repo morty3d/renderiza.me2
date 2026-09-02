@@ -615,7 +615,179 @@ no se superpongan.
 
 }
 
+/* =====================================================
+   FORMATOS COMPATIBLES
+===================================================== */
 
+.supported-formats {
+    width: 100%;
+    margin-top: 42px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/* ETIQUETA */
+
+.supported-formats-label {
+    margin-bottom: 22px;
+
+    font-family: "Roboto Mono", monospace;
+    font-size: 12px;
+    font-weight: 500;
+
+    letter-spacing: .15em;
+    text-transform: uppercase;
+
+    color: #100F0F;
+}
+
+
+/* GRID */
+
+.formats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 150px);
+
+    gap: 12px;
+}
+
+
+/* TARJETA */
+
+.format-card {
+    height: 120px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    border:
+        1px solid rgba(16, 15, 15, .28);
+
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, .18);
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        background .25s ease;
+}
+
+
+/* ICONO */
+
+.format-icon {
+    width: 46px;
+    height: 46px;
+
+    fill: none;
+
+    stroke: #100F0F;
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    transition:
+        stroke .25s ease,
+        transform .25s ease;
+}
+
+
+/* TEXTO */
+
+.format-card span {
+    font-family:
+        "Instrument Sans",
+        Arial,
+        sans-serif;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    color: #100F0F;
+}
+
+
+/* HOVER */
+
+.format-card:hover {
+    transform:
+        translateY(-3px);
+
+    border-color:
+        #146CFF;
+
+    background:
+        rgba(20, 108, 255, .055);
+}
+
+
+.format-card:hover
+.format-icon {
+
+    stroke:
+        #146CFF;
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 650px) {
+
+    .supported-formats {
+        margin-top: 34px;
+    }
+
+
+    .supported-formats-label {
+        margin-bottom: 16px;
+        font-size: 10px;
+    }
+
+
+    .formats-grid {
+        width: 100%;
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 8px;
+    }
+
+
+    .format-card {
+        height: 100px;
+    }
+
+
+    .format-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+
+    .format-card span {
+        font-size: 13px;
+    }
+
+}
 /* =====================================================
    CTA VISIBLE AL HACER SCROLL
 ===================================================== */
@@ -672,7 +844,7 @@ el centrado absoluto.
         0 auto;
 
     padding:
-        112px 0 0;
+        40px 0 0;
 
     text-align:
         center;
@@ -730,7 +902,7 @@ el centrado absoluto.
         .88;
 
     letter-spacing:
-        -.07em;
+        -.04em;
 
     font-weight:
         500;
@@ -738,14 +910,25 @@ el centrado absoluto.
 }
 
 
-.hero-title span {
+.hero-title-top,
+.hero-title-main {
+    display: block;
+}
 
-    display:
-        block;
 
-    color:
-        var(--blue);
+/* Lo tenés en 3D. */
 
+.hero-title-top {
+    color: var(--black);
+    font-size: .78em;
+}
+
+
+/* Mostralo en 3D. */
+
+.hero-title-main {
+    color: var(--blue);
+    font-size: 1em;
 }
 
 
@@ -2831,7 +3014,13 @@ footer {
             0;
 
     }
+.hero-title-top {
+    font-size: .68em;
+}
 
+.hero-title-main {
+    font-size: 1em;
+}
 
     .step-card:nth-child(-n+2) {
 
@@ -2995,7 +3184,7 @@ footer {
     .hero {
 
         padding-top:
-            70px;
+            10px;
 
     }
 
@@ -3497,6 +3686,79 @@ footer {
         transition-duration:
             .01ms !important;
 
+    }
+
+}
+/* SOLO ICONOS DE FORMATOS COMPATIBLES */
+
+.supported-formats .format-icon {
+    width: 48px;
+    height: 48px;
+
+    color: #146CFF;
+
+    fill: none;
+    stroke: currentColor;
+
+    filter:
+        drop-shadow(0 2px 0 rgba(0, 50, 150, .28))
+        drop-shadow(0 6px 10px rgba(20, 108, 255, .18));
+
+    transition:
+        transform .25s ease,
+        filter .25s ease;
+}
+
+
+.supported-formats .format-card:hover .format-icon {
+    transform:
+        translateY(-3px)
+        scale(1.06);
+
+    filter:
+        drop-shadow(0 3px 0 rgba(0, 45, 135, .34))
+        drop-shadow(0 9px 13px rgba(20, 108, 255, .25));
+}
+
+@media (max-width: 650px) {
+
+    .supported-formats {
+        margin-top: 28px;
+    }
+
+    .supported-formats-label {
+        margin-bottom: 12px;
+        font-size: 9px;
+        letter-spacing: .12em;
+    }
+
+    .formats-grid {
+        width: 100%;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+    }
+
+    .format-card {
+        min-width: 0;
+        height: 72px;
+        padding: 6px 2px;
+
+        gap: 5px;
+
+        border-radius: 8px;
+    }
+
+    .supported-formats .format-icon {
+        width: 28px;
+        height: 28px;
+
+        stroke-width: 2.4;
+    }
+
+    .format-card span {
+        font-size: 10px;
+        line-height: 1;
+        white-space: nowrap;
     }
 
 }
