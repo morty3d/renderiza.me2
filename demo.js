@@ -166,17 +166,76 @@ const camera =
 
 camera.attachControl(
     canvas,
-    true
+    true,
+    true,
+    2
 );
 
+
+/* =====================================================
+   NAVEGACIÓN
+===================================================== */
+
+/*
+DESKTOP
+
+Izquierdo + arrastrar = rotar
+Derecho + arrastrar = pan
+Ctrl + izquierdo = pan
+Rueda = zoom
+*/
+
 camera.panningSensibility =
-    0;
+    800;
+
+
+/*
+Zoom mouse
+*/
 
 camera.wheelDeltaPercentage =
     0.01;
 
+
+/*
+Zoom táctil
+*/
+
 camera.pinchDeltaPercentage =
     0.01;
+
+
+/*
+Evita zoom táctil brusco.
+*/
+
+camera.useNaturalPinchZoom =
+    true;
+
+
+/*
+Dos dedos:
+
+- mover juntos = PAN
+- separar / juntar = ZOOM
+*/
+
+if (
+    camera.inputs &&
+    camera.inputs.attached &&
+    camera.inputs.attached.pointers
+) {
+
+    camera.inputs.attached.pointers.multiTouchPanAndZoom =
+        true;
+
+    camera.inputs.attached.pointers.multiTouchPanning =
+        true;
+
+    camera.inputs.attached.pointers.pinchZoom =
+        true;
+
+}
 
 camera.lowerBetaLimit =
     0.02;
@@ -184,6 +243,102 @@ camera.lowerBetaLimit =
 camera.upperBetaLimit =
     Math.PI - 0.02;
 
+camera.useInputToRestoreState =
+    false;
+/* =====================================================
+   DOBLE TOQUE MOBILE = ZOOM
+===================================================== */
+
+scene.onPointerObservable.add(
+    pointerInfo => {
+
+        if (
+            pointerInfo.type !==
+            BABYLON.PointerEventTypes.POINTERDOUBLETAP
+        ) {
+
+            return;
+
+        }
+
+
+        const event =
+            pointerInfo.event;
+
+
+        /*
+        Solo touch.
+        No modificamos doble click de mouse.
+        */
+
+        if (
+            !event ||
+            event.pointerType !== "touch"
+        ) {
+
+            return;
+
+        }
+
+
+        /*
+        Evitamos el comportamiento nativo de
+        restaurar cámara con doble toque.
+        */
+
+        camera.useInputToRestoreState =
+            false;
+
+
+        const currentRadius =
+            camera.radius;
+
+
+        const minimumRadius =
+            camera.lowerRadiusLimit ||
+            0.01;
+
+
+        /*
+        Cada doble toque acerca aproximadamente 30%.
+        */
+
+        const targetRadius =
+            Math.max(
+                currentRadius * 0.70,
+                minimumRadius
+            );
+
+
+        /* =================================================
+           ANIMACIÓN SUAVE
+        ================================================= */
+
+        BABYLON.Animation.CreateAndStartAnimation(
+
+            "doubleTapZoom",
+
+            camera,
+
+            "radius",
+
+            60,
+
+            12,
+
+            currentRadius,
+
+            targetRadius,
+
+            BABYLON.Animation
+                .ANIMATIONLOOPMODE_CONSTANT,
+
+            new BABYLON.CubicEase()
+
+        );
+
+    }
+);
 
 /* =====================================================
    LIGHT

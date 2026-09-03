@@ -359,20 +359,196 @@ const camera =
 
 camera.attachControl(
     canvas,
-    true
+    true,
+    true,
+    2
 );
 
 
-camera.panningSensibility = 0;
+/* =====================================================
+   NAVEGACIÓN DE CÁMARA
 
-camera.wheelDeltaPercentage = 0.01;
+   DESKTOP
+   - Izquierdo + arrastrar = rotar
+   - Derecho + arrastrar = pan
+   - Ctrl + izquierdo = pan
+   - Rueda = zoom
 
-camera.pinchDeltaPercentage = 0.01;
+   MOBILE
+   - 1 dedo = rotar
+   - 2 dedos = pan
+   - Pellizcar = zoom
+   - Doble toque = acercar
+===================================================== */
 
-camera.lowerBetaLimit = 0.02;
+camera.panningSensibility =
+    800;
+
+
+camera.wheelDeltaPercentage =
+    0.01;
+
+
+camera.pinchDeltaPercentage =
+    0.01;
+
+
+camera.useNaturalPinchZoom =
+    true;
+
+
+/*
+Evita que Babylon use el doble toque
+para restaurar automáticamente la cámara.
+*/
+
+camera.useInputToRestoreState =
+    false;
+
+
+/*
+Configuración multitáctil.
+*/
+
+if (
+    camera.inputs &&
+    camera.inputs.attached &&
+    camera.inputs.attached.pointers
+) {
+
+    camera.inputs.attached.pointers.multiTouchPanAndZoom =
+        true;
+
+
+    camera.inputs.attached.pointers.multiTouchPanning =
+        true;
+
+}
+
+
+/*
+Evita que aparezca el menú contextual
+cuando usamos botón derecho para hacer pan.
+*/
+
+canvas.addEventListener(
+    "contextmenu",
+    event => {
+
+        event.preventDefault();
+
+    }
+);
+
+
+camera.lowerBetaLimit =
+    0.02;
+
 
 camera.upperBetaLimit =
     Math.PI - 0.02;
+
+
+/* =====================================================
+   DOBLE TOQUE MOBILE = ZOOM
+===================================================== */
+
+scene.onPointerObservable.add(
+    pointerInfo => {
+
+        if (
+            pointerInfo.type !==
+            BABYLON.PointerEventTypes.POINTERDOUBLETAP
+        ) {
+
+            return;
+
+        }
+
+
+        const event =
+            pointerInfo.event;
+
+
+        const isTouchDevice =
+
+            (
+                event &&
+                event.pointerType === "touch"
+            )
+
+            ||
+
+            (
+                navigator.maxTouchPoints &&
+                navigator.maxTouchPoints > 0
+            );
+
+
+        if (
+            !isTouchDevice
+        ) {
+
+            return;
+
+        }
+
+
+        const currentRadius =
+            camera.radius;
+
+
+        const minimumRadius =
+            camera.lowerRadiusLimit ||
+            0.01;
+
+
+        const targetRadius =
+            Math.max(
+
+                currentRadius *
+                0.70,
+
+                minimumRadius
+
+            );
+
+
+        const easing =
+            new BABYLON.CubicEase();
+
+
+        easing.setEasingMode(
+            BABYLON.EasingFunction
+                .EASINGMODE_EASEOUT
+        );
+
+
+        BABYLON.Animation.CreateAndStartAnimation(
+
+            "doubleTapZoom",
+
+            camera,
+
+            "radius",
+
+            60,
+
+            12,
+
+            currentRadius,
+
+            targetRadius,
+
+            BABYLON.Animation
+                .ANIMATIONLOOPMODE_CONSTANT,
+
+            easing
+
+        );
+
+    }
+);
 
 
 /* =====================================================
