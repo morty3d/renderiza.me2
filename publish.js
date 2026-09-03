@@ -3,6 +3,10 @@ document.addEventListener(
     () => {
 
 
+        /* =====================================================
+           DOM
+        ====================================================== */
+
         const planCards =
             document.querySelectorAll(
                 ".plan-card"
@@ -21,8 +25,33 @@ document.addEventListener(
             );
 
 
+        /* =====================================================
+           ESTADO
+        ====================================================== */
+
         let activePlan =
             null;
+
+
+
+        /* =====================================================
+           FORMATEAR PRECIO
+        ====================================================== */
+
+        function formatPrice(
+            price
+        ) {
+
+            return (
+                "$" +
+                Number(
+                    price
+                ).toLocaleString(
+                    "es-AR"
+                )
+            );
+
+        }
 
 
 
@@ -38,6 +67,10 @@ document.addEventListener(
                     () => {
 
 
+                        /* =====================================
+                           QUITAR SELECCIÓN ANTERIOR
+                        ====================================== */
+
                         planCards.forEach(
                             item => {
 
@@ -51,11 +84,23 @@ document.addEventListener(
                         );
 
 
+                        /* =====================================
+                           MARCAR NUEVO PLAN
+                        ====================================== */
+
                         card
                             .classList
                             .add(
                                 "selected"
                             );
+
+
+                        /* =====================================
+                           LEER DATOS DEL HTML
+                        ====================================== */
+
+                        const planId =
+                            card.dataset.plan;
 
 
                         const duration =
@@ -68,10 +113,14 @@ document.addEventListener(
                             );
 
 
+                        /* =====================================
+                           GUARDAR PLAN ACTIVO
+                        ====================================== */
+
                         activePlan = {
 
                             id:
-                                card.dataset.plan,
+                                planId,
 
                             duration:
                                 duration,
@@ -82,10 +131,18 @@ document.addEventListener(
                         };
 
 
+                        /* =====================================
+                           MOSTRAR RESUMEN
+                        ====================================== */
+
                         selectedPlan.textContent =
 
-                            `${duration} · $${price.toLocaleString("es-AR")}`;
+                            `${duration} · ${formatPrice(price)}`;
 
+
+                        /* =====================================
+                           ACTIVAR BOTÓN DE PAGO
+                        ====================================== */
 
                         payButton.disabled =
                             false;
@@ -101,7 +158,7 @@ document.addEventListener(
         /* =====================================================
            PAGAR
 
-           Mercado Pago lo conectamos después.
+           Mercado Pago se conecta después.
         ====================================================== */
 
         payButton.addEventListener(
@@ -120,20 +177,29 @@ document.addEventListener(
 
                 console.log(
 
-                    "Plan seleccionado:",
+                    "renderiza.me — Plan seleccionado:",
 
                     activePlan
 
                 );
 
 
+                /* =============================================
+                   TEMPORAL
+
+                   Después este bloque se reemplaza
+                   por la creación del pago en Mercado Pago.
+                ============================================= */
+
                 alert(
 
-                    `Plan seleccionado:\n\n` +
+                    `Publicación seleccionada\n\n` +
 
                     `${activePlan.duration}\n` +
 
-                    `$${activePlan.price.toLocaleString("es-AR")}\n\n` +
+                    `${formatPrice(activePlan.price)}\n\n` +
+
+                    `Pago único · Sin suscripción\n\n` +
 
                     `Siguiente paso: Mercado Pago.`
 

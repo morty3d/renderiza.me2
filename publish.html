@@ -2,18 +2,13 @@
 <html lang="es">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
 
     <title>Publicar modelo | renderiza.me</title>
-
-
-    <!-- FUENTES -->
 
     <link
         rel="preconnect"
@@ -31,33 +26,22 @@
         rel="stylesheet"
     >
 
-
-    <!-- CSS -->
-
     <link
         rel="stylesheet"
-        href="./publish.css"
+        href="./publish.css?v=express-20260903"
     >
-
 </head>
 
 
 <body>
 
-
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
-
     <header class="publish-header">
-
 
         <a
             class="publish-brand"
             href="./index.html"
             aria-label="renderiza.me - Inicio"
         >
-
             <img
                 src="./assets/logo-renderiza.svg"
                 class="publish-brand-logo"
@@ -67,9 +51,7 @@
             <span class="publish-brand-name">
                 renderiza<span>.me</span>
             </span>
-
         </a>
-
 
         <a
             class="back-button"
@@ -78,60 +60,27 @@
             ← Volver
         </a>
 
-
     </header>
 
 
-
-    <!-- =====================================================
-         CONTENIDO
-    ====================================================== -->
-
     <main class="publish-page">
-
-
-        <!-- =================================================
-             INTRO
-        ================================================== -->
 
         <section class="publish-intro">
 
-
-            <div class="section-kicker">
-                PUBLICAR MODELO
-            </div>
-
-
             <h1>
-
                 Tu modelo ya está listo.
-
-                <span>
-                    Ahora compartilo.
-                </span>
-
             </h1>
 
-
             <p class="publish-intro-main">
-
-                Elegí la duración de tu QR y Link.
-                <br>
-                <br>
-                Pagás una sola vez.
-                Sin suscripciones, sin cargos mensuales.
-
+                Pagás una sola vez.<br>
+                Sin suscripciones.<br>
+                Sin cargos mensuales.
             </p>
-
 
         </section>
 
-        <!-- =================================================
-             PLANES
-        ================================================== -->
 
         <section class="plans-section">
-
 
             <div class="plans-heading">
 
@@ -139,250 +88,200 @@
                     ¿Cuánto tiempo lo necesitás online?
                 </h2>
 
-            </div>
+                <p>
+                    Elegí cuánto tiempo querés mantener tu modelo publicado.
+                    Recibís un link único y un QR listo para compartir.
+                </p>
 
+            </div>
 
 
             <div class="plans-grid">
 
-
-                <!-- =========================================
-                     EXPRESS
-                ========================================== -->
-
                 <button
                     class="plan-card"
                     type="button"
-                    data-plan="express"
+                    data-plan="24h"
                     data-duration="24 horas"
                     data-price="4900"
                 >
 
-
                     <div class="plan-top">
-
-                        <span class="plan-number">
-                            01
-                        </span>
-
-                        <span class="plan-tag">
-                            EXPRESS
-                        </span>
-
+                        <span class="plan-number">01</span>
+                        <span class="plan-tag">EXPRESS</span>
                     </div>
 
-
-
                     <div class="plan-content">
-
 
                         <div class="plan-duration">
                             24 hs
                         </div>
 
-
                         <h3>
-                            Express
+                            24 horas
                         </h3>
-
 
                         <div class="plan-price">
                             $4.900
                         </div>
 
+                        <div class="plan-note">
+                            Pago único
+                        </div>
+
+                        <div class="plan-description">
+                            Ideal para una entrega, corrección
+                            o presentación puntual.
+                        </div>
+
+                    </div>
+
+                </button>
+
+
+                <button
+                    class="plan-card plan-card-featured"
+                    type="button"
+                    data-plan="72h"
+                    data-duration="72 horas"
+                    data-price="9900"
+                >
+
+                    <div class="plan-top">
+                        <span class="plan-number">02</span>
+                        <span class="plan-tag">MÁS ELEGIDO</span>
+                    </div>
+
+                    <div class="plan-content">
+
+                        <div class="plan-duration">
+                            72 hs
+                        </div>
+
+                        <h3>
+                            3 días
+                        </h3>
+
+                        <div class="plan-price">
+                            $9.900
+                        </div>
 
                         <div class="plan-note">
                             Pago único
                         </div>
 
-
                         <div class="plan-description">
-                            Ideal si necesitás compartir
-                            tu proyecto hoy o mañana.
+                            Para presentaciones, entregas o
+                            compartir tu proyecto durante varios días.
                         </div>
 
-
                     </div>
-
 
                 </button>
 
 
-
-                <!-- =========================================
-                     PRESENTACIÓN
-                ========================================== -->
-
                 <button
-                    class="plan-card plan-card-featured"
+                    class="plan-card"
                     type="button"
                     data-plan="7d"
                     data-duration="7 días"
-                    data-price="12900"
+                    data-price="14900"
                 >
 
-
                     <div class="plan-top">
-
-                        <span class="plan-number">
-                            02
-                        </span>
-
-                        <span class="plan-tag">
-                            PRESENTACIÓN
-                        </span>
-
+                        <span class="plan-number">03</span>
+                        <span class="plan-tag">1 SEMANA</span>
                     </div>
 
-
-
                     <div class="plan-content">
-
 
                         <div class="plan-duration">
                             7 días
                         </div>
 
-
                         <h3>
-                            Presentación
+                            1 semana
                         </h3>
 
-
                         <div class="plan-price">
-                            $12.900
+                            $14.900
                         </div>
-
 
                         <div class="plan-note">
                             Pago único
                         </div>
 
-
                         <div class="plan-description">
-                            Tené tu modelo disponible durante
-                            7 días.
+                            Ideal para muestras, exposiciones,
+                            entregas finales o presentaciones.
                         </div>
 
-
                     </div>
-
 
                 </button>
-
-
-
-                <!-- =========================================
-                     PROYECTO
-                ========================================== -->
-
-                <button
-                    class="plan-card"
-                    type="button"
-                    data-plan="30d"
-                    data-duration="30 días"
-                    data-price="21900"
-                >
-
-
-                    <div class="plan-top">
-
-                        <span class="plan-number">
-                            03
-                        </span>
-
-                        <span class="plan-tag">
-                            PROYECTO
-                        </span>
-
-                    </div>
-
-
-
-                    <div class="plan-content">
-
-
-                        <div class="plan-duration">
-                            30 días
-                        </div>
-
-
-                        <h3>
-                            Proyecto
-                        </h3>
-
-
-                        <div class="plan-price">
-                            $21.900
-                        </div>
-
-
-                        <div class="plan-note">
-                            Pago único
-                        </div>
-
-
-                        <div class="plan-description">
-
-                            Ideal para portfolio, clientes,
-                            muestras o proyectos que necesitás
-                            mantener disponibles por más tiempo.
-
-                        </div>
-
-
-                    </div>
-
-
-                </button>
-
 
             </div>
-
 
         </section>
 
 
+        <section class="extended-publication">
 
-        <!-- =================================================
-             RESUMEN / PAGO
-        ================================================== -->
+            <div>
+
+                <div class="section-kicker">
+                    PUBLICACIÓN EXTENDIDA
+                </div>
+
+                <h3>
+                    ¿Necesitás más tiempo?
+                </h3>
+
+                <p>
+                    Contactanos y armamos un presupuesto personalizado
+                    según la duración que necesites.
+                </p>
+
+            </div>
+
+            <a
+                class="extended-contact-button"
+                href="#"
+            >
+                Contactanos
+            </a>
+
+        </section>
+
 
         <section
             class="payment-box"
             id="paymentBox"
         >
 
-
             <div class="payment-copy">
-
 
                 <div class="section-kicker">
                     ÚLTIMO PASO
                 </div>
 
-
                 <h3>
                     Publicalo y empezá a compartirlo.
                 </h3>
 
-
                 <p>
-
                     Seleccioná una opción y pagá con Mercado Pago.
-
                     Una vez acreditado el pago vas a poder descargar
-                    tu código QR y copiar el link para compartir tu modelo.
-
+                    tu QR y copiar el link de tu publicación.
+                    <br><br>
+                    También te enviaremos el link y el QR por email
+                    para que los tengas siempre a mano.
                 </p>
-
 
             </div>
 
 
-
             <div class="payment-action">
-
 
                 <div
                     class="selected-plan"
@@ -390,7 +289,6 @@
                 >
                     Seleccioná una opción
                 </div>
-
 
                 <button
                     class="mercadopago-button"
@@ -401,47 +299,50 @@
                     Pagar con Mercado Pago
                 </button>
 
-
                 <div class="payment-security">
                     Pago seguro a través de Mercado Pago
                 </div>
 
-
             </div>
-
 
         </section>
 
 
-
-        <!-- =================================================
-             NOTA FINAL
-        ================================================== -->
-
         <div class="publish-footer-note">
 
-            <span>
-                ¿Necesitás más tiempo?
-            </span>
+            <div class="publish-note-item">
 
-            <p>
-                Podrás extender la publicación de tu modelo
-                antes de que finalice su vigencia.
-            </p>
+                <span>
+                    ¿Me avisan del vencimiento?
+                </span>
+
+                <p>
+                    Sí. Te enviaremos un recordatorio antes de que
+                    tu publicación expire, con la opción de extenderla.
+                </p>
+
+            </div>
+
+
+            <div class="publish-note-item">
+
+                <span>
+                    ¿Qué pasa cuando vence?
+                </span>
+
+                <p>
+                    El link deja de mostrar el modelo. Si extendés
+                    la publicación, podés mantener el mismo link y QR.
+                </p>
+
+            </div>
 
         </div>
-
 
     </main>
 
 
-
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
-
     <footer class="publish-footer">
-
 
         <a
             class="publish-footer-brand"
@@ -462,7 +363,6 @@
         </a>
 
 
-
         <div class="publish-footer-links">
 
             <a href="#">
@@ -480,22 +380,14 @@
         </div>
 
 
-
         <div class="publish-footer-copy">
             © 2026 renderiza.me
         </div>
 
-
     </footer>
 
 
-
-    <!-- =====================================================
-         JS
-    ====================================================== -->
-
     <script src="./publish.js"></script>
-
 
 </body>
 

@@ -5,15 +5,10 @@
 :root {
 
     --background: #F3F3F1;
-
     --black: #111111;
-
     --white: #FFFFFF;
-
     --gray: #676762;
-
     --blue: #146CFF;
-
     --blue-light: #BFD4FF;
 
     --border:
@@ -36,11 +31,8 @@
 
 html,
 body {
-
     margin: 0;
-
     min-height: 100%;
-
 }
 
 
@@ -69,20 +61,21 @@ body {
 
 .publish-header {
 
-    position: sticky;
+    position:
+        sticky;
 
-    top: 0;
+    top:
+        0;
 
-    z-index: 100;
+    z-index:
+        100;
 
-    width: 100%;
+    width:
+        100%;
 
-    height: 78px;
+    height:
+        78px;
 
-    /*
-    Esto hace que el contenido coincida
-    con el ancho máximo de 1480px del index.
-    */
     padding-left:
         max(
             32px,
@@ -95,11 +88,14 @@ body {
             calc((100vw - var(--container)) / 2)
         );
 
-    display: flex;
+    display:
+        flex;
 
-    align-items: center;
+    align-items:
+        center;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
     border-bottom:
         1px solid
@@ -123,14 +119,24 @@ body {
 
 .publish-brand {
 
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
+    display:
+        inline-flex;
 
-    margin-left: 8px;
+    align-items:
+        center;
 
-    color: var(--black);
-    text-decoration: none;
+    gap:
+        10px;
+
+    margin-left:
+        8px;
+
+    color:
+        var(--black);
+
+    text-decoration:
+        none;
+
 }
 
 
@@ -281,14 +287,14 @@ body {
 .section-kicker {
 
     margin-bottom:
-        24px;
+        14px;
 
     font-family:
         "Roboto Mono",
         monospace;
 
     font-size:
-        12px;
+        11px;
 
     font-weight:
         500;
@@ -317,33 +323,25 @@ body {
     line-height:
         .91;
 
+    color:
+        var(--blue);
+
     letter-spacing:
         -.065em;
 
     font-weight:
-        500;
+        450;
 
 }
 
 
-.publish-intro h1 span {
-
-    display:
-        block;
-
-    color:
-        var(--blue);
-
-}
-
-
-.publish-intro p {
+.publish-intro-main {
 
     max-width:
         690px;
 
     margin:
-        34px 0 0;
+        30px auto 0;
 
     color:
         var(--gray);
@@ -352,15 +350,13 @@ body {
         20px;
 
     line-height:
-        1.5;
+        1.42;
 
-}
+    font-weight:
+        600;
 
-
-.publish-intro-secondary {
-
-    opacity:
-        1;
+    text-align:
+        center;
 
 }
 
@@ -372,7 +368,7 @@ body {
 .plans-section {
 
     margin-top:
-        120px;
+        105px;
 
 }
 
@@ -380,7 +376,7 @@ body {
 .plans-heading {
 
     margin-bottom:
-        38px;
+        34px;
 
 }
 
@@ -408,6 +404,26 @@ body {
 
     font-weight:
         500;
+
+}
+
+
+.plans-heading p {
+
+    max-width:
+        720px;
+
+    margin:
+        18px 0 0;
+
+    color:
+        var(--gray);
+
+    font-size:
+        16px;
+
+    line-height:
+        1.5;
 
 }
 
@@ -444,7 +460,7 @@ body {
         0;
 
     min-height:
-        430px;
+        410px;
 
     padding:
         24px;
@@ -588,7 +604,7 @@ body {
 
 
 /* =====================================================
-   CONTENIDO
+   CONTENIDO PLAN
 ===================================================== */
 
 .plan-content {
@@ -599,22 +615,17 @@ body {
 }
 
 
-/* =====================================================
-   DURACIÓN
-   24 HS / 7 DÍAS / 30 DÍAS
-===================================================== */
-
 .plan-duration {
 
     margin-bottom:
-        11px;
+        9px;
 
     font-family:
         "Roboto Mono",
         monospace;
 
     font-size:
-        15px;
+        14px;
 
     font-weight:
         500;
@@ -634,14 +645,10 @@ body {
 }
 
 
-/* =====================================================
-   EXPRESS / PRESENTACIÓN / PROYECTO
-===================================================== */
-
 .plan-content h3 {
 
     margin:
-        0 0 20px;
+        0 0 16px;
 
     font-size:
         clamp(
@@ -662,14 +669,10 @@ body {
 }
 
 
-/* =====================================================
-   PRECIO
-===================================================== */
-
 .plan-price {
 
     margin-bottom:
-        15px;
+        12px;
 
     font-size:
         clamp(
@@ -690,14 +693,10 @@ body {
 }
 
 
-/* =====================================================
-   PAGO ÚNICO
-===================================================== */
-
 .plan-note {
 
     margin-bottom:
-        8px;
+        7px;
 
     font-family:
         "Roboto Mono",
@@ -715,10 +714,6 @@ body {
 }
 
 
-/* =====================================================
-   DESCRIPCIÓN
-===================================================== */
-
 .plan-description {
 
     max-width:
@@ -732,6 +727,147 @@ body {
 
     letter-spacing:
         -.01em;
+
+}
+
+
+/* =====================================================
+   PUBLICACIÓN EXTENDIDA
+===================================================== */
+
+.extended-publication {
+
+    margin-top:
+        24px;
+
+    padding:
+        30px 32px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        40px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        7px;
+
+}
+
+
+.extended-publication h3 {
+
+    margin:
+        0;
+
+    font-size:
+        clamp(
+            26px,
+            2.8vw,
+            40px
+        );
+
+    line-height:
+        1;
+
+    letter-spacing:
+        -.04em;
+
+    font-weight:
+        500;
+
+}
+
+
+.extended-publication p {
+
+    max-width:
+        680px;
+
+    margin:
+        12px 0 0;
+
+    color:
+        var(--gray);
+
+    font-size:
+        15px;
+
+    line-height:
+        1.5;
+
+}
+
+
+.extended-contact-button {
+
+    min-width:
+        154px;
+
+    min-height:
+        48px;
+
+    padding:
+        0 20px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex:
+        0 0 auto;
+
+    border:
+        1px solid
+        var(--black);
+
+    border-radius:
+        5px;
+
+    background:
+        transparent;
+
+    color:
+        var(--black);
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+
+    text-decoration:
+        none;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+
+}
+
+
+.extended-contact-button:hover {
+
+    background:
+        var(--black);
+
+    color:
+        var(--white);
 
 }
 
@@ -1003,13 +1139,25 @@ body {
 
 
 /* =====================================================
-   NOTA FINAL
+   NOTAS FINALES
 ===================================================== */
 
 .publish-footer-note {
 
     padding:
-        44px 0 70px;
+        42px 0 70px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap:
+        42px;
 
     color:
         var(--gray);
@@ -1019,6 +1167,14 @@ body {
 
     line-height:
         1.5;
+
+}
+
+
+.publish-note-item {
+
+    max-width:
+        560px;
 
 }
 
@@ -1121,11 +1277,6 @@ body {
 
     object-fit:
         contain;
-
-    /*
-    El mismo SVG negro se convierte
-    en blanco solamente en el footer.
-    */
 
     filter:
         brightness(0)
@@ -1249,21 +1400,10 @@ body {
     }
 
 
-    .plans-grid {
-
-        grid-template-columns:
-            repeat(
-                3,
-                minmax(0, 1fr)
-            );
-
-    }
-
-
     .plan-card {
 
         min-height:
-            390px;
+            380px;
 
         padding:
             20px;
@@ -1334,7 +1474,7 @@ body {
     .plan-card {
 
         min-height:
-            290px;
+            285px;
 
         border-right:
             0;
@@ -1369,6 +1509,39 @@ body {
 
     }
 
+
+    .extended-publication {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap:
+            24px;
+
+    }
+
+
+    .extended-contact-button {
+
+        width:
+            100%;
+
+    }
+
+
+    .publish-footer-note {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            28px;
+
+    }
+
 }
 
 
@@ -1377,9 +1550,6 @@ body {
 ===================================================== */
 
 @media (max-width: 650px) {
-
-
-    /* HEADER */
 
     .publish-header {
 
@@ -1392,13 +1562,12 @@ body {
     }
 
 
-    @media (max-width: 650px) {
-
     .publish-brand {
-        margin-left: 4px;
-    }
 
-}
+        margin-left:
+            4px;
+
+    }
 
 
     .publish-brand-logo {
@@ -1434,20 +1603,16 @@ body {
     }
 
 
-    /* PAGE */
-
     .publish-page {
 
         width:
             calc(100% - 28px);
 
         padding:
-            62px 0 30px;
+            58px 0 30px;
 
     }
 
-
-    /* INTRO */
 
     .publish-intro h1 {
 
@@ -1461,10 +1626,10 @@ body {
     }
 
 
-    .publish-intro p {
+    .publish-intro-main {
 
         margin-top:
-            26px;
+            20px;
 
         font-size:
             17px;
@@ -1472,12 +1637,10 @@ body {
     }
 
 
-    /* PLANES */
-
     .plans-section {
 
         margin-top:
-            80px;
+            62px;
 
     }
 
@@ -1485,7 +1648,7 @@ body {
     .plans-heading {
 
         margin-bottom:
-            28px;
+            26px;
 
     }
 
@@ -1494,6 +1657,17 @@ body {
 
         font-size:
             38px;
+
+    }
+
+
+    .plans-heading p {
+
+        margin-top:
+            14px;
+
+        font-size:
+            14px;
 
     }
 
@@ -1509,7 +1683,7 @@ body {
     .plan-card {
 
         min-height:
-            270px;
+            265px;
 
         padding:
             20px;
@@ -1532,25 +1706,21 @@ body {
     }
 
 
-    /* DURACIÓN */
-
     .plan-duration {
 
         margin-bottom:
-            8px;
+            7px;
 
         font-size:
-            13px;
+            12px;
 
     }
 
 
-    /* NOMBRE */
-
     .plan-content h3 {
 
         margin-bottom:
-            15px;
+            13px;
 
         font-size:
             34px;
@@ -1558,12 +1728,10 @@ body {
     }
 
 
-    /* PRECIO */
-
     .plan-price {
 
         margin-bottom:
-            12px;
+            10px;
 
         font-size:
             48px;
@@ -1582,7 +1750,43 @@ body {
     }
 
 
-    /* PAYMENT */
+    .extended-publication {
+
+        margin-top:
+            14px;
+
+        padding:
+            24px 20px;
+
+        gap:
+            22px;
+
+    }
+
+
+    .extended-publication h3 {
+
+        font-size:
+            30px;
+
+    }
+
+
+    .extended-publication p {
+
+        font-size:
+            14px;
+
+    }
+
+
+    .extended-contact-button {
+
+        min-height:
+            52px;
+
+    }
+
 
     .payment-box {
 
@@ -1606,6 +1810,14 @@ body {
     }
 
 
+    .payment-copy p {
+
+        font-size:
+            14px;
+
+    }
+
+
     .mercadopago-button {
 
         min-height:
@@ -1617,17 +1829,16 @@ body {
     }
 
 
-    /* NOTA */
-
     .publish-footer-note {
 
         padding:
             34px 0 52px;
 
+        gap:
+            24px;
+
     }
 
-
-    /* FOOTER */
 
     .publish-footer {
 
