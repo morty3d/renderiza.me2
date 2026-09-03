@@ -57,9 +57,12 @@
 
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
 
-    <!-- OPEN CASCADE / STEP -->
 
-<script src="./assets/occt/occt-import-js.js"></script>
+    <!-- =====================================================
+         OPEN CASCADE / STEP
+    ====================================================== -->
+
+    <script src="./assets/occt/occt-import-js.js"></script>
 
 </head>
 
@@ -93,7 +96,6 @@
             </span>
 
         </a>
-
 
 
         <!-- VOLVER -->
@@ -238,11 +240,11 @@
 
 
         <input
-    id="replaceFileInput"
-    type="file"
-    accept=".glb,.stl,.obj,.step,.stp"
-    hidden
->
+            id="replaceFileInput"
+            type="file"
+            accept=".glb,.stl,.obj,.step,.stp"
+            hidden
+        >
 
 
 
@@ -358,30 +360,170 @@
             </div>
 
 
-            <div class="light-icon">
-                ☀
-            </div>
+            <div class="light-controls-stack">
 
 
-            <div class="slider-wrapper">
+                <!-- =========================================
+                     GIRAR LUZ
+                ========================================== -->
 
-                <input
-                    id="lightSlider"
-                    class="tool-slider"
-                    type="range"
-                    min="0"
-                    max="200"
-                    value="100"
-                >
-
-            </div>
+                <div class="light-control-row">
 
 
-            <div
-                class="slider-value"
-                id="lightValue"
-            >
-                100%
+                    <!--
+                    MISMO SOL EXACTO QUE EL DE INTENSIDAD
+                    + FLECHAS ALREDEDOR
+                    -->
+
+                    <div
+                        class="light-rotate-icon"
+                        title="Girar luz"
+                        aria-hidden="true"
+                    >
+
+
+                        <!-- SOL -->
+
+                        <div class="light-icon">
+                            ☀
+                        </div>
+
+
+                        <!-- FLECHAS DE ROTACIÓN -->
+
+                        <svg
+                            class="light-rotate-arrows"
+                            viewBox="0 0 32 32"
+                            aria-hidden="true"
+                        >
+
+                            <!-- FLECHA SUPERIOR -->
+
+                            <path
+                                d="
+                                    M6 11
+                                    C8 5.5
+                                    14 3.5
+                                    20 5
+                                    C22 5.5
+                                    24 6.5
+                                    25.5 8
+                                "
+                            ></path>
+
+                            <path
+                                d="M25.5 8V3.8"
+                            ></path>
+
+                            <path
+                                d="M25.5 8H21.3"
+                            ></path>
+
+
+                            <!-- FLECHA INFERIOR -->
+
+                            <path
+                                d="
+                                    M26 21
+                                    C24 26.5
+                                    18 28.5
+                                    12 27
+                                    C10 26.5
+                                    8 25.5
+                                    6.5 24
+                                "
+                            ></path>
+
+                            <path
+                                d="M6.5 24V28.2"
+                            ></path>
+
+                            <path
+                                d="M6.5 24H10.7"
+                            ></path>
+
+                        </svg>
+
+                    </div>
+
+
+
+                    <!-- SLIDER GIRO -->
+
+                    <div class="slider-wrapper">
+
+                        <input
+                            id="lightDirectionSlider"
+                            class="tool-slider"
+                            type="range"
+                            min="0"
+                            max="360"
+                            step="1"
+                            value="0"
+                            aria-label="Dirección de la luz"
+                        >
+
+                    </div>
+
+
+                    <!-- VALOR GIRO -->
+
+                    <div
+                        class="slider-value"
+                        id="lightDirectionValue"
+                    >
+                        0°
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =========================================
+                     INTENSIDAD
+                ========================================== -->
+
+                <div class="light-control-row">
+
+
+                    <!-- MISMO SOL -->
+
+                    <div class="light-icon">
+                        ☀
+                    </div>
+
+
+                    <!-- SLIDER INTENSIDAD -->
+
+                    <div class="slider-wrapper">
+
+                        <input
+                            id="lightSlider"
+                            class="tool-slider"
+                            type="range"
+                            min="0"
+                            max="200"
+                            value="100"
+                            aria-label="Intensidad de la luz"
+                        >
+
+                    </div>
+
+
+                    <!-- VALOR INTENSIDAD -->
+
+                    <div
+                        class="slider-value"
+                        id="lightValue"
+                    >
+                        100%
+                    </div>
+
+
+                </div>
+
+
             </div>
 
         </div>
@@ -430,9 +572,11 @@
                 id="frontButton"
                 type="button"
             >
+
                 <span>
                     Frontal
                 </span>
+
             </button>
 
 
@@ -444,9 +588,11 @@
                 id="sideButton"
                 type="button"
             >
+
                 <span>
                     Lateral
                 </span>
+
             </button>
 
 
@@ -458,9 +604,11 @@
                 id="topButton"
                 type="button"
             >
+
                 <span>
                     Superior
                 </span>
+
             </button>
 
 
@@ -488,8 +636,11 @@
                     ></circle>
 
                     <path d="M12 2v4"></path>
+
                     <path d="M12 18v4"></path>
+
                     <path d="M2 12h4"></path>
+
                     <path d="M18 12h4"></path>
 
                 </svg>
@@ -519,8 +670,11 @@
                     ></circle>
 
                     <path d="M12 2v2"></path>
+
                     <path d="M12 20v2"></path>
+
                     <path d="M2 12h2"></path>
+
                     <path d="M20 12h2"></path>
 
                 </svg>
@@ -571,13 +725,21 @@
 
                 <svg viewBox="0 0 24 24">
 
-                    <path d="M8 3H3v5"></path>
+                    <path
+                        d="M8 3H3v5"
+                    ></path>
 
-                    <path d="M16 3h5v5"></path>
+                    <path
+                        d="M16 3h5v5"
+                    ></path>
 
-                    <path d="M8 21H3v-5"></path>
+                    <path
+                        d="M8 21H3v-5"
+                    ></path>
 
-                    <path d="M16 21h5v-5"></path>
+                    <path
+                        d="M16 21h5v-5"
+                    ></path>
 
                 </svg>
 

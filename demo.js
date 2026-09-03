@@ -63,6 +63,16 @@ const lightButton =
 const lightPanel =
     document.getElementById("lightPanel");
 
+const lightDirectionSlider =
+    document.getElementById(
+        "lightDirectionSlider"
+    );
+
+const lightDirectionValue =
+    document.getElementById(
+        "lightDirectionValue"
+    );
+
 const lightSlider =
     document.getElementById("lightSlider");
 
@@ -81,60 +91,27 @@ const viewButtons =
    CONFIGURACIÓN VISUAL
 ===================================================== */
 
-/*
-Plano Blueprint
-*/
-
 const CUT_PLANE_COLOR_HEX =
     "#173B70";
-
 
 const CUT_PLANE_OPACITY =
     0.35;
 
-
-/*
-Plano siempre cuadrado.
-
-Tamaño =
-mayor arista del bounding box + 15%
-*/
-
 const CUT_PLANE_SIZE_FACTOR =
     1.15;
 
-
-/*
-Opacidad del modelo durante corte.
-*/
-
 const CUT_MODEL_OPACITY =
     0.20;
-
-
-/*
-Contorno en perspectiva.
-*/
 
 const SECTION_BORDER_COLOR =
     BABYLON.Color3.FromHexString(
         "#2664EB"
     );
 
-
-/*
-Contorno con plano Blueprint.
-*/
-
 const SECTION_BORDER_ORTHO_COLOR =
     BABYLON.Color3.FromHexString(
         "#FFFFFF"
     );
-
-
-/*
-Línea guía punteada.
-*/
 
 const CUT_GUIDE_COLOR =
     BABYLON.Color3.FromHexString(
@@ -148,17 +125,13 @@ const CUT_GUIDE_COLOR =
 
 const engine =
     new BABYLON.Engine(
-
         canvas,
-
         true,
-
         {
             preserveDrawingBuffer: true,
             stencil: true,
             antialias: true
         }
-
     );
 
 
@@ -170,7 +143,6 @@ const scene =
     new BABYLON.Scene(
         engine
     );
-
 
 scene.clearColor =
     BABYLON.Color4.FromHexString(
@@ -184,43 +156,30 @@ scene.clearColor =
 
 const camera =
     new BABYLON.ArcRotateCamera(
-
         "camera",
-
         -Math.PI / 2,
-
         Math.PI / 2.35,
-
         5,
-
         BABYLON.Vector3.Zero(),
-
         scene
-
     );
-
 
 camera.attachControl(
     canvas,
     true
 );
 
-
 camera.panningSensibility =
     0;
-
 
 camera.wheelDeltaPercentage =
     0.01;
 
-
 camera.pinchDeltaPercentage =
     0.01;
 
-
 camera.lowerBetaLimit =
     0.02;
-
 
 camera.upperBetaLimit =
     Math.PI - 0.02;
@@ -232,35 +191,26 @@ camera.upperBetaLimit =
 
 const hemiLight =
     new BABYLON.HemisphericLight(
-
         "hemiLight",
-
         new BABYLON.Vector3(
             0,
             1,
             0
         ),
-
         scene
-
     );
 
 
 const keyLight =
     new BABYLON.DirectionalLight(
-
         "keyLight",
-
         new BABYLON.Vector3(
             -1,
             -2,
             -1
         ),
-
         scene
-
     );
-
 
 keyLight.position =
     new BABYLON.Vector3(
@@ -272,19 +222,14 @@ keyLight.position =
 
 const fillLight =
     new BABYLON.DirectionalLight(
-
         "fillLight",
-
         new BABYLON.Vector3(
             1,
             -1,
             1
         ),
-
         scene
-
     );
-
 
 fillLight.position =
     new BABYLON.Vector3(
@@ -295,13 +240,9 @@ fillLight.position =
 
 
 const LIGHT_BASE = {
-
     hemi: 1.25,
-
     key: 1.2,
-
     fill: 0.55
-
 };
 
 
@@ -312,21 +253,17 @@ function setLightIntensity(
     const factor =
         percent / 100;
 
-
     hemiLight.intensity =
         LIGHT_BASE.hemi *
         factor;
-
 
     keyLight.intensity =
         LIGHT_BASE.key *
         factor;
 
-
     fillLight.intensity =
         LIGHT_BASE.fill *
         factor;
-
 
     lightValue.textContent =
         Math.round(
@@ -342,16 +279,149 @@ setLightIntensity(
 
 
 /* =====================================================
+   GIRAR LUZ
+===================================================== */
+
+/*
+0° conserva exactamente la posición
+original de la iluminación.
+
+360° completa una vuelta alrededor
+del modelo.
+*/
+
+const LIGHT_ORBIT_RADIUS =
+    Math.sqrt(
+        5 * 5 +
+        5 * 5
+    );
+
+
+const LIGHT_BASE_ANGLE =
+    Math.PI / 4;
+
+
+const LIGHT_HORIZONTAL_COMPONENT =
+    Math.SQRT2;
+
+
+function setLightDirection(
+    degrees
+) {
+
+    const safeDegrees =
+        Math.max(
+            0,
+            Math.min(
+                360,
+                Number(degrees) || 0
+            )
+        );
+
+
+    const radians =
+
+        LIGHT_BASE_ANGLE +
+
+        (
+            safeDegrees *
+            Math.PI /
+            180
+        );
+
+
+    const cos =
+        Math.cos(
+            radians
+        );
+
+
+    const sin =
+        Math.sin(
+            radians
+        );
+
+
+    /* =================================================
+       LUZ PRINCIPAL
+    ================================================= */
+
+    keyLight.position.set(
+        cos *
+        LIGHT_ORBIT_RADIUS,
+
+        8,
+
+        sin *
+        LIGHT_ORBIT_RADIUS
+    );
+
+
+    const keyHorizontalX =
+        cos *
+        LIGHT_HORIZONTAL_COMPONENT;
+
+
+    const keyHorizontalZ =
+        sin *
+        LIGHT_HORIZONTAL_COMPONENT;
+
+
+    keyLight.direction.set(
+        -keyHorizontalX,
+        -2,
+        -keyHorizontalZ
+    );
+
+
+    /* =================================================
+       LUZ DE RELLENO
+       SIEMPRE EN EL LADO CONTRARIO
+    ================================================= */
+
+    fillLight.position.set(
+        -cos *
+        LIGHT_ORBIT_RADIUS,
+
+        4,
+
+        -sin *
+        LIGHT_ORBIT_RADIUS
+    );
+
+
+    fillLight.direction.set(
+        keyHorizontalX,
+        -1,
+        keyHorizontalZ
+    );
+
+
+    /* =================================================
+       UI
+    ================================================= */
+
+    lightDirectionValue.textContent =
+        Math.round(
+            safeDegrees
+        ) + "°";
+
+}
+
+
+setLightDirection(
+    0
+);
+
+
+/* =====================================================
    MODEL ROOT
 ===================================================== */
 
 const modelRoot =
     new BABYLON.TransformNode(
-
         "modelRoot",
-
         scene
-
     );
 
 
@@ -383,9 +453,7 @@ let initialCamera = {
 let modelDimensions = {
 
     x: 1,
-
     y: 1,
-
     z: 1
 
 };
@@ -409,10 +477,8 @@ let activePresetView =
 let cutAxis =
     "x";
 
-
 let cutEnabled =
     false;
-
 
 let currentCutPoint =
     BABYLON.Vector3.Zero();
@@ -424,7 +490,6 @@ let currentCutPoint =
 
 let cutVisualPlane =
     null;
-
 
 let cutVisualMaterial =
     null;
@@ -444,7 +509,6 @@ let sectionBorderMesh =
 
 let cutGuideMesh =
     null;
-
 
 let cutGuideArrows =
     null;
@@ -473,7 +537,6 @@ const originalMaterialStates =
 let cutOpacityMeshes =
     [];
 
-
 const originalMeshVisibility =
     new Map();
 
@@ -493,13 +556,9 @@ let sectionUpdateFrame =
 function isPresetViewActive() {
 
     return (
-
         activePresetView === "front" ||
-
         activePresetView === "side" ||
-
         activePresetView === "top"
-
     );
 
 }
@@ -519,7 +578,6 @@ function getCurrentSectionBorderColor() {
 
     }
 
-
     return SECTION_BORDER_COLOR;
 
 }
@@ -535,14 +593,11 @@ function setLoadingProgress(
 
     const safePercent =
         Math.max(
-
             0,
-
             Math.min(
                 100,
                 percent
             )
-
         );
 
 
@@ -611,22 +666,12 @@ function loadDemoModel() {
         scene,
 
 
-        /* =================================================
-           SUCCESS
-        ================================================= */
-
         function (
-
             meshes,
-
             particleSystems,
-
             skeletons,
-
             animationGroups,
-
             transformNodes
-
         ) {
 
             setLoadingProgress(
@@ -635,34 +680,22 @@ function loadDemoModel() {
 
 
             prepareLoadedModel(
-
                 meshes,
-
                 animationGroups,
-
                 transformNodes
-
             );
 
         },
 
-
-        /* =================================================
-           PROGRESS
-        ================================================= */
 
         function (
             event
         ) {
 
             if (
-
                 event &&
-
                 event.lengthComputable &&
-
                 event.total > 0
-
             ) {
 
                 const percent =
@@ -686,28 +719,16 @@ function loadDemoModel() {
         },
 
 
-        /* =================================================
-           ERROR
-        ================================================= */
-
         function (
-
             scene,
-
             message,
-
             exception
-
         ) {
 
             console.error(
-
                 "Error cargando modelo demo:",
-
                 message,
-
                 exception
-
             );
 
 
@@ -736,10 +757,6 @@ function prepareLoadedModel(
 
 ) {
 
-    /* =================================================
-       VALIDAR
-    ================================================= */
-
     if (
         !meshes ||
         meshes.length === 0
@@ -748,7 +765,6 @@ function prepareLoadedModel(
         showLoadError(
             "El GLB no contiene geometría."
         );
-
 
         return;
 
@@ -760,11 +776,8 @@ function prepareLoadedModel(
     ================================================= */
 
     if (
-
         animationGroups &&
-
         animationGroups.length
-
     ) {
 
         animationGroups.forEach(
@@ -785,11 +798,8 @@ function prepareLoadedModel(
     ================================================= */
 
     const importedNodes = [
-
         ...meshes,
-
         ...(transformNodes || [])
-
     ];
 
 
@@ -804,13 +814,10 @@ function prepareLoadedModel(
             node => {
 
                 return (
-
                     !node.parent ||
-
                     !importedNodeSet.has(
                         node.parent
                     )
-
                 );
 
             }
@@ -833,25 +840,17 @@ function prepareLoadedModel(
 
     let minimum =
         new BABYLON.Vector3(
-
             Number.POSITIVE_INFINITY,
-
             Number.POSITIVE_INFINITY,
-
             Number.POSITIVE_INFINITY
-
         );
 
 
     let maximum =
         new BABYLON.Vector3(
-
             Number.NEGATIVE_INFINITY,
-
             Number.NEGATIVE_INFINITY,
-
             Number.NEGATIVE_INFINITY
-
         );
 
 
@@ -872,11 +871,8 @@ function prepareLoadedModel(
 
 
             if (
-
                 mesh.getTotalVertices &&
-
                 mesh.getTotalVertices() === 0
-
             ) {
 
                 return;
@@ -897,21 +893,15 @@ function prepareLoadedModel(
 
             minimum =
                 BABYLON.Vector3.Minimize(
-
                     minimum,
-
                     boundingBox.minimumWorld
-
                 );
 
 
             maximum =
                 BABYLON.Vector3.Maximize(
-
                     maximum,
-
                     boundingBox.maximumWorld
-
                 );
 
 
@@ -921,28 +911,19 @@ function prepareLoadedModel(
     );
 
 
-    /* =================================================
-       VALIDAR BOUNDS
-    ================================================= */
-
     if (
-
         validMeshCount === 0 ||
-
         !Number.isFinite(
             minimum.x
         ) ||
-
         !Number.isFinite(
             maximum.x
         )
-
     ) {
 
         showLoadError(
             "No pudimos calcular las dimensiones del modelo."
         );
-
 
         return;
 
@@ -954,7 +935,6 @@ function prepareLoadedModel(
     ================================================= */
 
     const center =
-
         minimum
             .add(
                 maximum
@@ -969,7 +949,6 @@ function prepareLoadedModel(
     ================================================= */
 
     const dimensions =
-
         maximum
             .subtract(
                 minimum
@@ -1004,13 +983,9 @@ function prepareLoadedModel(
     ================================================= */
 
     modelRoot.position.set(
-
         -center.x,
-
         -center.y,
-
         -center.z
-
     );
 
 
@@ -1055,39 +1030,28 @@ function prepareLoadedModel(
 
 
     const boundingRadius =
-
         Math.max(
-
             dimensions.length() /
             2,
-
             0.000001
-
         );
 
 
     const renderWidth =
         Math.max(
-
             engine.getRenderWidth(),
-
             1
-
         );
 
 
     const renderHeight =
         Math.max(
-
             engine.getRenderHeight(),
-
             1
-
         );
 
 
     const aspect =
-
         renderWidth /
         renderHeight;
 
@@ -1115,13 +1079,9 @@ function prepareLoadedModel(
 
 
     const limitingFov =
-
         Math.min(
-
             verticalFov,
-
             horizontalFov
-
         );
 
 
@@ -1140,13 +1100,10 @@ function prepareLoadedModel(
 
 
     if (
-
         !Number.isFinite(
             fittedRadius
         ) ||
-
         fittedRadius <= 0
-
     ) {
 
         fittedRadius =
@@ -1160,44 +1117,31 @@ function prepareLoadedModel(
 
 
     camera.lowerRadiusLimit =
-
         Math.max(
-
             boundingRadius *
             0.20,
-
             0.000001
-
         );
 
 
     camera.upperRadiusLimit =
-
         fittedRadius *
         10;
 
 
     camera.minZ =
-
         Math.max(
-
             boundingRadius /
             10000,
-
             0.000001
-
         );
 
 
     camera.maxZ =
-
         Math.max(
-
             fittedRadius *
             1000,
-
             100
-
         );
 
 
@@ -1217,10 +1161,6 @@ function prepareLoadedModel(
 
     };
 
-
-    /* =================================================
-       DEBUG
-    ================================================= */
 
     console.log(
         "renderiza.me demo — Modelo cargado"
@@ -1245,10 +1185,6 @@ function prepareLoadedModel(
     );
 
 
-    /* =================================================
-       TERMINAR
-    ================================================= */
-
     setLoadingProgress(
         100
     );
@@ -1264,9 +1200,7 @@ function prepareLoadedModel(
                 );
 
         },
-
         250
-
     );
 
 }
@@ -1274,9 +1208,6 @@ function prepareLoadedModel(
 
 /* =====================================================
    AUTOROTACIÓN
-
-   Igual que upload-viewer:
-   rota la cámara, no el modelo.
 ===================================================== */
 
 scene.onBeforeRenderObservable.add(
@@ -1287,7 +1218,6 @@ scene.onBeforeRenderObservable.add(
         ) {
 
             camera.alpha +=
-
                 engine.getDeltaTime()
                 * 0.00012;
 
@@ -1319,14 +1249,6 @@ function leavePresetView() {
         }
     );
 
-
-    /*
-    Perspectiva:
-
-    - sin plano Blueprint
-    - contorno azul
-    - guía punteada
-    */
 
     if (
         cutEnabled
@@ -1392,11 +1314,8 @@ rotateButton.addEventListener(
         rotateButton
             .classList
             .toggle(
-
                 "active",
-
                 autoRotate
-
             );
 
 
@@ -1455,12 +1374,9 @@ function setCutAxisState(
             button
                 .classList
                 .toggle(
-
                     "active",
-
                     button.dataset.axis ===
                         axis
-
                 );
 
         }
@@ -1474,15 +1390,10 @@ function setCutAxisState(
 ===================================================== */
 
 function setView(
-
     alpha,
-
     beta,
-
     button,
-
     viewName
-
 ) {
 
     autoRotate =
@@ -1523,12 +1434,6 @@ function setView(
         );
 
 
-    /*
-    FRONTAL
-    cámara mira Z
-    plano XY
-    */
-
     if (
         viewName === "front"
     ) {
@@ -1539,13 +1444,6 @@ function setView(
 
     }
 
-
-    /*
-    LATERAL
-    cámara mira X
-    plano YZ
-    */
-
     else if (
         viewName === "side"
     ) {
@@ -1555,13 +1453,6 @@ function setView(
         );
 
     }
-
-
-    /*
-    SUPERIOR
-    cámara mira Y
-    plano XZ
-    */
 
     else if (
         viewName === "top"
@@ -1594,15 +1485,10 @@ frontButton.addEventListener(
     () => {
 
         setView(
-
             -Math.PI / 2,
-
             Math.PI / 2,
-
             frontButton,
-
             "front"
-
         );
 
     }
@@ -1618,15 +1504,10 @@ sideButton.addEventListener(
     () => {
 
         setView(
-
             0,
-
             Math.PI / 2,
-
             sideButton,
-
             "side"
-
         );
 
     }
@@ -1642,15 +1523,10 @@ topButton.addEventListener(
     () => {
 
         setView(
-
             -Math.PI / 2,
-
             0.02,
-
             topButton,
-
             "top"
-
         );
 
     }
@@ -1684,19 +1560,11 @@ function closePanels() {
         );
 
 
-    /*
-    Cortes refleja el estado REAL
-    del clipping.
-    */
-
     cutButton
         .classList
         .toggle(
-
             "active",
-
             cutEnabled
-
         );
 
 }
@@ -1704,17 +1572,11 @@ function closePanels() {
 
 /* =====================================================
    CUT BUTTON
-
-   Activa/desactiva TODO el corte.
 ===================================================== */
 
 cutButton.addEventListener(
     "click",
     () => {
-
-        /* =================================================
-           APAGAR
-        ================================================= */
 
         if (
             cutEnabled
@@ -1740,15 +1602,10 @@ cutButton.addEventListener(
 
             updateCutPlane();
 
-
             return;
 
         }
 
-
-        /* =================================================
-           ENCENDER
-        ================================================= */
 
         cutEnabled =
             true;
@@ -1797,7 +1654,6 @@ lightButton.addEventListener(
     () => {
 
         const open =
-
             lightPanel
                 .classList
                 .contains(
@@ -1859,13 +1715,9 @@ function prepareCutSystem(
         mesh => {
 
             if (
-
                 !mesh ||
-
                 !mesh.getVerticesData ||
-
                 !mesh.getTotalVertices
-
             ) {
 
                 return;
@@ -1882,43 +1734,26 @@ function prepareCutSystem(
             }
 
 
-            /* =================================================
-               VISIBILIDAD ORIGINAL
-            ================================================= */
-
             cutOpacityMeshes.push(
                 mesh
             );
 
 
             originalMeshVisibility.set(
-
                 mesh,
-
                 mesh.visibility
-
             );
 
-
-            /* =================================================
-               MATERIAL
-            ================================================= */
 
             collectCutMaterials(
                 mesh.material
             );
 
 
-            /* =================================================
-               POSICIONES
-            ================================================= */
-
             const positions =
                 mesh.getVerticesData(
-
                     BABYLON.VertexBuffer
                         .PositionKind
-
                 );
 
 
@@ -1931,10 +1766,6 @@ function prepareCutSystem(
 
             }
 
-
-            /* =================================================
-               ÍNDICES
-            ================================================= */
 
             let indices =
                 mesh.getIndices();
@@ -1950,19 +1781,14 @@ function prepareCutSystem(
 
 
                 const vertexCount =
-
                     positions.length /
                     3;
 
 
                 for (
-
                     let i = 0;
-
                     i < vertexCount;
-
                     i++
-
                 ) {
 
                     indices.push(
@@ -1974,28 +1800,18 @@ function prepareCutSystem(
             }
 
 
-            /* =================================================
-               WORLD MATRIX
-            ================================================= */
-
             mesh.computeWorldMatrix(
                 true
             );
 
 
             const worldMatrix =
-
                 mesh
                     .getWorldMatrix()
                     .clone();
 
 
-            /* =================================================
-               WORLD POSITIONS
-            ================================================= */
-
             const worldPositions =
-
                 new Float32Array(
                     positions.length
                 );
@@ -2010,45 +1826,31 @@ function prepareCutSystem(
 
 
             for (
-
                 let i = 0;
-
                 i < positions.length;
-
                 i += 3
-
             ) {
 
                 source.set(
-
                     positions[i],
-
                     positions[i + 1],
-
                     positions[i + 2]
-
                 );
 
 
                 BABYLON.Vector3
                     .TransformCoordinatesToRef(
-
                         source,
-
                         worldMatrix,
-
                         transformed
-
                     );
 
 
                 worldPositions[i] =
                     transformed.x;
 
-
                 worldPositions[i + 1] =
                     transformed.y;
-
 
                 worldPositions[i + 2] =
                     transformed.z;
@@ -2072,21 +1874,11 @@ function prepareCutSystem(
     );
 
 
-    /*
-    Grupo 2 reservado para:
-    contorno y guías.
-    */
-
     scene.setRenderingAutoClearDepthStencil(
-
         2,
-
         true,
-
         true,
-
         false
-
     );
 
 }
@@ -2110,11 +1902,8 @@ function collectCutMaterials(
 
 
     if (
-
         material.subMaterials &&
-
         material.subMaterials.length
-
     ) {
 
         material.subMaterials.forEach(
@@ -2126,7 +1915,6 @@ function collectCutMaterials(
 
             }
         );
-
 
         return;
 
@@ -2145,19 +1933,14 @@ function collectCutMaterials(
 
 
     originalMaterialStates.set(
-
         material,
-
         {
-
             backFaceCulling:
                 material.backFaceCulling,
 
             twoSidedLighting:
                 material.twoSidedLighting
-
         }
-
     );
 
 }
@@ -2235,7 +2018,6 @@ function setCutModelOpacity(
         mesh => {
 
             const originalVisibility =
-
                 originalMeshVisibility.get(
                     mesh
                 );
@@ -2256,9 +2038,7 @@ function setCutModelOpacity(
             ) {
 
                 mesh.visibility =
-
                     originalVisibility *
-
                     CUT_MODEL_OPACITY;
 
             }
@@ -2281,11 +2061,8 @@ function setCutModelOpacity(
 ===================================================== */
 
 function makeCutOverlay(
-
     mesh,
-
     renderingGroup = 2
-
 ) {
 
     if (
@@ -2344,36 +2121,23 @@ function makeCutOverlay(
 ===================================================== */
 
 function planeDistanceXYZ(
-
     x,
-
     y,
-
     z,
-
     plane
-
 ) {
 
     return (
-
         plane.normal.x *
         x
-
         +
-
         plane.normal.y *
         y
-
         +
-
         plane.normal.z *
         z
-
         +
-
         plane.d
-
     );
 
 }
@@ -2384,38 +2148,25 @@ function planeDistanceXYZ(
 ===================================================== */
 
 function intersectEdgeWithPlane(
-
     ax,
     ay,
     az,
-
     bx,
     by,
     bz,
-
     distanceA,
     distanceB,
-
     epsilon
-
 ) {
 
-    /*
-    Arista totalmente coplanar.
-    */
-
     if (
-
         Math.abs(
             distanceA
         ) <= epsilon
-
         &&
-
         Math.abs(
             distanceB
         ) <= epsilon
-
     ) {
 
         return null;
@@ -2423,24 +2174,16 @@ function intersectEdgeWithPlane(
     }
 
 
-    /*
-    Ambos vértices del mismo lado.
-    */
-
     if (
-
         (
             distanceA > epsilon &&
             distanceB > epsilon
         )
-
         ||
-
         (
             distanceA < -epsilon &&
             distanceB < -epsilon
         )
-
     ) {
 
         return null;
@@ -2449,7 +2192,6 @@ function intersectEdgeWithPlane(
 
 
     const denominator =
-
         distanceA -
         distanceB;
 
@@ -2466,7 +2208,6 @@ function intersectEdgeWithPlane(
 
 
     const t =
-
         distanceA /
         denominator;
 
@@ -2482,7 +2223,6 @@ function intersectEdgeWithPlane(
 
 
     return new BABYLON.Vector3(
-
         ax +
         (
             bx - ax
@@ -2497,7 +2237,6 @@ function intersectEdgeWithPlane(
         (
             bz - az
         ) * t
-
     );
 
 }
@@ -2508,13 +2247,9 @@ function intersectEdgeWithPlane(
 ===================================================== */
 
 function addUniqueSectionPoint(
-
     points,
-
     point,
-
     epsilon
-
 ) {
 
     if (
@@ -2527,7 +2262,6 @@ function addUniqueSectionPoint(
 
 
     const epsilonSquared =
-
         epsilon *
         epsilon;
 
@@ -2537,20 +2271,13 @@ function addUniqueSectionPoint(
     ) {
 
         if (
-
             BABYLON.Vector3
                 .DistanceSquared(
-
                     existing,
-
                     point
-
                 )
-
             <=
-
             epsilonSquared
-
         ) {
 
             return;
@@ -2579,7 +2306,6 @@ function buildSectionBorder() {
 
         sectionBorderMesh.dispose();
 
-
         sectionBorderMesh =
             null;
 
@@ -2587,11 +2313,8 @@ function buildSectionBorder() {
 
 
     if (
-
         !cutEnabled ||
-
         !scene.clipPlane
-
     ) {
 
         return;
@@ -2604,27 +2327,18 @@ function buildSectionBorder() {
 
 
     const maxDimension =
-
         Math.max(
-
             modelDimensions.x,
-
             modelDimensions.y,
-
             modelDimensions.z
-
         );
 
 
     const epsilon =
-
         Math.max(
-
             maxDimension *
             0.000001,
-
             0.00000001
-
         );
 
 
@@ -2644,25 +2358,18 @@ function buildSectionBorder() {
 
 
             for (
-
                 let i = 0;
-
-                i + 2 <
-                indices.length;
-
+                i + 2 < indices.length;
                 i += 3
-
             ) {
 
                 const i0 =
                     indices[i] *
                     3;
 
-
                 const i1 =
                     indices[i + 1] *
                     3;
-
 
                 const i2 =
                     indices[i + 2] *
@@ -2701,58 +2408,43 @@ function buildSectionBorder() {
 
                 const da =
                     planeDistanceXYZ(
-
                         ax,
                         ay,
                         az,
                         plane
-
                     );
 
 
                 const db =
                     planeDistanceXYZ(
-
                         bx,
                         by,
                         bz,
                         plane
-
                     );
 
 
                 const dc =
                     planeDistanceXYZ(
-
                         cx,
                         cy,
                         cz,
                         plane
-
                     );
 
 
-                /*
-                Triángulo completamente
-                de un mismo lado.
-                */
-
                 if (
-
                     (
                         da > epsilon &&
                         db > epsilon &&
                         dc > epsilon
                     )
-
                     ||
-
                     (
                         da < -epsilon &&
                         db < -epsilon &&
                         dc < -epsilon
                     )
-
                 ) {
 
                     continue;
@@ -2760,28 +2452,10 @@ function buildSectionBorder() {
                 }
 
 
-                /*
-                Triángulo coplanar.
-                */
-
                 if (
-
-                    Math.abs(
-                        da
-                    ) <= epsilon
-
-                    &&
-
-                    Math.abs(
-                        db
-                    ) <= epsilon
-
-                    &&
-
-                    Math.abs(
-                        dc
-                    ) <= epsilon
-
+                    Math.abs(da) <= epsilon &&
+                    Math.abs(db) <= epsilon &&
+                    Math.abs(dc) <= epsilon
                 ) {
 
                     continue;
@@ -2794,80 +2468,53 @@ function buildSectionBorder() {
 
 
                 addUniqueSectionPoint(
-
                     points,
-
                     intersectEdgeWithPlane(
-
                         ax,
                         ay,
                         az,
-
                         bx,
                         by,
                         bz,
-
                         da,
                         db,
-
                         epsilon
-
                     ),
-
                     epsilon
-
                 );
 
 
                 addUniqueSectionPoint(
-
                     points,
-
                     intersectEdgeWithPlane(
-
                         bx,
                         by,
                         bz,
-
                         cx,
                         cy,
                         cz,
-
                         db,
                         dc,
-
                         epsilon
-
                     ),
-
                     epsilon
-
                 );
 
 
                 addUniqueSectionPoint(
-
                     points,
-
                     intersectEdgeWithPlane(
-
                         cx,
                         cy,
                         cz,
-
                         ax,
                         ay,
                         az,
-
                         dc,
                         da,
-
                         epsilon
-
                     ),
-
                     epsilon
-
                 );
 
 
@@ -2876,11 +2523,8 @@ function buildSectionBorder() {
                 ) {
 
                     lines.push([
-
                         points[0],
-
                         points[1]
-
                     ]);
 
                 }
@@ -2901,26 +2545,16 @@ function buildSectionBorder() {
 
 
     sectionBorderMesh =
-
         BABYLON.MeshBuilder
             .CreateLineSystem(
-
                 "renderizaSectionBorder",
-
                 {
                     lines:
                         lines
                 },
-
                 scene
-
             );
 
-
-    /*
-    Perspectiva = azul
-    Vistas = blanco
-    */
 
     sectionBorderMesh.color =
         getCurrentSectionBorderColor();
@@ -2931,11 +2565,8 @@ function buildSectionBorder() {
 
 
     makeCutOverlay(
-
         sectionBorderMesh,
-
         2
-
     );
 
 }
@@ -2953,7 +2584,6 @@ function disposeCutGuide() {
 
         cutGuideMesh.dispose();
 
-
         cutGuideMesh =
             null;
 
@@ -2966,7 +2596,6 @@ function disposeCutGuide() {
 
         cutGuideArrows.dispose();
 
-
         cutGuideArrows =
             null;
 
@@ -2977,8 +2606,6 @@ function disposeCutGuide() {
 
 /* =====================================================
    GUÍA PUNTEADA + FLECHAS
-
-   SOLO EN PERSPECTIVA
 ===================================================== */
 
 function buildCutGuide(
@@ -2989,11 +2616,8 @@ function buildCutGuide(
 
 
     if (
-
         !cutEnabled ||
-
         isPresetViewActive()
-
     ) {
 
         return;
@@ -3002,26 +2626,19 @@ function buildCutGuide(
 
 
     const maxDimension =
-
         Math.max(
-
             modelDimensions.x,
-
             modelDimensions.y,
-
             modelDimensions.z
-
         );
 
 
     const halfLength =
-
         maxDimension *
         0.70;
 
 
     const offset =
-
         maxDimension *
         0.08;
 
@@ -3033,39 +2650,27 @@ function buildCutGuide(
     let normal;
 
 
-    /* =================================================
-       X
-    ================================================= */
-
     if (
         cutAxis === "x"
     ) {
 
         start =
             new BABYLON.Vector3(
-
                 point.x,
-
                 modelDimensions.y /
                 2 +
                 offset,
-
                 -halfLength
-
             );
 
 
         end =
             new BABYLON.Vector3(
-
                 point.x,
-
                 modelDimensions.y /
                 2 +
                 offset,
-
                 halfLength
-
             );
 
 
@@ -3077,11 +2682,6 @@ function buildCutGuide(
             );
 
     }
-
-
-    /* =================================================
-       Y
-    ================================================= */
 
     else if (
         cutAxis === "y"
@@ -3089,29 +2689,21 @@ function buildCutGuide(
 
         start =
             new BABYLON.Vector3(
-
                 -halfLength,
-
                 point.y,
-
                 modelDimensions.z /
                 2 +
                 offset
-
             );
 
 
         end =
             new BABYLON.Vector3(
-
                 halfLength,
-
                 point.y,
-
                 modelDimensions.z /
                 2 +
                 offset
-
             );
 
 
@@ -3124,38 +2716,25 @@ function buildCutGuide(
 
     }
 
-
-    /* =================================================
-       Z
-    ================================================= */
-
     else {
 
         start =
             new BABYLON.Vector3(
-
                 -halfLength,
-
                 modelDimensions.y /
                 2 +
                 offset,
-
                 point.z
-
             );
 
 
         end =
             new BABYLON.Vector3(
-
                 halfLength,
-
                 modelDimensions.y /
                 2 +
                 offset,
-
                 point.z
-
             );
 
 
@@ -3169,37 +2748,23 @@ function buildCutGuide(
     }
 
 
-    /* =================================================
-       DASHED LINE
-    ================================================= */
-
     cutGuideMesh =
-
         BABYLON.MeshBuilder
             .CreateDashedLines(
-
                 "renderizaCutGuide",
-
                 {
-
                     points: [
                         start,
                         end
                     ],
-
                     dashNb:
                         24,
-
                     dashSize:
                         3,
-
                     gapSize:
                         2
-
                 },
-
                 scene
-
             );
 
 
@@ -3212,20 +2777,12 @@ function buildCutGuide(
 
 
     makeCutOverlay(
-
         cutGuideMesh,
-
         2
-
     );
 
 
-    /* =================================================
-       FLECHAS
-    ================================================= */
-
     const direction =
-
         end
             .subtract(
                 start
@@ -3234,13 +2791,9 @@ function buildCutGuide(
 
 
     let side =
-
         BABYLON.Vector3.Cross(
-
             normal,
-
             direction
-
         );
 
 
@@ -3259,123 +2812,89 @@ function buildCutGuide(
 
 
     const arrowLength =
-
         maxDimension *
         0.055;
 
 
     const arrowWidth =
-
         arrowLength *
         0.45;
 
 
     const startOutDirection =
-
         direction.scale(
             -1
         );
 
 
     const startBase =
-
         start.subtract(
-
             startOutDirection
                 .scale(
                     arrowLength
                 )
-
         );
 
 
     const endBase =
-
         end.subtract(
-
             direction
                 .scale(
                     arrowLength
                 )
-
         );
 
 
     const arrowLines = [
 
         [
-
             start,
-
             startBase.add(
-
                 side.scale(
                     arrowWidth
                 )
-
             )
-
         ],
 
         [
-
             start,
-
             startBase.subtract(
-
                 side.scale(
                     arrowWidth
                 )
-
             )
-
         ],
 
         [
-
             end,
-
             endBase.add(
-
                 side.scale(
                     arrowWidth
                 )
-
             )
-
         ],
 
         [
-
             end,
-
             endBase.subtract(
-
                 side.scale(
                     arrowWidth
                 )
-
             )
-
         ]
 
     ];
 
 
     cutGuideArrows =
-
         BABYLON.MeshBuilder
             .CreateLineSystem(
-
                 "renderizaCutGuideArrows",
-
                 {
                     lines:
                         arrowLines
                 },
-
                 scene
-
             );
 
 
@@ -3388,20 +2907,15 @@ function buildCutGuide(
 
 
     makeCutOverlay(
-
         cutGuideArrows,
-
         2
-
     );
 
 }
 
 
 /* =====================================================
-   TEXTURA BLUEPRINT POR CÓDIGO
-
-   NO USA ARCHIVOS EXTERNOS.
+   TEXTURA BLUEPRINT
 ===================================================== */
 
 function createBlueprintGridTexture() {
@@ -3411,25 +2925,16 @@ function createBlueprintGridTexture() {
 
 
     const texture =
-
         new BABYLON.DynamicTexture(
-
             "renderizaBlueprintGrid",
-
             {
-
                 width:
                     textureSize,
-
                 height:
                     textureSize
-
             },
-
             scene,
-
             false
-
         );
 
 
@@ -3437,20 +2942,11 @@ function createBlueprintGridTexture() {
         texture.getContext();
 
 
-    /* =================================================
-       FONDO
-    ================================================= */
-
     ctx.clearRect(
-
         0,
-
         0,
-
         textureSize,
-
         textureSize
-
     );
 
 
@@ -3459,55 +2955,34 @@ function createBlueprintGridTexture() {
 
 
     ctx.fillRect(
-
         0,
-
         0,
-
         textureSize,
-
         textureSize
-
     );
 
-
-    /* =================================================
-       GRID
-    ================================================= */
 
     const divisions =
         24;
 
 
     const step =
-
         textureSize /
         divisions;
 
 
     for (
-
         let i = 0;
-
         i <= divisions;
-
         i++
-
     ) {
 
         const position =
-
             i *
             step;
 
 
-        /*
-        Cada sexta línea
-        es principal.
-        */
-
         const major =
-
             i % 6 === 0;
 
 
@@ -3515,60 +2990,38 @@ function createBlueprintGridTexture() {
 
 
         ctx.strokeStyle =
-
             major
-
                 ? "rgba(255,255,255,0.55)"
-
                 : "rgba(255,255,255,0.22)";
 
 
         ctx.lineWidth =
-
             major
-
                 ? 2
-
                 : 1;
 
 
-        /* vertical */
-
         ctx.moveTo(
-
             position,
-
             0
-
         );
 
 
         ctx.lineTo(
-
             position,
-
             textureSize
-
         );
 
-
-        /* horizontal */
 
         ctx.moveTo(
-
             0,
-
             position
-
         );
 
 
         ctx.lineTo(
-
             textureSize,
-
             position
-
         );
 
 
@@ -3602,34 +3055,19 @@ function createCutVisualPlane() {
     }
 
 
-    /*
-    Plano 1 x 1.
-
-    Después escalamos uniformemente.
-    */
-
     cutVisualPlane =
-
         BABYLON.MeshBuilder
             .CreatePlane(
-
                 "renderizaCutVisualPlane",
-
                 {
-
                     width:
                         1,
-
                     height:
                         1,
-
                     sideOrientation:
                         BABYLON.Mesh.DOUBLESIDE
-
                 },
-
                 scene
-
             );
 
 
@@ -3649,18 +3087,10 @@ function createCutVisualPlane() {
         BABYLON.Texture.CLAMP_ADDRESSMODE;
 
 
-    /* =================================================
-       MATERIAL
-    ================================================= */
-
     cutVisualMaterial =
-
         new BABYLON.StandardMaterial(
-
             "renderizaCutVisualMaterial",
-
             scene
-
         );
 
 
@@ -3697,7 +3127,6 @@ function createCutVisualPlane() {
 
 
     cutVisualMaterial.transparencyMode =
-
         BABYLON.Material
             .MATERIAL_ALPHABLEND;
 
@@ -3715,17 +3144,9 @@ function createCutVisualPlane() {
     );
 
 
-    /*
-    Plano grupo 1.
-    Bordes grupo 2.
-    */
-
     makeCutOverlay(
-
         cutVisualPlane,
-
         1
-
     );
 
 }
@@ -3739,20 +3160,9 @@ function updateCutVisualPlane(
     point
 ) {
 
-    /*
-    Solo existe visualmente en:
-
-    Frontal
-    Lateral
-    Superior
-    */
-
     if (
-
         !cutEnabled ||
-
         !isPresetViewActive()
-
     ) {
 
         if (
@@ -3765,7 +3175,6 @@ function updateCutVisualPlane(
                 );
 
         }
-
 
         return;
 
@@ -3786,131 +3195,70 @@ function updateCutVisualPlane(
     );
 
 
-    /* =================================================
-       POSICIÓN
-    ================================================= */
-
     cutVisualPlane.position.copyFrom(
         point
     );
 
 
-    /* =================================================
-       RESET ROTACIÓN
-    ================================================= */
-
     cutVisualPlane.rotation.set(
-
         0,
-
         0,
-
         0
-
     );
 
 
-    /* =================================================
-       TAMAÑO CUADRADO
-
-       MAYOR dimensión BB + 15%
-    ================================================= */
-
     const largestBoundingEdge =
-
         Math.max(
-
             modelDimensions.x,
-
             modelDimensions.y,
-
             modelDimensions.z
-
         );
 
 
     const squareSize =
-
         largestBoundingEdge *
-
         CUT_PLANE_SIZE_FACTOR;
 
 
     cutVisualPlane.scaling.set(
-
         squareSize,
-
         squareSize,
-
         1
-
     );
 
-
-    /* =================================================
-       FRONTAL
-
-       Plano XY
-    ================================================= */
 
     if (
         activePresetView === "front"
     ) {
 
         cutVisualPlane.rotation.set(
-
             0,
-
             0,
-
             0
-
         );
 
     }
-
-
-    /* =================================================
-       LATERAL
-
-       Plano YZ
-    ================================================= */
 
     else if (
         activePresetView === "side"
     ) {
 
         cutVisualPlane.rotation.set(
-
             0,
-
             Math.PI / 2,
-
             0
-
         );
 
     }
-
-
-    /* =================================================
-       SUPERIOR
-
-       Plano XZ
-    ================================================= */
 
     else if (
         activePresetView === "top"
     ) {
 
         cutVisualPlane.rotation.set(
-
             Math.PI / 2,
-
             0,
-
             0
-
         );
 
     }
@@ -3942,7 +3290,6 @@ function scheduleSectionVisualUpdate(
 
 
     sectionUpdateFrame =
-
         requestAnimationFrame(
             () => {
 
@@ -3950,20 +3297,8 @@ function scheduleSectionVisualUpdate(
                     null;
 
 
-                /*
-                Contorno siempre.
-                */
-
                 buildSectionBorder();
 
-
-                /*
-                Perspectiva =
-                guía punteada.
-
-                Vista =
-                sin guía.
-                */
 
                 if (
                     isPresetViewActive()
@@ -3982,10 +3317,6 @@ function scheduleSectionVisualUpdate(
                 }
 
 
-                /*
-                Blueprint solo en vistas.
-                */
-
                 updateCutVisualPlane(
                     pointCopy
                 );
@@ -4001,12 +3332,6 @@ function scheduleSectionVisualUpdate(
 ===================================================== */
 
 function clearSectionVisuals() {
-
-    /*
-    Evitamos que un frame pendiente
-    vuelva a dibujar algo después
-    de apagar Cortes.
-    */
 
     if (
         sectionUpdateFrame
@@ -4028,7 +3353,6 @@ function clearSectionVisuals() {
     ) {
 
         sectionBorderMesh.dispose();
-
 
         sectionBorderMesh =
             null;
@@ -4059,10 +3383,6 @@ function clearSectionVisuals() {
 
 function updateCutPlane() {
 
-    /* =================================================
-       CORTE OFF
-    ================================================= */
-
     if (
         !cutEnabled
     ) {
@@ -4089,18 +3409,11 @@ function updateCutPlane() {
     }
 
 
-    /* =================================================
-       SLIDER
-    ================================================= */
-
     const percent =
-
         Number(
             cutSlider.value
         )
-
         /
-
         100;
 
 
@@ -4113,10 +3426,6 @@ function updateCutPlane() {
         BABYLON.Vector3.Zero();
 
 
-    /* =================================================
-       X
-    ================================================= */
-
     if (
         cutAxis === "x"
     ) {
@@ -4126,33 +3435,21 @@ function updateCutPlane() {
 
 
         point.x =
-
             -dimension /
             2
-
             +
-
             dimension *
             percent;
 
 
         normal =
             new BABYLON.Vector3(
-
                 1,
-
                 0,
-
                 0
-
             );
 
     }
-
-
-    /* =================================================
-       Y
-    ================================================= */
 
     else if (
         cutAxis === "y"
@@ -4163,33 +3460,21 @@ function updateCutPlane() {
 
 
         point.y =
-
             -dimension /
             2
-
             +
-
             dimension *
             percent;
 
 
         normal =
             new BABYLON.Vector3(
-
                 0,
-
                 1,
-
                 0
-
             );
 
     }
-
-
-    /* =================================================
-       Z
-    ================================================= */
 
     else {
 
@@ -4198,25 +3483,18 @@ function updateCutPlane() {
 
 
         point.z =
-
             -dimension /
             2
-
             +
-
             dimension *
             percent;
 
 
         normal =
             new BABYLON.Vector3(
-
                 0,
-
                 0,
-
                 1
-
             );
 
     }
@@ -4227,57 +3505,31 @@ function updateCutPlane() {
     );
 
 
-    /* =================================================
-       CLIPPING REAL
-    ================================================= */
-
     const d =
-
         -BABYLON.Vector3.Dot(
-
             normal,
-
             point
-
         );
 
 
     scene.clipPlane =
-
         new BABYLON.Plane(
-
             normal.x,
-
             normal.y,
-
             normal.z,
-
             d
-
         );
 
-
-    /* =================================================
-       DOUBLE SIDE
-    ================================================= */
 
     setCutDoubleSided(
         true
     );
 
 
-    /* =================================================
-       OPACIDAD MODELO
-    ================================================= */
-
     setCutModelOpacity(
         true
     );
 
-
-    /* =================================================
-       VISUALES
-    ================================================= */
 
     scheduleSectionVisualUpdate(
         point
@@ -4306,7 +3558,6 @@ cutSlider.addEventListener(
 
 
         cutValue.textContent =
-
             cutSlider.value +
             "%";
 
@@ -4332,15 +3583,6 @@ axisButtons.forEach(
                     button.dataset.axis;
 
 
-                /*
-                Si estamos en vista ortogonal,
-                cambiamos también la cámara.
-
-                X = lateral
-                Y = superior
-                Z = frontal
-                */
-
                 if (
                     isPresetViewActive()
                 ) {
@@ -4350,51 +3592,34 @@ axisButtons.forEach(
                     ) {
 
                         setView(
-
                             0,
-
                             Math.PI / 2,
-
                             sideButton,
-
                             "side"
-
                         );
 
                     }
-
 
                     else if (
                         selectedAxis === "y"
                     ) {
 
                         setView(
-
                             -Math.PI / 2,
-
                             0.02,
-
                             topButton,
-
                             "top"
-
                         );
 
                     }
 
-
                     else {
 
                         setView(
-
                             -Math.PI / 2,
-
                             Math.PI / 2,
-
                             frontButton,
-
                             "front"
-
                         );
 
                     }
@@ -4404,11 +3629,6 @@ axisButtons.forEach(
 
                 }
 
-
-                /*
-                Perspectiva:
-                cambia solamente eje.
-                */
 
                 setCutAxisState(
                     selectedAxis
@@ -4436,7 +3656,7 @@ axisButtons.forEach(
 
 
 /* =====================================================
-   QUITAR CORTE — X DEL SLIDER
+   QUITAR CORTE
 ===================================================== */
 
 cutReset.addEventListener(
@@ -4476,7 +3696,25 @@ cutReset.addEventListener(
 
 
 /* =====================================================
-   LIGHT
+   LUZ — GIRO
+===================================================== */
+
+lightDirectionSlider.addEventListener(
+    "input",
+    () => {
+
+        setLightDirection(
+            Number(
+                lightDirectionSlider.value
+            )
+        );
+
+    }
+);
+
+
+/* =====================================================
+   LUZ — INTENSIDAD
 ===================================================== */
 
 lightSlider.addEventListener(
@@ -4484,11 +3722,9 @@ lightSlider.addEventListener(
     () => {
 
         setLightIntensity(
-
             Number(
                 lightSlider.value
             )
-
         );
 
     }
@@ -4531,19 +3767,8 @@ resetButton.addEventListener(
             );
 
 
-        /*
-        Volvemos a perspectiva.
-        */
-
         clearViewButtons();
 
-
-        /*
-        Si sigue activo el corte:
-        desaparece Blueprint,
-        borde vuelve a azul,
-        aparece guía.
-        */
 
         if (
             cutEnabled

@@ -544,7 +544,228 @@
         rgba(255, 255, 255, .25);
 
 }
+/* =====================================================
+   PANEL LUZ — DOBLE SLIDER
+===================================================== */
 
+#lightPanel {
+
+    align-items:
+        center;
+
+}
+
+
+/* CONTENEDOR DE LOS DOS SLIDERS */
+
+#lightPanel
+.light-controls-stack {
+
+    flex:
+        1 1 auto;
+
+    min-width:
+        0;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        9px;
+
+}
+
+
+/* CADA FILA */
+
+#lightPanel
+.light-control-row {
+
+    width:
+        100%;
+
+    min-width:
+        0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+}
+
+
+/* =====================================================
+   ICONO GIRAR LUZ
+===================================================== */
+
+/* =====================================================
+   ICONO GIRAR LUZ
+===================================================== */
+
+#lightPanel
+.light-rotate-icon {
+
+    position:
+        relative;
+
+    width:
+        32px;
+
+    height:
+        32px;
+
+    flex:
+        0 0 32px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        var(--upload-black);
+
+    overflow:
+        visible;
+
+}
+
+
+/* MISMO SOL QUE INTENSIDAD */
+
+#lightPanel
+.light-rotate-icon
+.light-icon {
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    width:
+        25px;
+
+    height:
+        25px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    font-size:
+        18px;
+
+    line-height:
+        1;
+
+    z-index:
+        2;
+
+}
+
+
+/* FLECHAS ALREDEDOR DEL SOL */
+
+#lightPanel
+.light-rotate-arrows {
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    width:
+        28px;
+
+    height:
+        28px;
+
+    overflow:
+        visible;
+
+    fill:
+        none;
+
+    stroke:
+        currentColor;
+
+    stroke-width:
+        1;
+
+    stroke-linecap:
+        round;
+
+    stroke-linejoin:
+        round;
+
+    z-index:
+        3;
+
+    pointer-events:
+        none;
+
+}
+
+
+/* LOS DOS SLIDERS OCUPAN EL MISMO ANCHO */
+
+#lightPanel
+.light-control-row
+.slider-wrapper {
+
+    flex:
+        1 1 auto;
+
+    min-width:
+        80px;
+
+}
+
+
+/* LOS DOS VALORES OCUPAN EL MISMO ESPACIO */
+
+#lightPanel
+.light-control-row
+.slider-value {
+
+    width:
+        42px;
+
+    flex:
+        0 0 42px;
+
+}
 
 /* =====================================================
    TABLET
@@ -778,5 +999,59 @@
             18px;
 
     }
+/* =================================================
+   PANEL LUZ MOBILE
+================================================= */
 
+#lightPanel {
+
+    padding:
+        8px 7px;
+
+}
+
+
+#lightPanel
+.light-controls-stack {
+
+    width:
+        100%;
+
+    gap:
+        7px;
+
+}
+
+
+#lightPanel
+.light-control-row {
+
+    gap:
+        6px;
+
+}
+
+
+#lightPanel
+.light-rotate-icon {
+
+    width:
+        25px;
+
+    flex:
+        0 0 25px;
+
+}
+
+
+#lightPanel
+.light-rotate-icon svg {
+
+    width:
+        20px;
+
+    height:
+        20px;
+
+}
 }

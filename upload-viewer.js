@@ -24,10 +24,40 @@ const cutSlider = document.getElementById("cutSlider");
 const cutValue = document.getElementById("cutValue");
 const cutReset = document.getElementById("cutReset");
 
-const lightButton = document.getElementById("lightButton");
-const lightPanel = document.getElementById("lightPanel");
-const lightSlider = document.getElementById("lightSlider");
-const lightValue = document.getElementById("lightValue");
+const lightButton =
+    document.getElementById(
+        "lightButton"
+    );
+
+
+const lightPanel =
+    document.getElementById(
+        "lightPanel"
+    );
+
+
+const lightDirectionSlider =
+    document.getElementById(
+        "lightDirectionSlider"
+    );
+
+
+const lightDirectionValue =
+    document.getElementById(
+        "lightDirectionValue"
+    );
+
+
+const lightSlider =
+    document.getElementById(
+        "lightSlider"
+    );
+
+
+const lightValue =
+    document.getElementById(
+        "lightValue"
+    );
 
 const publishButton = document.getElementById("publishButton");
 
@@ -452,7 +482,173 @@ function setLightIntensity(percent) {
 }
 
 
-setLightIntensity(100);
+/* =====================================================
+   DIRECCIÓN / GIRO DE LUZ
+===================================================== */
+
+/*
+0° conserva exactamente
+la orientación original del visor.
+
+360° completa una vuelta
+alrededor del modelo.
+*/
+
+const LIGHT_ORBIT_RADIUS =
+    Math.sqrt(
+        5 * 5 +
+        5 * 5
+    );
+
+
+const LIGHT_BASE_ANGLE =
+    Math.PI / 4;
+
+
+const LIGHT_HORIZONTAL_COMPONENT =
+    Math.SQRT2;
+
+
+
+function setLightDirection(
+    degrees
+) {
+
+    const safeDegrees =
+        Math.max(
+            0,
+            Math.min(
+                360,
+                Number(degrees) || 0
+            )
+        );
+
+
+    const radians =
+
+        LIGHT_BASE_ANGLE +
+
+        (
+            safeDegrees *
+            Math.PI /
+            180
+        );
+
+
+    const cos =
+        Math.cos(
+            radians
+        );
+
+
+    const sin =
+        Math.sin(
+            radians
+        );
+
+
+    /* =================================================
+       POSICIÓN KEY LIGHT
+    ================================================= */
+
+    keyLight.position.set(
+
+        cos *
+        LIGHT_ORBIT_RADIUS,
+
+        8,
+
+        sin *
+        LIGHT_ORBIT_RADIUS
+
+    );
+
+
+    /* =================================================
+       DIRECCIÓN KEY LIGHT
+    ================================================= */
+
+    const keyHorizontalX =
+
+        cos *
+        LIGHT_HORIZONTAL_COMPONENT;
+
+
+    const keyHorizontalZ =
+
+        sin *
+        LIGHT_HORIZONTAL_COMPONENT;
+
+
+    keyLight.direction.set(
+
+        -keyHorizontalX,
+
+        -2,
+
+        -keyHorizontalZ
+
+    );
+
+
+    /* =================================================
+       FILL LIGHT
+
+       Se mantiene siempre
+       del lado contrario.
+    ================================================= */
+
+    fillLight.position.set(
+
+        -cos *
+        LIGHT_ORBIT_RADIUS,
+
+        4,
+
+        -sin *
+        LIGHT_ORBIT_RADIUS
+
+    );
+
+
+    fillLight.direction.set(
+
+        keyHorizontalX,
+
+        -1,
+
+        keyHorizontalZ
+
+    );
+
+
+    /* =================================================
+       UI
+    ================================================= */
+
+    lightDirectionValue.textContent =
+
+        Math.round(
+            safeDegrees
+        ) +
+
+        "°";
+
+}
+
+
+/* =====================================================
+   ESTADO INICIAL
+===================================================== */
+
+setLightIntensity(
+    100
+);
+
+
+setLightDirection(
+    0
+);
 
 
 /* =====================================================
@@ -5376,7 +5572,27 @@ cutReset.addEventListener(
 
 
 /* =====================================================
-   LIGHT
+   LIGHT — DIRECCIÓN
+===================================================== */
+
+lightDirectionSlider.addEventListener(
+    "input",
+    () => {
+
+        setLightDirection(
+
+            Number(
+                lightDirectionSlider.value
+            )
+
+        );
+
+    }
+);
+
+
+/* =====================================================
+   LIGHT — INTENSIDAD
 ===================================================== */
 
 lightSlider.addEventListener(

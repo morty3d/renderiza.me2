@@ -296,19 +296,121 @@
 
 
         <!-- =================================================
-             PANEL DE LUZ
-        ================================================== -->
+     PANEL DE LUZ
+================================================== -->
 
-        <div
-            class="tool-panel"
-            id="lightPanel"
-        >
+<div
+    class="tool-panel"
+    id="lightPanel"
+>
+
+    <div class="tool-panel-title">
+        LUZ
+    </div>
 
 
-            <div class="tool-panel-title">
-                LUZ
+    <div class="light-controls-stack">
+
+
+        <!-- =========================================
+             GIRAR LUZ
+        ========================================== -->
+
+        <div class="light-control-row">
+
+            <div
+                class="light-rotate-icon"
+                title="Girar luz"
+                aria-hidden="true"
+            >
+
+                <!-- MISMO SOL QUE INTENSIDAD -->
+
+                <div class="light-icon">
+                    ☀
+                </div>
+
+
+                <!-- FLECHAS DE ROTACIÓN -->
+
+                <svg
+                    class="light-rotate-arrows"
+                    viewBox="0 0 32 32"
+                    aria-hidden="true"
+                >
+
+                    <!-- SUPERIOR -->
+
+                    <path
+                        d="
+                            M6 11
+                            C8 5.5
+                            14 3.5
+                            20 5
+                            C22 5.5
+                            24 6.5
+                            25.5 8
+                        "
+                    ></path>
+
+                    <path d="M25.5 8V3.8"></path>
+                    <path d="M25.5 8H21.3"></path>
+
+
+                    <!-- INFERIOR -->
+
+                    <path
+                        d="
+                            M26 21
+                            C24 26.5
+                            18 28.5
+                            12 27
+                            C10 26.5
+                            8 25.5
+                            6.5 24
+                        "
+                    ></path>
+
+                    <path d="M6.5 24V28.2"></path>
+                    <path d="M6.5 24H10.7"></path>
+
+                </svg>
+
             </div>
 
+
+            <div class="slider-wrapper">
+
+                <input
+                    id="lightDirectionSlider"
+                    class="tool-slider"
+                    type="range"
+                    min="0"
+                    max="360"
+                    value="0"
+                    step="1"
+                    aria-label="Dirección de la luz"
+                >
+
+            </div>
+
+
+            <div
+                class="slider-value"
+                id="lightDirectionValue"
+            >
+                0°
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             INTENSIDAD
+        ========================================== -->
+
+        <div class="light-control-row">
 
             <div class="light-icon">
                 ☀
@@ -338,10 +440,12 @@
                 100%
             </div>
 
-
         </div>
 
 
+    </div>
+
+</div>
 
         <!-- =================================================
              CONTROLES
