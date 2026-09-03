@@ -5804,7 +5804,44 @@ replaceFileInput.addEventListener(
             return;
 
         }
+        /* =================================================
+           VALIDAR PESO MÁXIMO — 75 MB
+        ================================================= */
 
+        const MAX_REPLACEMENT_FILE_SIZE =
+            75 *
+            1024 *
+            1024;
+
+
+        if (
+            file.size >
+            MAX_REPLACEMENT_FILE_SIZE
+        ) {
+
+            const fileSizeMB =
+                (
+                    file.size /
+                    1024 /
+                    1024
+                ).toFixed(1);
+
+
+            alert(
+                "El archivo pesa " +
+                fileSizeMB +
+                " MB.\n\n" +
+                "El tamaño máximo permitido es de 75 MB."
+            );
+
+
+            replaceFileInput.value =
+                "";
+
+
+            return;
+
+        }
 
         /* =================================================
            VALIDAR GLB

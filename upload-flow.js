@@ -62,7 +62,43 @@ function getModelExtension(file) {
 
 }
 
+/* =====================================================
+   LÍMITE DE PESO
+===================================================== */
 
+const MAX_MODEL_FILE_SIZE_MB =
+    75;
+
+const MAX_MODEL_FILE_SIZE_BYTES =
+    MAX_MODEL_FILE_SIZE_MB *
+    1024 *
+    1024;
+
+
+function isModelFileSizeValid(
+    file
+) {
+
+    return (
+        file &&
+        file.size <=
+        MAX_MODEL_FILE_SIZE_BYTES
+    );
+
+}
+
+
+function getFileSizeMB(
+    file
+) {
+
+    return (
+        file.size /
+        1024 /
+        1024
+    ).toFixed(1);
+
+}
 /* =====================================================
    VALIDAR FORMATO
 ===================================================== */
@@ -132,7 +168,31 @@ modelFileInput.addEventListener(
             return;
 
         }
+/* =====================================================
+   VALIDAR PESO MÁXIMO
+===================================================== */
 
+if (
+    !isModelFileSizeValid(
+        file
+    )
+) {
+
+    alert(
+        "El archivo pesa " +
+        getFileSizeMB(file) +
+        " MB.\n\n" +
+        "El tamaño máximo permitido es de 75 MB."
+    );
+
+
+    modelFileInput.value =
+        "";
+
+
+    return;
+
+}
 
         /* =================================================
            VALIDAR FORMATO
