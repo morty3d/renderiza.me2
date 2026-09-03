@@ -811,7 +811,59 @@
     }
 
 }
+/* =====================================================
+   ICONO CORTES
+===================================================== */
 
+/* =====================================================
+   ICONO CORTES
+===================================================== */
+
+#cutButton .cut-button-icon {
+
+    width:
+        24px;
+
+    height:
+        24px;
+
+    flex:
+        0 0 24px;
+
+    display:
+        block;
+
+    background:
+        currentColor;
+
+    -webkit-mask-image:
+        url("./assets/cut_svg.svg?v=4");
+
+    mask-image:
+        url("./assets/cut_svg.svg?v=4");
+
+    -webkit-mask-repeat:
+        no-repeat;
+
+    mask-repeat:
+        no-repeat;
+
+    -webkit-mask-position:
+        center;
+
+    mask-position:
+        center;
+
+    -webkit-mask-size:
+        contain;
+
+    mask-size:
+        contain;
+
+    pointer-events:
+        none;
+
+}
 
 /* =====================================================
    MOBILE
@@ -1051,6 +1103,18 @@
         20px;
 
     height:
+        20px;
+
+}
+#cutButton .cut-button-icon {
+
+    width:
+        20px;
+
+    height:
+        20px;
+
+    flex-basis:
         20px;
 
 }
