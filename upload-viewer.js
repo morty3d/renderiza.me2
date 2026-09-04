@@ -382,7 +382,7 @@ camera.attachControl(
 ===================================================== */
 
 camera.panningSensibility =
-    800;
+    1600;
 
 
 camera.wheelDeltaPercentage =

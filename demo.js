@@ -186,7 +186,7 @@ Rueda = zoom
 */
 
 camera.panningSensibility =
-    800;
+    1600;
 
 
 /*
