@@ -92,10 +92,10 @@ const viewButtons =
 ===================================================== */
 
 const CUT_PLANE_COLOR_HEX =
-    "#173B70";
+    "#1e78b3";
 
 const CUT_PLANE_OPACITY =
-    0.35;
+    1;
 
 const CUT_PLANE_SIZE_FACTOR =
     1.15;
