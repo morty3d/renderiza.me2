@@ -1498,7 +1498,9 @@ function buildBabylonMeshesFromStep(
 
                         vertexData.indices,
 
-                        normals
+                        normals,
+
+                        { useRightHandedSystem: true }
 
                     );
 
@@ -1537,13 +1539,9 @@ function buildBabylonMeshesFromStep(
 
 
 /* =========================================
-   CORREGIR ORIENTACIÓN STEP
-
-   OCCT devuelve geometría con orientación
-   compatible con Three.js / right-handed.
-
-   Babylon trabaja por defecto en left-handed,
-   por eso corregimos solamente los STEP.
+   OCCT conserva las coordenadas y normales del CAD.
+   La escena STEP usa el mismo sistema right-handed;
+   no rotar, intercambiar ejes ni reflejar los vértices.
 ========================================= */
 
 mesh.overrideMaterialSideOrientation =
@@ -1570,6 +1568,10 @@ meshes.push(
 async function loadStepModel(
     file
 ) {
+
+    // Conservar el sistema de ejes del archivo, también en la proyección.
+    // Cambiar solo el lado visible de las caras no evita el efecto espejo.
+    scene.useRightHandedSystem = true;
 
     try {
 
@@ -1798,6 +1800,8 @@ if (
     return;
 
 }
+
+        scene.useRightHandedSystem = false;
 
         /* =================================================
            LOADING
