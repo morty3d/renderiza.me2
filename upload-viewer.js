@@ -2657,6 +2657,8 @@ function leavePresetView() {
     - reaparece guía punteada
     */
 
+    perspectiveButton.classList.add("active");
+
     if (
         cutEnabled
     ) {
@@ -2687,7 +2689,6 @@ canvas.addEventListener(
             );
 
 
-        leavePresetView();
 
 
         interactionHelp
@@ -2707,6 +2708,8 @@ canvas.addEventListener(
 rotateButton.addEventListener(
     "click",
     () => {
+
+        if (isPresetViewActive()) return;
 
         autoRotate =
             !autoRotate;
@@ -2792,6 +2795,22 @@ function setCutAxisState(axis) {
    CAMBIAR VISTA
 ===================================================== */
 
+const viewerNavigation = createViewerNavigation(camera, scene, engine, canvas, interactionHelp);
+const perspectiveButton = document.getElementById("perspectiveButton");
+
+perspectiveButton.addEventListener("click", () => {
+    viewerNavigation.setPerspective();
+    autoRotate = false;
+    rotateButton.disabled = false;
+    rotateButton.title = "Rotación automática";
+    rotateButton.classList.remove("active");
+    camera.alpha = initialCamera.alpha;
+    camera.beta = initialCamera.beta;
+    clearViewButtons();
+    perspectiveButton.classList.add("active");
+    if (cutEnabled) updateCutPlane();
+});
+
 function setView(
 
     alpha,
@@ -2824,7 +2843,7 @@ function setView(
 
 
     camera.setTarget(
-        BABYLON.Vector3.Zero()
+        BABYLON.Vector3.Zero(), false, false, true
     );
 
 
@@ -2834,6 +2853,10 @@ function setView(
     activePresetView =
         viewName;
 
+
+    viewerNavigation.setOrthographic(viewName, alpha, beta);
+    rotateButton.disabled = true;
+    rotateButton.title = "Seleccioná Perspectiva para habilitar la rotación";
 
     button
         .classList
@@ -5799,46 +5822,45 @@ resetButton.addEventListener(
     "click",
     () => {
 
-        camera.alpha =
-            initialCamera.alpha;
+        viewerNavigation.clearMotion();
 
-
-        camera.beta =
-            initialCamera.beta;
-
+        if (!isPresetViewActive()) {
+            camera.alpha = initialCamera.alpha;
+            camera.beta = initialCamera.beta;
+        }
 
         camera.radius =
             initialCamera.radius;
 
 
         camera.setTarget(
-            initialCamera.target
+            initialCamera.target.clone(), false, false, true
         );
 
 
         autoRotate =
-            true;
+            !isPresetViewActive();
 
 
         rotateButton
             .classList
-            .add(
-                "active"
+            .toggle(
+                "active", autoRotate
             );
 
 
         /*
-        Volvemos a perspectiva.
+        Centrar conserva la vista técnica seleccionada.
         */
 
-        clearViewButtons();
+        if (!isPresetViewActive()) {
+            clearViewButtons();
+            perspectiveButton.classList.add("active");
+        }
 
 
         /*
-        Si hay corte activo:
-
-        desaparece Blueprint
-        y vuelve el modo perspectiva.
+        Actualizar el corte sin cambiar la vista seleccionada.
         */
 
         if (

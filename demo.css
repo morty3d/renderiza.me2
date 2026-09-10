@@ -887,6 +887,12 @@ body {
 }
 
 
+.viewer-button:disabled {
+    opacity: 0.4;
+    cursor: default;
+    background: transparent;
+}
+
 .controls-separator {
 
     width:
@@ -1536,7 +1542,7 @@ body {
 
         grid-template-columns:
             repeat(
-                4,
+                5,
                 minmax(0, 1fr)
             );
 
@@ -1887,7 +1893,7 @@ body {
 
         grid-template-columns:
             repeat(
-                4,
+                5,
                 minmax(0, 1fr)
             );
 
