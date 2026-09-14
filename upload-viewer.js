@@ -250,6 +250,17 @@ async function replaceStoredModel(file) {
 
 async function getCurrentModel() {
 
+    const modelSource = document.querySelector("[data-model-src]")?.dataset.modelSrc;
+    if (modelSource) {
+        const response = await fetch(modelSource);
+        if (!response.ok) {
+            throw new Error("No pudimos descargar el modelo del visor.");
+        }
+        const blob = await response.blob();
+        const name = new URL(modelSource, document.baseURI).pathname.split("/").pop();
+        return { file: new File([blob], name, { type: "model/gltf-binary" }) };
+    }
+
     const db =
         await openDatabase();
 
@@ -5930,7 +5941,7 @@ fullscreenButton.addEventListener(
    PUBLICAR
 ===================================================== */
 
-publishButton.addEventListener(
+publishButton?.addEventListener(
     "click",
     () => {
 
@@ -5972,7 +5983,7 @@ window.addEventListener(
    REEMPLAZAR ARCHIVO
 ===================================================== */
 
-replaceFileButton.addEventListener(
+replaceFileButton?.addEventListener(
     "click",
     () => {
 
@@ -5991,7 +6002,7 @@ replaceFileButton.addEventListener(
 );
 
 
-replaceFileInput.addEventListener(
+replaceFileInput?.addEventListener(
     "change",
     async event => {
 

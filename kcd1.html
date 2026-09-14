@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>kcd1 | renderiza.me</title>
+
+
+    <!-- =====================================================
+         FUENTES
+    ====================================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         CSS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="./demo.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="./upload.css"
+    >
+
+
+    <!-- =====================================================
+         BABYLON
+    ====================================================== -->
+
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+
+
+    <!-- =====================================================
+         OPEN CASCADE / STEP
+    ====================================================== -->
+
+    <script src="./assets/occt/occt-import-js.js"></script>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="demo-header upload-header">
+
+
+        <!-- LOGO -->
+
+        <div class="demo-brand upload-brand" aria-label="renderiza.me">
+
+            <img
+                src="./assets/logo-renderiza.svg"
+                class="upload-brand-logo"
+                alt=""
+            >
+
+            <span class="upload-brand-name">
+                renderiza<span>.me</span>
+            </span>
+
+        </div>
+
+
+        <!-- VOLVER -->
+
+        
+
+
+    </header>
+
+
+
+    <!-- =====================================================
+         VISOR
+    ====================================================== -->
+
+    <main class="viewer upload-viewer" data-model-src="./assets/kcd1.glb">
+
+
+        <canvas
+            id="renderCanvas"
+            aria-label="Visor 3D"
+        ></canvas>
+
+
+
+        <!-- =================================================
+             CARGA
+        ================================================== -->
+
+        <div
+            class="loading-screen"
+            id="loadingScreen"
+        >
+
+            <div class="loading-content">
+
+
+                <div class="loading-label">
+                    PREPARANDO TU MODELO
+                </div>
+
+
+                <div class="loading-title">
+                    renderiza<span>.me</span>
+                </div>
+
+
+                <div class="loading-bar">
+
+                    <div
+                        class="loading-progress"
+                        id="loadingProgress"
+                    ></div>
+
+                </div>
+
+
+                <div
+                    class="loading-percent"
+                    id="loadingPercent"
+                >
+                    0%
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             ERROR
+        ================================================== -->
+
+        <div
+            class="error-message"
+            id="errorMessage"
+        >
+            No pudimos cargar tu modelo.
+        </div>
+
+
+
+        <!-- =================================================
+             INFO MODELO
+        ================================================== -->
+
+        <div class="model-info">
+
+            <span>
+                MODELO
+            </span>
+
+            <strong id="modelName">
+                Tu proyecto
+            </strong>
+
+        </div>
+
+
+
+        <!-- =================================================
+             REEMPLAZAR ARCHIVO
+        ================================================== -->
+
+        
+
+
+        
+
+
+
+        <!-- =================================================
+             AYUDA DE NAVEGACIÓN
+        ================================================== -->
+
+        <div
+            class="interaction-help"
+            id="interactionHelp"
+        >
+
+            <span class="desktop-help">
+                Arrastrá para girar · Scroll para acercar
+            </span>
+
+            <span class="mobile-help">
+                Deslizá para girar · Pellizcá para acercar
+            </span>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PANEL CORTES
+        ================================================== -->
+
+        <div
+            class="tool-panel"
+            id="cutPanel"
+        >
+
+            <div class="tool-panel-title">
+                CORTE
+            </div>
+
+
+            <div class="axis-buttons">
+
+                <button
+                    class="axis-button active"
+                    data-axis="x"
+                    type="button"
+                >
+                    X
+                </button>
+
+                <button
+                    class="axis-button"
+                    data-axis="y"
+                    type="button"
+                >
+                    Y
+                </button>
+
+                <button
+                    class="axis-button"
+                    data-axis="z"
+                    type="button"
+                >
+                    Z
+                </button>
+
+            </div>
+
+
+            <div class="slider-wrapper">
+
+                <input
+                    id="cutSlider"
+                    class="tool-slider"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="50"
+                >
+
+            </div>
+
+
+            <div
+                class="slider-value"
+                id="cutValue"
+            >
+                50%
+            </div>
+
+
+            <button
+                class="panel-reset"
+                id="cutReset"
+                type="button"
+            >
+                Quitar corte
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PANEL LUZ
+        ================================================== -->
+
+        <div
+            class="tool-panel"
+            id="lightPanel"
+        >
+
+            <div class="tool-panel-title">
+                LUZ
+            </div>
+
+
+            <div class="light-controls-stack">
+
+
+                <!-- =========================================
+                     GIRAR LUZ
+                ========================================== -->
+
+                <div class="light-control-row">
+
+
+                    <!--
+                    MISMO SOL EXACTO QUE EL DE INTENSIDAD
+                    + FLECHAS ALREDEDOR
+                    -->
+
+                    <div
+                        class="light-rotate-icon"
+                        title="Girar luz"
+                        aria-hidden="true"
+                    >
+
+
+                        <!-- SOL -->
+
+                        <div class="light-icon">
+                            ☀
+                        </div>
+
+
+                        <!-- FLECHAS DE ROTACIÓN -->
+
+                        <svg
+                            class="light-rotate-arrows"
+                            viewBox="0 0 32 32"
+                            aria-hidden="true"
+                        >
+
+                            <!-- FLECHA SUPERIOR -->
+
+                            <path
+                                d="
+                                    M6 11
+                                    C8 5.5
+                                    14 3.5
+                                    20 5
+                                    C22 5.5
+                                    24 6.5
+                                    25.5 8
+                                "
+                            ></path>
+
+                            <path
+                                d="M25.5 8V3.8"
+                            ></path>
+
+                            <path
+                                d="M25.5 8H21.3"
+                            ></path>
+
+
+                            <!-- FLECHA INFERIOR -->
+
+                            <path
+                                d="
+                                    M26 21
+                                    C24 26.5
+                                    18 28.5
+                                    12 27
+                                    C10 26.5
+                                    8 25.5
+                                    6.5 24
+                                "
+                            ></path>
+
+                            <path
+                                d="M6.5 24V28.2"
+                            ></path>
+
+                            <path
+                                d="M6.5 24H10.7"
+                            ></path>
+
+                        </svg>
+
+                    </div>
+
+
+
+                    <!-- SLIDER GIRO -->
+
+                    <div class="slider-wrapper">
+
+                        <input
+                            id="lightDirectionSlider"
+                            class="tool-slider"
+                            type="range"
+                            min="0"
+                            max="360"
+                            step="1"
+                            value="0"
+                            aria-label="Dirección de la luz"
+                        >
+
+                    </div>
+
+
+                    <!-- VALOR GIRO -->
+
+                    <div
+                        class="slider-value"
+                        id="lightDirectionValue"
+                    >
+                        0°
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =========================================
+                     INTENSIDAD
+                ========================================== -->
+
+                <div class="light-control-row">
+
+
+                    <!-- MISMO SOL -->
+
+                    <div class="light-icon">
+                        ☀
+                    </div>
+
+
+                    <!-- SLIDER INTENSIDAD -->
+
+                    <div class="slider-wrapper">
+
+                        <input
+                            id="lightSlider"
+                            class="tool-slider"
+                            type="range"
+                            min="0"
+                            max="200"
+                            value="100"
+                            aria-label="Intensidad de la luz"
+                        >
+
+                    </div>
+
+
+                    <!-- VALOR INTENSIDAD -->
+
+                    <div
+                        class="slider-value"
+                        id="lightValue"
+                    >
+                        100%
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             CONTROLES
+        ================================================== -->
+
+        <div class="viewer-controls upload-controls">
+
+
+            <!-- ROTACIÓN -->
+
+            <button
+                class="viewer-button active"
+                id="rotateButton"
+                type="button"
+            >
+
+                <svg viewBox="0 0 24 24">
+
+                    <path
+                        d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5"
+                    ></path>
+
+                    <path
+                        d="M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5"
+                    ></path>
+
+                </svg>
+
+                <span>
+                    Rotación
+                </span>
+
+            </button>
+
+
+
+            <button class="viewer-button view-button active" id="perspectiveButton" type="button"
+                title="Perspectiva: arrastrá para girar">
+                <span>Perspectiva</span>
+            </button>
+
+            <!-- FRONTAL -->
+
+            <button
+                class="viewer-button view-button"
+                id="frontButton"
+                type="button"
+            >
+
+                <span>
+                    Frontal
+                </span>
+
+            </button>
+
+
+
+            <!-- LATERAL -->
+
+            <button
+                class="viewer-button view-button"
+                id="sideButton"
+                type="button"
+            >
+
+                <span>
+                    Lateral
+                </span>
+
+            </button>
+
+
+
+            <!-- SUPERIOR -->
+
+            <button
+                class="viewer-button view-button"
+                id="topButton"
+                type="button"
+            >
+
+                <span>
+                    Superior
+                </span>
+
+            </button>
+
+
+
+            <!-- CORTES -->
+
+            <button
+    class="viewer-button"
+    id="cutButton"
+    type="button"
+>
+    <span
+    class="cut-button-icon"
+    aria-hidden="true"
+></span>
+
+    <span>Cortes</span>
+</button>
+
+
+
+            <!-- LUZ -->
+
+            <button
+                class="viewer-button"
+                id="lightButton"
+                type="button"
+            >
+
+                <svg viewBox="0 0 24 24">
+
+    <circle
+        cx="12"
+        cy="12"
+        r="4"
+    ></circle>
+
+    <path d="M12 2v2"></path>
+    <path d="M12 20v2"></path>
+    <path d="M4.93 4.93l1.41 1.41"></path>
+    <path d="M17.66 17.66l1.41 1.41"></path>
+    <path d="M2 12h2"></path>
+    <path d="M20 12h2"></path>
+    <path d="M4.93 19.07l1.41-1.41"></path>
+    <path d="M17.66 6.34l1.41-1.41"></path>
+
+</svg>
+
+                <span>
+                    Luz
+                </span>
+
+            </button>
+
+
+
+            <!-- CENTRAR -->
+
+            <button
+                class="viewer-button"
+                id="resetButton"
+                type="button"
+            >
+
+                <svg viewBox="0 0 24 24">
+
+                    <path
+                        d="M3 12a9 9 0 1 0 3-6.7"
+                    ></path>
+
+                    <path
+                        d="M3 4v6h6"
+                    ></path>
+
+                </svg>
+
+                <span>
+                    Centrar
+                </span>
+
+            </button>
+
+
+
+            <!-- FULLSCREEN -->
+
+            <button
+                class="viewer-button"
+                id="fullscreenButton"
+                type="button"
+            >
+
+                <svg viewBox="0 0 24 24">
+
+                    <path
+                        d="M8 3H3v5"
+                    ></path>
+
+                    <path
+                        d="M16 3h5v5"
+                    ></path>
+
+                    <path
+                        d="M8 21H3v-5"
+                    ></path>
+
+                    <path
+                        d="M16 21h5v-5"
+                    ></path>
+
+                </svg>
+
+                <span>
+                    Pantalla completa
+                </span>
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             CTA PUBLICAR
+        ================================================== -->
+
+        
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         JS
+    ====================================================== -->
+
+    <script src="./viewer-navigation.js"></script>
+    <script src="./upload-viewer.js"></script>
+    <script src="./viewer-studio.js"></script>
+
+
+</body>
+
+</html>
