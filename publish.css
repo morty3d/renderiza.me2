@@ -429,7 +429,7 @@ body {
 
 
 /* =====================================================
-   GRID DE 3 PLANES
+   GRID DE 4 PLANES
 ===================================================== */
 
 .plans-grid {
@@ -439,7 +439,7 @@ body {
 
     grid-template-columns:
         repeat(
-            3,
+            4,
             minmax(0, 1fr)
         );
 
@@ -576,6 +576,9 @@ body {
 
 
 .plan-tag {
+
+    text-align: center;
+    line-height: 1.4;
 
     padding:
         7px 10px;
@@ -1391,6 +1394,18 @@ body {
 ===================================================== */
 
 @media (max-width: 1000px) {
+
+    .plans-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .plan-card:nth-child(2) {
+        border-right: 0;
+    }
+
+    .plan-card:nth-child(-n+2) {
+        border-bottom: 1px solid var(--black);
+    }
 
     .publish-page {
 
